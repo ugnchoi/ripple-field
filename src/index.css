@@ -128,3 +128,11 @@
     @apply font-sans;
     }
 }
+ 
+.root {
+  isolation: isolate;
+}
+
+body {
+  position: relative;
+}

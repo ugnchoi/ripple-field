@@ -7,8 +7,6 @@ import {
   WebGLRenderer,
 } from 'three';
 
-import "./index.css"
-
 import {
   AUTO_RANDOM_SPAWN_COUNT_PER_WINDOW,
   AUTO_RANDOM_SPAWN_STRENGTH,
