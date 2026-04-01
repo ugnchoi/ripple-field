@@ -107,6 +107,29 @@ Lock final defaults and optional variants.
 - The background remains background-first
 - Product teams can understand when to use or skip polish
 
+## Implementation delivery (code)
+
+### Candidates implemented (all gated)
+
+| Layer | Role | Shader hook |
+|-------|------|----------------|
+| **Tonal lift** | Extra `rgb` gain ∝ `vField²` on strong swells only | Fragment, `uPolishTonalK` |
+| **Vignette** | Screen-space corner darkening via `gl_FragCoord` (no extra pass) | Fragment, `uPolishVignetteK` / floor |
+| **Edge softening** | Slightly widens point disc outer smoothstep | Fragment, `uPolishEdgeSoft` |
+| **Depth cueing** | Mild darkening toward frustum corners in world XY | Vertex `vDepthAtten`, `uPolishDepthK` |
+
+Per-layer enable flags live in `uPolishLayers` (`Vector4`: tonal, vignette, edge, depth). The demo keeps all four at `1` when polish is on; products can zero a component to drop a layer without shader edits.
+
+### Defaults and toggles
+
+- **`POLISH_DEFAULT_ENABLED`**: `false` — baseline remains the unpolished field.
+- **Demo**: checkbox **Subtle polish** sets `uPolishMaster`; **`prefers-reduced-motion: reduce`** forces master off regardless of checkbox.
+- **Tuning**: strengths in `constants.ts` under Phase 7 (`POLISH_*`).
+
+### Performance
+
+Polish adds only a few branches and one screen-space multiply per visible fragment; no bloom, blur, or extra draw passes.
+
 ## Completion note
 
 The project should still be considered complete even if this phase is skipped. The success of the system depends on the field, the grid, and the composition—not on optional finishing treatment.

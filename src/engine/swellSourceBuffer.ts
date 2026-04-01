@@ -21,12 +21,15 @@ export class SwellSourceBuffer {
   private readonly widths = new Float32Array(MAX_SWELL_SOURCES);
   private readonly decays = new Float32Array(MAX_SWELL_SOURCES);
 
+  private uniformsDirty = true;
+
   constructor() {
     this.clear();
   }
 
   clear(): void {
     this.startTimes.fill(inactiveTime);
+    this.uniformsDirty = true;
   }
 
   /**
@@ -68,9 +71,13 @@ export class SwellSourceBuffer {
     this.strengths[index] = strength;
     this.widths[index] = width;
     this.decays[index] = decay;
+    this.uniformsDirty = true;
   }
 
   copyToUniforms(material: ShaderMaterial): void {
+    if (!this.uniformsDirty) {
+      return;
+    }
     const target = material.uniforms as {
       uStartTime: { value: Float32Array };
       uCenterX: { value: Float32Array };
@@ -89,5 +96,6 @@ export class SwellSourceBuffer {
       target.uWidth.value[i] = this.widths[i];
       target.uDecay.value[i] = this.decays[i];
     }
+    this.uniformsDirty = false;
   }
 }

@@ -17,10 +17,293 @@
         height: 100%;
         overflow: hidden;
       }
+      #app {
+        position: relative;
+      }
+      .ripple-host {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .ripple-host canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .foreground {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: space-between;
+        padding: clamp(1rem, 4vw, 2.5rem);
+        gap: 1rem;
+        pointer-events: none;
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          sans-serif;
+        color: #1a1b22;
+      }
+      .foreground * {
+        pointer-events: auto;
+      }
+      .top-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+      .brand {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(26, 27, 34, 0.55);
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .toolbar label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.8125rem;
+        color: rgba(26, 27, 34, 0.72);
+        cursor: pointer;
+        user-select: none;
+      }
+      .toolbar input[type='checkbox'] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: #4a4d5c;
+      }
+      .main-columns {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr minmax(0, 34rem) 1fr;
+        gap: clamp(0.75rem, 2vw, 1.5rem);
+        align-items: start;
+        min-height: 0;
+      }
+      @media (max-width: 900px) {
+        .main-columns {
+          grid-template-columns: 1fr;
+        }
+      }
+      .side-panel {
+        padding: 0.75rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.42);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(10px);
+        max-width: 16rem;
+      }
+      @media (max-width: 900px) {
+        .side-panel {
+          max-width: none;
+        }
+      }
+      .side-panel h2 {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: rgba(26, 27, 34, 0.5);
+        margin-bottom: 0.35rem;
+      }
+      .side-panel p {
+        font-size: 0.8125rem;
+        line-height: 1.45;
+        color: rgba(26, 27, 34, 0.78);
+      }
+      .hero-card {
+        border-radius: 16px;
+        padding: clamp(1.25rem, 3vw, 2rem);
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(230, 231, 238, 0.95);
+        box-shadow: 0 18px 50px rgba(22, 24, 35, 0.08);
+      }
+      .hero-card h1 {
+        font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+        font-weight: 650;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        margin-bottom: 0.65rem;
+      }
+      .hero-card .lede {
+        font-size: 0.9375rem;
+        line-height: 1.55;
+        color: rgba(26, 27, 34, 0.78);
+        margin-bottom: 1rem;
+      }
+      .hero-card .body {
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: rgba(26, 27, 34, 0.72);
+        margin-bottom: 1.25rem;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .btn {
+        appearance: none;
+        border: none;
+        border-radius: 999px;
+        padding: 0.55rem 1.1rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease,
+          background 0.12s ease;
+      }
+      .btn:focus-visible {
+        outline: 2px solid #3d5afe;
+        outline-offset: 2px;
+      }
+      .btn-primary {
+        background: #2c2f3a;
+        color: #f7f7fb;
+        box-shadow: 0 6px 20px rgba(44, 47, 58, 0.25);
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        background: rgba(255, 255, 255, 0.65);
+        color: #2c2f3a;
+        border: 1px solid rgba(44, 47, 58, 0.12);
+      }
+      .btn-ghost:hover {
+        background: rgba(255, 255, 255, 0.92);
+      }
+      .dense-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .mini-card {
+        border-radius: 10px;
+        padding: 0.55rem 0.65rem;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        font-size: 0.75rem;
+        line-height: 1.4;
+        color: rgba(26, 27, 34, 0.72);
+      }
+      .footer-note {
+        font-size: 0.6875rem;
+        color: rgba(26, 27, 34, 0.45);
+        text-align: center;
+        line-height: 1.4;
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
     </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div id="ripple-host" class="ripple-host" aria-hidden="true"></div>
+      <div class="foreground" role="presentation">
+        <header class="top-bar">
+          <span class="brand">Ripple field · Phase 7 polish</span>
+          <div class="toolbar">
+            <label>
+              <input id="quiet-mode" type="checkbox" aria-describedby="quiet-hint" />
+              Quiet background
+            </label>
+            <span id="quiet-hint" class="visually-hidden"
+              >Lowers motion and point opacity for calmer composition</span
+            >
+            <label>
+              <input id="polish-layer" type="checkbox" aria-describedby="polish-hint" />
+              Subtle polish
+            </label>
+            <span id="polish-hint" class="visually-hidden"
+              >Optional tonal lift, vignette, softer point edges, and corner depth cueing</span
+            >
+          </div>
+        </header>
+        <div class="main-columns">
+          <aside class="side-panel" aria-label="Sparse layout column">
+            <h2>Sparse</h2>
+            <p>Peripheral copy stays legible while the grid reads as atmosphere.</p>
+          </aside>
+          <article
+            class="hero-card"
+            data-ripple-safe="primary"
+            aria-label="Primary content"
+          >
+            <h1>Foreground-safe composition</h1>
+            <p class="lede">
+              Headings, paragraphs, and actions sit above a damped safe zone so the field
+              stays felt—not competitive.
+            </p>
+            <p class="body">
+              Type away from inputs to trigger soft keyboard ripples (throttled). Click the
+              canvas margins or use buttons; focus stays on your product chrome.
+            </p>
+            <div class="actions">
+              <button type="button" class="btn btn-primary" id="demo-primary">
+                Primary action
+              </button>
+              <button type="button" class="btn btn-ghost" id="demo-secondary">
+                Secondary
+              </button>
+              <label class="toolbar" style="margin-left: 0.25rem">
+                <span style="font-size: 0.8125rem; color: rgba(26, 27, 34, 0.72)"
+                  >Notes</span
+                >
+                <input
+                  id="demo-notes"
+                  type="text"
+                  placeholder="Ripples suppressed while typing here"
+                  aria-label="Demo notes field"
+                  style="
+                    min-width: 12rem;
+                    padding: 0.45rem 0.6rem;
+                    border-radius: 8px;
+                    border: 1px solid rgba(44, 47, 58, 0.18);
+                    font-size: 0.8125rem;
+                  "
+                />
+              </label>
+            </div>
+          </article>
+          <aside class="side-panel dense-stack" aria-label="Dense layout column">
+            <h2>Dense</h2>
+            <div class="mini-card">Card A — stacked panels for busy layouts.</div>
+            <div class="mini-card">Card B — contrast holds with local surfaces.</div>
+            <div class="mini-card">Card C — ripple stays in the gutters.</div>
+          </aside>
+        </div>
+        <p class="footer-note">
+          Safe zone follows the primary card. Compare quiet mode and subtle polish (off by
+          default; disabled under reduced motion).
+        </p>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

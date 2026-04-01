@@ -118,6 +118,37 @@ Confirm the production experience on target hardware.
 - The visual experience survives expected hardware variation
 - Performance exceptions are understood and bounded
 
+## Implementation delivery (code)
+
+This section records what the reference build does so Phase 6 exit criteria stay traceable.
+
+### Performance budget
+
+| Tier | When | Grid columns (before point-budget clamp) | DPR cap | Approx. point budget |
+|------|------|----------------------------------------|---------|----------------------|
+| **full** | Default desktop / large memory | `GRID_COLS` (244) | 2.0 | ≤ ~62k vertices |
+| **balanced** | `deviceMemory ≤ 4`, or viewport ≥ ~2.52M CSS pixels | ~88% of `GRID_COLS` | 1.5 | ≤ ~48k |
+| **efficient** | `prefers-reduced-motion: reduce`, or CSS width under 640px | ~72% of `GRID_COLS` | 1.25 | ≤ ~36k |
+
+Columns are further clamped so `cols × rows(aspect)` stays under the tier budget (`resolvePerformanceBudget` in `src/engine/resolvePerformanceBudget.ts`). Geometry rebuilds only when aspect or resolved column count changes.
+
+### Runtime guards
+
+- **Swell cap**: `MAX_SWELL_SOURCES` (16) matches the vertex shader loop; oldest source is recycled when full (`SwellSourceBuffer`).
+- **Uniform uploads**: CPU copies into swell uniforms only after a spawn or `clear()` (`uniformsDirty`), not every frame.
+- **Pointer cadence**: `PERF_POINTER_SWELL_MIN_INTERVAL` limits pathological click spam; keyboard remains throttled by `FOREGROUND_KEY_SWELL_MIN_INTERVAL`.
+- **Safe zone**: DOM → world bounds for `[data-ripple-safe]` are pushed to uniforms only when the normalized bounds string changes (resize / layout shift).
+
+### Device validation matrix (manual)
+
+| Configuration | Expectation |
+|-----------------|-------------|
+| Desktop discrete GPU, 1080p–1440p, tier **full** | Baseline smooth interaction; use as golden reference. |
+| Integrated laptop GPU, 1440p, tier **balanced** | Coherent look; verify no sustained frame drops during rapid clicks + typing. |
+| Mobile / narrow (under 640 CSS px) or reduced motion, tier **efficient** | Lower density + DPR; field should remain readable, quieter motion. |
+
+Unacceptable: sustained jank on **balanced** tier at 1080p on a recent integrated GPU — treat as a regression and lower default caps or shader cost.
+
 ## Hand-off to next phase
 
 At the end of Phase 6, the system should be production-safe without any reliance on a polish layer. Phase 7 may add refinement, but only if it clearly improves the approved background behavior.
