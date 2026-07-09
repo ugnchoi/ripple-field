@@ -1,0 +1,293 @@
+{
+  "basics": {
+    "name": "Yoojin Choi",
+    "title": "Digital Manager, Design Lead",
+    "specialties": ["Product Design", "UX/UI", "AX Design"],
+    "tagline": "Designing from the surface to the core",
+    "oneLiner": "I run the room, map the paths, and ship.",
+    "summary": "Design Lead at BCG Design Studios. Full-stack UX designer focused on the upstream of design — problem definition and solution validation. I lead a small, hands-on squad end-to-end: framing the problem, mapping journeys, prototyping, and shipping MVPs, keeping close to both users and delivery.",
+    "location": {
+      "current": "Seoul, South Korea",
+      "openToWork": ["Montreal, QC"]
+    },
+    "email": "ugn.choi@gmail.com",
+    "phone": "+82-10-7317-1990",
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "ugnchoi",
+        "url": "https://www.linkedin.com/in/ugnchoi"
+      }
+    ],
+    "stats": {
+      "connections": "500+",
+      "followers": 1139
+    }
+  },
+  "pillars": [
+    {
+      "title": "UX Expert",
+      "description": "Full-stack UX designer with a focus on the upstream of design — problem definition and solution validation. Having participated in numerous product development projects, I can coordinate the project and act as a facilitator of meetings, research activities, and brainstorming sessions."
+    },
+    {
+      "title": "Communicator and Leader",
+      "description": "Across a wide spectrum of projects I gained a flexible mind and the know-how to advocate the UX standpoint with stakeholders. I collaborate at ease with developers and managers, and have coached junior designers, led projects, and provided consultancy and critiques."
+    },
+    {
+      "title": "Just Make It",
+      "description": "Visualizing ideas into tangible solutions is where I thrive. I explore ideas by prototyping — from paper prototypes to high-fidelity interactive prototypes depending on the maturity of the idea. I'm keen on using various design tools and enjoy learning new ones."
+    }
+  ],
+  "work": [
+    {
+      "company": "Boston Consulting Group (BCG)",
+      "position": "Digital Manager",
+      "team": "BCG Design Studios",
+      "employmentType": "Full-time",
+      "location": "Seoul, South Korea",
+      "workMode": "Hybrid",
+      "startDate": "2022-12",
+      "endDate": null,
+      "current": true,
+      "summary": "I lead a small, hands-on design squad. We work end-to-end: framing the problem, mapping journeys, prototyping, and shipping MVPs. I keep us close to users and close to delivery.",
+      "highlights": [
+        "Lead a cross-functional squad delivering strategy, journeys, prototypes, and MVPs.",
+        "Structured a GenAI-powered construction dashboard; simplified data views and oversight.",
+        "Led e-commerce UX review; clarified discovery and checkout flows.",
+        "Ran FI design sprints; improved internal tool usability and UI patterns.",
+        "Designed a construction MVP (tasks, risk, cost) and a starter design system.",
+        "Use DVF (Desirability, Viability, Feasibility) to make trade-offs visible and decisions faster.",
+        "Partner with marketing on campaigns that support adoption."
+      ],
+      "skills": ["Design Thinking", "Prototyping", "GenAI", "Design Systems"],
+      "recognition": "Recognized at BCG Star Awards"
+    },
+    {
+      "company": "Vaco (onsite Google)",
+      "position": "Tech Consulting (UX)",
+      "employmentType": "Full-time",
+      "location": "Seoul, South Korea",
+      "startDate": "2021-07",
+      "endDate": "2022-12",
+      "current": false,
+      "summary": "As a UX specialist, my core job was providing UX consultancy for digital and electronic products of globally renowned developers and manufacturers, as well as those with high potential. The main goal was promoting UX best practices and nurturing the ecosystem of the digital space.",
+      "highlights": [
+        "UX consultancy for digital/electronic products.",
+        "Project coordination and stakeholder communication across development, business development, and operations."
+      ],
+      "skills": ["User Experience (UX)", "Design Thinking", "Stakeholder Management"]
+    },
+    {
+      "company": "Self-employed",
+      "position": "Independent UX Designer",
+      "employmentType": "Freelance",
+      "location": "South Korea",
+      "startDate": "2019-02",
+      "endDate": "2021-06",
+      "current": false,
+      "summary": "Worked on various projects developing mobile and web applications, spanning from defining user flows and running ideation sessions to developing design systems and creating interactive prototypes. The latest project was a consumer app for a construction company, integrating complex infrastructural systems and IoT technology to meet the needs of prospective and current tenants.",
+      "highlights": [
+        "UX/UI design for mobile and web apps.",
+        "Defined user flows, ran ideation sessions, built design systems and interactive prototypes.",
+        "Regularly participated in and facilitated UX meet-ups, bootcamps, and design contests."
+      ],
+      "skills": ["User Experience (UX)", "Design Thinking", "IoT", "Design Systems"]
+    },
+    {
+      "company": "JKMDESIGN inc.",
+      "position": "Designer / Team Manager",
+      "employmentType": "Full-time",
+      "location": "South Korea",
+      "startDate": "2016-04",
+      "endDate": "2019-02",
+      "current": false,
+      "summary": "Joined the brand design team as an intern with end-to-end experience from concept development and prototyping to production-ready delivery. Later moved to the Product Planning Team and Design Lab, focusing on research and planning — qualitative research, prototyping, and testing.",
+      "subRoles": [
+        {
+          "period": "2017-2019",
+          "title": "Product Planning Team & Design Lab",
+          "role": "Manager, Design Researcher",
+          "highlights": [
+            "Qualitative research: user research, interviewing, stakeholder mapping",
+            "Quantitative research: surveying, analytics",
+            "Design research & product planning",
+            "Production supervision"
+          ]
+        },
+        {
+          "period": "2016-2017",
+          "title": "Brand & Packaging Design Team",
+          "role": "Designer",
+          "highlights": [
+            "A to Z design: sketch, lo-fi/hi-fi prototypes, production-ready design",
+            "Design research and ideation",
+            "Package design & development"
+          ]
+        }
+      ],
+      "skills": ["User Research", "Product Planning", "Brand Design"]
+    },
+    {
+      "company": "Korea Design Membership (KDM)",
+      "position": "Designer / Member",
+      "location": "South Korea",
+      "startDate": "2015-05",
+      "endDate": "2015-12",
+      "current": false,
+      "summary": "As a member of KDM, collaborated with designers and non-designers from various domains.",
+      "highlights": [
+        "Industrial-academic project with LG Electronics.",
+        "Design workshop with Seymourpowell — served as workshop director.",
+        "Design exhibition at the 2015 Korea Design Festival."
+      ],
+      "skills": ["Design Workshops", "Industrial Design"]
+    }
+  ],
+  "skills": [
+    {
+      "category": "UX & Research",
+      "keywords": [
+        "UX Strategy",
+        "User Research",
+        "User Journey Mapping",
+        "Usability Testing",
+        "Heuristic Evaluation",
+        "Wireframing",
+        "Lo-fi / Hi-fi Prototyping",
+        "Service Design"
+      ]
+    },
+    {
+      "category": "Product & Design",
+      "keywords": [
+        "Product Design",
+        "UI Design",
+        "Design Systems",
+        "Interaction Design",
+        "Design Thinking"
+      ]
+    },
+    {
+      "category": "AI & Emerging",
+      "keywords": ["AX Design", "AI / GenAI", "Vibe-prototyping"]
+    },
+    {
+      "category": "Domains",
+      "keywords": ["E-commerce", "Enterprise / SaaS", "IoT", "Financial Institutions (FI)"]
+    },
+    {
+      "category": "Leadership & Facilitation",
+      "keywords": [
+        "Design Leadership",
+        "Creative Facilitation",
+        "Squad / Team Management",
+        "Stakeholder Communication",
+        "Coaching & Critique"
+      ]
+    },
+    {
+      "category": "Tools",
+      "keywords": ["Figma", "Adobe CC", "ProtoPie", "Jira", "Miro", "Gamma", "Cursor", "Replit"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Handong Global University",
+      "degree": "Bachelor of Arts + Bachelor of Science",
+      "area": "Visual Communication Design / Product Design",
+      "startDate": "2009",
+      "endDate": "2016",
+      "gpa": "3.2 / 4.5",
+      "activities": ["Student Mentoring", "Sign Language"],
+      "coursework": {
+        "graduationWork": "Web Service Design for future and beginning farmers",
+        "advancedStudies": ["Brand Experience Design", "Editorial Design"],
+        "fundamentals": [
+          "Graphic Design",
+          "Industrial Design",
+          "Motion Design",
+          "Typography",
+          "Color Theory"
+        ]
+      }
+    },
+    {
+      "institution": "Interaction Design Foundation (IxDF)",
+      "degree": "Member",
+      "area": "UX Design, Design Thinking, Human-Computer Interaction",
+      "startDate": "2019-10",
+      "endDate": "2022-01"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Mobile User Experience (UX) Design",
+      "issuer": "IxDF - The Interaction Design Foundation",
+      "date": "2020-08",
+      "credentialId": "64710"
+    },
+    {
+      "name": "Emotional Design",
+      "issuer": "IxDF - The Interaction Design Foundation",
+      "date": "2020-07",
+      "credentialId": "64710"
+    }
+  ],
+  "certificationsNote": "8 licenses & certifications total (IxDF); 2 detailed above.",
+  "awards": [
+    {
+      "title": "SK Securities Digital Transformation",
+      "result": "Finalist",
+      "date": "2021-07",
+      "category": "Application Idea & Design"
+    },
+    {
+      "title": "Shinhan Card Digital Transformation",
+      "result": "1st Place",
+      "date": "2020-11",
+      "category": "Application Idea & Design"
+    },
+    {
+      "title": "Samsung Monitor Design",
+      "result": "3rd Place",
+      "date": "2020-09",
+      "category": "User Research"
+    }
+  ],
+  "languages": [
+    { "language": "Korean", "fluency": "Native" },
+    { "language": "English", "fluency": "Professional working proficiency" },
+    { "language": "Russian", "fluency": "Working proficiency" },
+    { "language": "French", "fluency": "Elementary proficiency" }
+  ],
+  "volunteerAndOther": [
+    {
+      "role": "Interpreter / Coordinator",
+      "organization": "Independent",
+      "startDate": "2009-03",
+      "endDate": "2012-05",
+      "summary": "Bridged linguistic and cultural gaps for users facing new environments and facilitated seamless communication across contexts such as ERP systems, negotiations, and conferences.",
+      "languages": ["English", "Russian", "Korean"]
+    },
+    {
+      "role": "Signals, Counseling",
+      "organization": "Republic of Korea Army",
+      "startDate": "2010-08",
+      "endDate": "2012-05"
+    }
+  ],
+  "recommendations": [
+    {
+      "name": "HyunJeong Lee (LJ)",
+      "title": "Partner Success @ Aptos Labs | Ex-Google, Ex-Microsoft",
+      "date": "2023-04-25",
+      "relationship": "Worked with Yoojin on the same team",
+      "text": "Yoojin is a great collaborator and a trusted person when you need a POV on UX across various platforms from app to web. I had a great pleasure working with Yoojin to close several key deals, and Yoojin always managed to provide his work and proactively shared his view on solutions to close deals with speed and efficiency."
+    }
+  ],
+  "meta": {
+    "sources": ["Yoojin_Choi_RESUME+CV.docx", "LinkedIn profile export"],
+    "lastUpdated": "2026-07-09",
+    "notes": "LinkedIn used as authoritative source for dates, titles, and current role. Some LinkedIn sections (full 19 skills, all 8 certifications, portfolio links) were collapsed in the export and are not fully captured."
+  }
+}

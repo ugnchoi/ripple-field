@@ -5,3 +5,9 @@ dist
 .env
 .env.*
 !.env.example
+
+# Resume reference material (kept local; app only uses resume.json + headshot)
+docs/resume/*.html
+docs/resume/*_files/
+docs/resume/*.docx
+docs/resume/*.JPG
