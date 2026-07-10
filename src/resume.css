@@ -74,12 +74,46 @@ body {
   text-transform: uppercase;
   color: var(--ink);
 }
+.masthead__right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.25rem;
+}
 .masthead__contact {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 1rem;
   font-size: 0.78125rem;
   color: var(--ink-mute);
+}
+.masthead__action {
+  flex: none;
+  appearance: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.6);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.masthead__action:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.masthead__action:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .masthead__contact a {
   color: inherit;
@@ -506,5 +540,98 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* Print / Save as PDF: strip the atmospheric field and vellum treatment,
+   fall back to a clean paper document with selectable text. */
+@media print {
+  @page {
+    margin: 14mm 15mm;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  .no-print,
+  .ripple-host {
+    display: none !important;
+  }
+
+  .page {
+    display: block;
+    min-height: 0;
+    padding: 0 !important;
+    gap: 0;
+    pointer-events: auto;
+  }
+  .page > * {
+    max-width: none;
+    width: 100%;
+  }
+
+  .sheet {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  .masthead {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero {
+    padding-bottom: 1.25rem;
+    gap: 1rem;
+  }
+  .hero__tagline {
+    font-size: 2rem;
+  }
+
+  .section {
+    padding: 1.25rem 0;
+    break-inside: auto;
+  }
+  .section__head {
+    position: static !important;
+  }
+
+  /* Keep logical units from splitting across pages. */
+  .hero,
+  .masthead,
+  .xp__item,
+  .skills__group,
+  .grid2 > *,
+  .lang,
+  .quote,
+  .chip {
+    break-inside: avoid;
+  }
+  h1,
+  h2,
+  .section__title,
+  .xp__top,
+  .entry__title,
+  .award__result {
+    break-after: avoid;
+  }
+
+  /* Preserve accent/photo colors when printing backgrounds is enabled. */
+  .hero__photo,
+  .award__result,
+  .xp__recognition {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

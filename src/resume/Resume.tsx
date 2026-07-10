@@ -140,6 +140,17 @@ const AwardEntry = ({ award }: { award: Award }) => (
   </div>
 );
 
+const downloadPdf = () => {
+  const previousTitle = document.title;
+  document.title = 'Yoojin Choi — Resume';
+  const restore = () => {
+    document.title = previousTitle;
+    window.removeEventListener('afterprint', restore);
+  };
+  window.addEventListener('afterprint', restore);
+  window.print();
+};
+
 export const Resume = () => {
   const { basics } = resume;
 
@@ -147,21 +158,30 @@ export const Resume = () => {
     <div className="page">
       <header className="masthead">
         <span className="masthead__name">{basics.name}</span>
-        <nav className="masthead__contact" aria-label="Contact">
-          {basics.email ? (
-            <a href={`mailto:${basics.email}`}>{basics.email}</a>
-          ) : null}
-          {basics.phone ? (
-            <a href={`tel:${basics.phone.replace(/[^+\d]/g, '')}`}>
-              {basics.phone}
-            </a>
-          ) : null}
-          {basics.profiles.map((p) => (
-            <a key={p.url} href={p.url} target="_blank" rel="noreferrer">
-              {p.network}
-            </a>
-          ))}
-        </nav>
+        <div className="masthead__right">
+          <nav className="masthead__contact" aria-label="Contact">
+            {basics.email ? (
+              <a href={`mailto:${basics.email}`}>{basics.email}</a>
+            ) : null}
+            {basics.phone ? (
+              <a href={`tel:${basics.phone.replace(/[^+\d]/g, '')}`}>
+                {basics.phone}
+              </a>
+            ) : null}
+            {basics.profiles.map((p) => (
+              <a key={p.url} href={p.url} target="_blank" rel="noreferrer">
+                {p.network}
+              </a>
+            ))}
+          </nav>
+          <button
+            type="button"
+            className="masthead__action no-print"
+            onClick={downloadPdf}
+          >
+            Download PDF
+          </button>
+        </div>
       </header>
 
       <main className="sheet" data-ripple-safe="primary">
@@ -187,14 +207,6 @@ export const Resume = () => {
             </div>
           </div>
           <p className="hero__summary">{basics.summary}</p>
-          <p className="hero__oneliner">“{basics.oneLiner}”</p>
-          {basics.location.openToWork?.length ? (
-            <div className="hero__specialties">
-              <span className="chip">
-                Open to work · {basics.location.openToWork.join(', ')}
-              </span>
-            </div>
-          ) : null}
         </div>
 
         <Section index="01" title="Approach">
