@@ -106,6 +106,10 @@ const syncPolishViewportUniforms = (): void => {
   rippleMaterial.uniforms.uViewAspect.value = currentAspect;
 };
 
+const syncAmbientUniforms = (): void => {
+  rippleMaterial.uniforms.uAmbientScale.value = reducedMotionMq.matches ? 0 : 1;
+};
+
 const syncPolishUniforms = (): void => {
   const wants = polishToggle?.checked ?? false;
   const allowed = !reducedMotionMq.matches;
@@ -117,6 +121,7 @@ if (polishToggle) {
 }
 polishToggle?.addEventListener('change', syncPolishUniforms);
 syncPolishUniforms();
+syncAmbientUniforms();
 
 const refreshCachedSafeElement = (): void => {
   cachedSafeElement = document.querySelector<HTMLElement>('[data-ripple-safe="primary"]');
@@ -142,6 +147,11 @@ const applyPixelRatioCap = (cap: number): void => {
     renderer.setPixelRatio(next);
     lastAppliedPixelRatio = next;
   }
+  // gl_PointSize is in framebuffer pixels, so without this every dot renders at 1/dpr of its
+  // intended size — half size on a retina display, while the dot spacing that the sizes were
+  // tuned against is derived in CSS pixels. Feeding the ratio in keeps all the size constants
+  // denominated in CSS pixels and consistent across displays.
+  rippleMaterial.uniforms.uPixelRatio.value = next;
 };
 
 const handleResize = () => {
@@ -332,11 +342,15 @@ window.addEventListener('resize', handleResize);
 
 reducedMotionMq.addEventListener('change', () => {
   syncPolishUniforms();
+  syncAmbientUniforms();
   handleResize();
 });
 
 rippleHost.appendChild(renderer.domElement);
-renderer.domElement.addEventListener('pointerdown', handlePointerDown);
+// Listen on window (not just the canvas) so a click anywhere on the page — including
+// over the card content, where pointer-events re-enable for text/links — still spawns
+// a ripple. The safe-zone system already damps the visual response there.
+window.addEventListener('pointerdown', handlePointerDown);
 window.addEventListener('keydown', handleKeyDown);
 
 const demoPrimary = document.querySelector('#demo-primary');

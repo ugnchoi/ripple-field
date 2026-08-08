@@ -1,4 +1,8 @@
-import { GRID_COLS } from './constants';
+import {
+  PERF_GRID_COLS_MAX,
+  PERF_GRID_COLS_MIN,
+  TARGET_DOT_SPACING_PX,
+} from './constants';
 
 export type PerformanceDegradationTier = 'full' | 'balanced' | 'efficient';
 
@@ -67,15 +71,24 @@ export const resolvePerformanceBudget = (
 
   const caps: Record<
     PerformanceDegradationTier,
-    { cols: number; dpr: number; maxPoints: number }
+    { dpr: number; maxPoints: number }
   > = {
-    full: { cols: GRID_COLS, dpr: 2, maxPoints: 62_000 },
-    balanced: { cols: Math.round(GRID_COLS * 0.88), dpr: 1.5, maxPoints: 48_000 },
-    efficient: { cols: Math.round(GRID_COLS * 0.72), dpr: 1.25, maxPoints: 36_000 },
+    full: { dpr: 2, maxPoints: 62_000 },
+    balanced: { dpr: 1.5, maxPoints: 48_000 },
+    efficient: { dpr: 1.25, maxPoints: 36_000 },
   };
 
-  const { cols: tierCols, dpr: rendererPixelRatioCap, maxPoints } = caps[tier];
-  const gridCols = clampColsToPointBudget(tierCols, aspect, maxPoints, 96);
+  const { dpr: rendererPixelRatioCap, maxPoints } = caps[tier];
+  const targetCols = Math.min(
+    PERF_GRID_COLS_MAX,
+    Math.max(PERF_GRID_COLS_MIN, Math.round(input.cssWidth / TARGET_DOT_SPACING_PX)),
+  );
+  const gridCols = clampColsToPointBudget(
+    targetCols,
+    aspect,
+    maxPoints,
+    PERF_GRID_COLS_MIN,
+  );
 
   return {
     tier,

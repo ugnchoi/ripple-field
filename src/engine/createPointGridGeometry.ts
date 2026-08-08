@@ -1,6 +1,12 @@
 import { BufferGeometry, Float32BufferAttribute } from 'three';
 
-import { GRID_COLS, GRID_JITTER, GRID_STAGGER, PERF_GRID_COLS_MIN } from './constants';
+import {
+  GRID_COLS,
+  GRID_JITTER,
+  GRID_STAGGER,
+  PERF_GRID_COLS_MAX,
+  PERF_GRID_COLS_MIN,
+} from './constants';
 
 const fract01 = (value: number): number => value - Math.floor(value);
 
@@ -17,7 +23,7 @@ export const createPointGridGeometry = (
 ): BufferGeometry => {
   const cols = Math.max(
     PERF_GRID_COLS_MIN,
-    Math.min(GRID_COLS, Math.round(colsRequested)),
+    Math.min(PERF_GRID_COLS_MAX, Math.round(colsRequested)),
   );
   const rows = Math.max(56, Math.round((cols - 1) / aspect) + 1);
 
