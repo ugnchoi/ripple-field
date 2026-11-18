@@ -68,7 +68,7 @@ function validateMessages(raw: unknown): ChatMessage[] | null {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) {
     return Response.json(
       { error: 'Chat is not configured yet (missing GEMINI_API_KEY).' },
@@ -94,10 +94,15 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
-    model,
-  )}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const model = (process.env.GEMINI_MODEL || 'gemini-2.5-flash').trim();
+  // Vertex AI Express Mode keys start with "AQ.", while Google AI Studio keys start with "AIza".
+  const endpoint = apiKey.startsWith('AQ.')
+    ? `https://aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(
+        model,
+      )}:generateContent?key=${encodeURIComponent(apiKey)}`
+    : `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+        model,
+      )}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
   const payload = {
     systemInstruction: {
