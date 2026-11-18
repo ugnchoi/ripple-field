@@ -1,8 +1,12 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
 import { Resume } from '@/resume/Resume';
 import { Opening } from '@/experience/Opening';
 import { Intro } from '@/experience/Intro';
+import { ChatWidget } from '@/experience/ChatWidget';
 import { Playground } from '@/experience/Playground';
+import { SurfaceCanvas } from '@/experience/SurfaceCanvas';
+import type { SurfaceController } from '@/experience/types';
+import { useMotionPreference } from '@/experience/useMotionPreference';
 import { createGridSurface } from '@/grid';
 
 type PortfolioTab = 'intro' | 'resume';
@@ -12,8 +16,10 @@ const tabFromHash = (): PortfolioTab =>
 
 function PortfolioTabs() {
   const [activeTab, setActiveTab] = useState<PortfolioTab>(tabFromHash);
+  const reducedMotion = useMotionPreference();
   const introTabRef = useRef<HTMLButtonElement>(null);
   const resumeTabRef = useRef<HTMLButtonElement>(null);
+  const resumeSurfaceRef = useRef<SurfaceController | null>(null);
 
   const selectTab = useCallback((next: PortfolioTab, { scrollTop = false } = {}) => {
     setActiveTab(next);
@@ -51,6 +57,17 @@ function PortfolioTabs() {
     }
     selectTab(next);
     (next === 'intro' ? introTabRef : resumeTabRef).current?.focus();
+  };
+
+  const handleResumePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (reducedMotion || !window.innerWidth || !window.innerHeight) return;
+    const nx = Math.min(1, Math.max(0, event.clientX / window.innerWidth));
+    const ny = Math.min(1, Math.max(0, event.clientY / window.innerHeight));
+    resumeSurfaceRef.current?.hover?.(nx, ny);
+  };
+
+  const handleResumePointerLeave = () => {
+    resumeSurfaceRef.current?.leave?.();
   };
 
   return (
@@ -104,10 +121,31 @@ function PortfolioTabs() {
           />
         </div>
       ) : (
-        <div role="tabpanel" id="panel-resume" aria-labelledby="tab-resume">
-          <Resume />
+        <div
+          role="tabpanel"
+          id="panel-resume"
+          aria-labelledby="tab-resume"
+          onPointerMove={handleResumePointerMove}
+          onPointerLeave={handleResumePointerLeave}
+        >
+          <div className="ripple-host no-print" aria-hidden="true">
+            <SurfaceCanvas
+              createSurface={createGridSurface}
+              paused={reducedMotion}
+              strength={0.65}
+              ambient={true}
+              allowPageScroll
+              onController={(next) => {
+                resumeSurfaceRef.current = next;
+              }}
+            />
+          </div>
+          <section id="resume" aria-label="Resume">
+            <Resume />
+          </section>
         </div>
       )}
+      <ChatWidget />
     </>
   );
 }
