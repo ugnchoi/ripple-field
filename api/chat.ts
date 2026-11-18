@@ -95,9 +95,10 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const model = (process.env.GEMINI_MODEL || 'gemini-2.5-flash').trim();
-  // Vertex AI Express Mode keys start with "AQ.", while Google AI Studio keys start with "AIza".
-  const isVertexExpress = apiKey.startsWith('AQ.');
-  const endpoint = isVertexExpress
+  // Google AI Studio now issues "AQ." authorization keys as well as "AIza" keys;
+  // both work on generativelanguage.googleapis.com via the x-goog-api-key header.
+  const useVertex = process.env.GEMINI_PROVIDER === 'vertex';
+  const endpoint = useVertex
     ? `https://aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(
         model,
       )}:generateContent`
