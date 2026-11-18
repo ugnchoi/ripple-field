@@ -16,6 +16,9 @@ const IN_PRACTICE: readonly string[] = [
 export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps) {
   const { basics, pillars, work, awards, languages } = resume;
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [revealedChapters, setRevealedChapters] = useState<boolean[]>(() =>
+    pillars.map(() => false),
+  );
   const chapterRefs = useRef<Array<HTMLElement | null>>([]);
 
   useEffect(() => {
@@ -63,6 +66,48 @@ export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps)
       window.removeEventListener('resize', scheduleUpdate);
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const motionQuery =
+      typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)')
+        : null;
+
+    if (motionQuery?.matches || typeof IntersectionObserver === 'undefined') {
+      setRevealedChapters(pillars.map(() => true));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const idxAttr = entry.target.getAttribute('data-chapter');
+          const idx = idxAttr !== null ? Number(idxAttr) : -1;
+          if (idx >= 0) {
+            setRevealedChapters((prev) => {
+              if (prev[idx]) return prev;
+              const next = [...prev];
+              next[idx] = true;
+              return next;
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.22 },
+    );
+
+    chapterRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [pillars.length]);
 
   const activeChapter = Math.max(0, Math.min(pillars.length - 1, Math.round(scrollProgress)));
 
@@ -142,7 +187,7 @@ export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps)
                     }}
                     data-chapter={index}
                     data-active={isActive ? 'true' : 'false'}
-                    className="intro__chapter"
+                    className={`intro__chapter${revealedChapters[index] ? ' is-revealed' : ''}`}
                   >
                     <span className="intro__chapter-index">
                       {chapterNumber} / {totalChapters}

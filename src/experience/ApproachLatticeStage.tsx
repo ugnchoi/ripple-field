@@ -21,9 +21,9 @@ interface CalloutItem {
 
 const CHAPTER_CALLOUTS: readonly (readonly CalloutItem[])[] = [
   [
-    { label: 'Define', nx: -0.48, ny: 0.34, strong: true },
-    { label: 'Map', nx: 0.0, ny: -0.14 },
-    { label: 'Validate', nx: 0.48, ny: -0.32, strong: true },
+    { label: 'Define', nx: -0.46, ny: 0.14, strong: true },
+    { label: 'Map', nx: 0.0, ny: 0.0 },
+    { label: 'Validate', nx: 0.46, ny: -0.14, strong: true },
   ],
   [
     { label: 'Design', nx: 0.0, ny: -0.48 },
@@ -32,9 +32,9 @@ const CHAPTER_CALLOUTS: readonly (readonly CalloutItem[])[] = [
     { label: 'Aligned', nx: 0.0, ny: 0.04, strong: true },
   ],
   [
-    { label: 'Sketch', nx: -0.52, ny: 0.32 },
-    { label: 'Prototype', nx: 0.0, ny: -0.26 },
-    { label: 'Shipped', nx: 0.5, ny: 0.24, strong: true },
+    { label: 'Sketch', nx: -0.46, ny: 0.22 },
+    { label: 'Prototype', nx: 0.0, ny: -0.14 },
+    { label: 'Shipped', nx: 0.46, ny: 0.12, strong: true },
   ],
 ];
 
@@ -59,72 +59,47 @@ function smoothstep(edge0: number, edge1: number, x: number): number {
   return t * t * (3 - 2 * t);
 }
 
-function hash2D(x: number, y: number): number {
-  const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453123;
-  return n - Math.floor(n);
-}
-
-/**
- * Shortest distance from point (px, py) to segment (ax, ay)-(bx, by),
- * returning both distance and closest segment parameter t in [0, 1].
- */
-function distToSegment(
-  px: number,
-  py: number,
-  ax: number,
-  ay: number,
-  bx: number,
-  by: number,
-): [number, number] {
-  const abx = bx - ax;
-  const aby = by - ay;
-  const lenSq = abx * abx + aby * aby;
-  if (lenSq <= 1e-6) return [Math.hypot(px - ax, py - ay), 0];
-  const t = clamp01(((px - ax) * abx + (py - ay) * aby) / lenSq);
-  const cx = ax + abx * t;
-  const cy = ay + aby * t;
-  return [Math.hypot(px - cx, py - cy), t];
-}
-
 /**
  * Scalar field 0: UX Expert
- * Topographic contour rings + luminous dot-traced path connecting Define -> Map -> Validate.
+ * Focused elliptical ripple resonance between Define (-0.46, 0.14) and Validate (0.46, -0.14),
+ * passing through Map (0.0, 0.0).
  */
 function fieldUxExpert(nx: number, ny: number, time: number): { energy: number; accent: number } {
-  const r = Math.hypot(nx * 0.88, ny * 1.06);
-  const warp = 0.06 * Math.sin(nx * 3.4 + time * 0.35) * Math.cos(ny * 3.1 - time * 0.25);
-  const contourWave = Math.sin((r + warp) * 18.0 - time * 0.65);
-  const contourRing = Math.pow(Math.max(0, contourWave), 3) * 0.48 * Math.exp(-r * 0.9);
+  const d1 = Math.hypot(nx + 0.46, ny - 0.14);
+  const d2 = Math.hypot(nx - 0.46, ny + 0.14);
+  const ellipticSum = d1 + d2;
 
-  // Path: Define (-0.48, 0.34) -> Map (0.0, -0.14) -> Validate (0.48, -0.32)
-  const [d1, t1] = distToSegment(nx, ny, -0.48, 0.34, 0.0, -0.14);
-  const [d2, t2] = distToSegment(nx, ny, 0.0, -0.14, 0.48, -0.32);
+  // Elliptical wave-lens standing contours connecting both foci
+  const ellipticEnvelope = Math.exp(-Math.max(0, ellipticSum - 1.0) * 1.65);
+  const ellipticContours =
+    Math.pow(Math.max(0, Math.cos((ellipticSum - 1.0) * 16.0 - time * 0.75)), 2) *
+    0.46 *
+    ellipticEnvelope;
 
-  const onFirst = d1 <= d2;
-  const pathDist = onFirst ? d1 : d2;
-  const pathU = onFirst ? t1 * 0.5 : 0.5 + t2 * 0.5;
+  // Expanding ripple from Define & converging/focusing ripple into Validate
+  const waveDefine = Math.max(0, Math.sin(d1 * 22.0 - time * 2.2)) * Math.exp(-d1 * 1.85);
+  const waveValidate = Math.max(0, Math.sin(d2 * 22.0 + time * 2.2)) * Math.exp(-d2 * 1.85);
+  const focusRipples = (waveDefine + waveValidate) * 0.48;
 
-  const pathBand = Math.exp(-(pathDist * pathDist) / 0.0028);
-  const pulsePos = (time * 0.24) % 1.25;
-  const pulse = Math.exp(-Math.pow((pathU - pulsePos) / 0.14, 2));
-  const pathGlow = pathBand * (0.55 + 0.65 * pulse);
+  // Crisp focal drop cores and subtle halos at Define & Validate, plus gentle Map center
+  const defineCore = Math.exp(-(d1 * d1) / 0.0052);
+  const validateCore = Math.exp(-(d2 * d2) / 0.0056);
+  const dMap = Math.hypot(nx, ny);
+  const mapNode = Math.exp(-(dMap * dMap) / 0.0042) * 0.55;
 
-  const dDefine = Math.hypot(nx + 0.48, ny - 0.34);
-  const dMap = Math.hypot(nx - 0.0, ny + 0.14);
-  const dValidate = Math.hypot(nx - 0.48, ny + 0.32);
+  const focalHalos =
+    0.32 * Math.exp(-Math.pow((d1 - 0.11) / 0.032, 2)) +
+    0.38 * Math.exp(-Math.pow((d2 - 0.11) / 0.032, 2));
 
-  const nodeCore =
-    Math.exp(-(dDefine * dDefine) / 0.0045) +
-    Math.exp(-(dMap * dMap) / 0.0045) +
-    Math.exp(-(dValidate * dValidate) / 0.0052);
-
-  const nodeHalo =
-    0.35 * Math.exp(-Math.pow((dDefine - 0.11) / 0.03, 2)) +
-    0.35 * Math.exp(-Math.pow((dMap - 0.11) / 0.03, 2)) +
-    0.45 * Math.exp(-Math.pow((dValidate - 0.12) / 0.03, 2));
-
-  const energy = clamp01(contourRing + pathGlow * 0.85 + nodeCore * 0.9 + nodeHalo);
-  const accent = clamp01(pathBand * (0.4 + 0.6 * pulse) + Math.exp(-(dValidate * dValidate) / 0.009) * 0.9);
+  const energy = clamp01(
+    ellipticContours + focusRipples + defineCore * 0.92 + validateCore * 0.95 + mapNode + focalHalos,
+  );
+  const accent = clamp01(
+    validateCore * 0.95 +
+      defineCore * 0.65 +
+      ellipticContours * 0.7 +
+      Math.max(0, waveValidate - 0.2) * 0.85,
+  );
   return { energy, accent };
 }
 
@@ -165,47 +140,54 @@ function fieldCommunicator(nx: number, ny: number, time: number): { energy: numb
   return { energy, accent };
 }
 
+const JUST_MAKE_IT_DROPS = [
+  { x: -0.46, y: 0.22 }, // Sketch
+  { x: 0.0, y: -0.14 },  // Prototype
+  { x: 0.46, y: 0.12 },  // Shipped
+] as const;
+
 /**
  * Scalar field 2: Just Make It
- * Organic scattered noise dots morphing into structured UI dot-blocks
- * and radiating an active ripple crest (Sketch -> Prototype -> Shipped).
+ * Cascading multi-drop ripple interference across Sketch (-0.46, 0.22),
+ * Prototype (0.0, -0.14), and Shipped (0.46, 0.12) on a 4.2s 3-beat cadence.
  */
-function fieldJustMakeIt(
-  nx: number,
-  ny: number,
-  col: number,
-  row: number,
-  time: number,
-): { energy: number; accent: number } {
-  // Organic left-side sketch noise
-  const noise = hash2D(col * 0.73, row * 0.91);
-  const organicMask = smoothstep(0.15, -0.62, nx);
-  const organicSpark = organicMask * (noise > 0.62 ? (noise - 0.62) * 2.1 : 0.08);
+function fieldJustMakeIt(nx: number, ny: number, time: number): { energy: number; accent: number } {
+  const cycle = 4.2;
+  const stagger = 1.4;
+  const speed = 0.58;
+  const width = 0.24;
+  const wavelength = 0.19;
+  const twoPiOverLambda = (Math.PI * 2) / wavelength;
 
-  // Structured UI dot-blocks in center/right
-  const inFrame = Math.abs(nx - 0.14) < 0.56 && Math.abs(ny) < 0.44;
-  const frameEdge =
-    inFrame && (Math.abs(Math.abs(nx - 0.14) - 0.56) < 0.035 || Math.abs(Math.abs(ny) - 0.44) < 0.035)
-      ? 0.55
-      : 0;
+  let waveSum = 0;
+  let coreSum = 0;
+  let shippedBoost = 0;
 
-  const inHeader = nx > -0.36 && nx < 0.64 && ny > -0.38 && ny < -0.26;
-  const inSidebar = nx > -0.36 && nx < -0.12 && ny > -0.18 && ny < 0.34;
-  const inMainCard = nx > -0.04 && nx < 0.62 && ny > -0.18 && ny < 0.12;
-  const inMetricA = nx > -0.04 && nx < 0.26 && ny > 0.18 && ny < 0.36;
-  const inMetricB = nx > 0.32 && nx < 0.62 && ny > 0.18 && ny < 0.36;
+  for (let k = 0; k < JUST_MAKE_IT_DROPS.length; k++) {
+    const drop = JUST_MAKE_IT_DROPS[k];
+    const r = Math.hypot(nx - drop.x, ny - drop.y);
+    const age = (((time - k * stagger) % cycle) + cycle) % cycle;
 
-  const blockHit = inHeader || inSidebar || inMainCard || inMetricA || inMetricB ? 0.52 : 0;
-  const structureMask = smoothstep(-0.35, 0.2, nx);
+    const onset = 1 - Math.exp(-age / 0.15);
+    const decay = Math.exp(-0.45 * age) * Math.exp(-r * 0.9);
+    const front = speed * age;
+    const packet = Math.exp(-0.5 * Math.pow((r - front) / width, 2));
+    const harmonic = 0.5 + 0.5 * Math.cos(twoPiOverLambda * (r - front));
 
-  // Active ripple crest emanating from Shipped node (0.48, 0.22)
-  const dShip = Math.hypot(nx - 0.48, ny - 0.22);
-  const rippleCrest =
-    Math.max(0, Math.cos(dShip * 20.0 - time * 2.2)) * Math.exp(-dShip * 2.0) * 0.95;
-  const shipCore = Math.exp(-(dShip * dShip) / 0.008);
+    const train = onset * decay * packet * harmonic;
+    waveSum += train;
 
-  const energy = clamp01(organicSpark + (frameEdge + blockHit) * structureMask + rippleCrest + shipCore * 0.9);
-  const accent = clamp01(rippleCrest * 0.85 + shipCore * 0.95);
+    const impact = Math.exp(-age / 0.55) * 0.6 + 0.4;
+    const core = Math.exp(-(r * r) / 0.005) * impact;
+    coreSum += core;
+
+    if (k === 2) {
+      shippedBoost = core + train * 0.75;
+    }
+  }
+
+  const energy = clamp01(waveSum * 0.78 + coreSum * 0.85);
+  const accent = clamp01(shippedBoost * 0.85 + Math.max(0, waveSum - 0.35) * 0.9);
   return { energy, accent };
 }
 
@@ -319,7 +301,7 @@ export function ApproachLatticeStage({
             accent += w1 * f1.accent;
           }
           if (w2 > 0.005) {
-            const f2 = fieldJustMakeIt(nx, ny, i, j, timeSec);
+            const f2 = fieldJustMakeIt(nx, ny, timeSec);
             energy += w2 * f2.energy;
             accent += w2 * f2.accent;
           }
