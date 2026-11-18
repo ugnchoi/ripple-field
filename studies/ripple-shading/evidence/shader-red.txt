@@ -1,0 +1,46 @@
+✖ shader injection rejects missing or duplicated revision-sensitive boundaries (1.617935ms)
+✖ shader construction rejects invalid numerical coefficients (0.280891ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.415634
+
+✖ failing tests:
+
+test at studies/ripple-shading/shader.test.mjs:10:1
+✖ shader injection rejects missing or duplicated revision-sensitive boundaries (1.617935ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-shading/shader.test.mjs:12:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /shader contract/i,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at studies/ripple-shading/shader.test.mjs:18:1
+✖ shader construction rejects invalid numerical coefficients (0.280891ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-shading/shader.test.mjs:19:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /step/i,
+    operator: 'throws',
+    diff: 'simple'
+  }

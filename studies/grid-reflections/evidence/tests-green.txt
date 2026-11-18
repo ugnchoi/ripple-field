@@ -1,0 +1,14 @@
+✔ seeded fixed planar grid is reproducible with exact pitch and no animated coordinates (9.50835ms)
+✔ signed field is deterministic, born continuously and expires without residual packets (0.732691ms)
+✔ all modes retain visible positive marks and gaps for arbitrary saturation (2.370394ms)
+✔ C adds only restrained zero-luminance chroma to B (0.407584ms)
+✔ scenario tape copies cannot mutate subsequent replay (0.243318ms)
+✔ C saturated tint remains inside declared linear RGB gamut bound (0.302342ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 118.168993

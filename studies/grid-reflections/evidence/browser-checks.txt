@@ -1,0 +1,6 @@
+### Ran Playwright code
+```js
+await (async (page)=>{const result=await page.evaluate(async()=>{const a=window.gridReflections;a.setScenario("overlap");a.setTime(2.3);const states=[];for(const mode of ["A","B","C"]){a.setMode(mode);states.push(a.getState());}const before=a.getState();await new Promise(r=>setTimeout(r,150));const pause=a.getState();const ignored=a.disturb(.5,.5);a.clear();const cleared=a.getState();a.setScenario("single");a.setTime(1.1);const first=a.getState();a.setTime(1.1);const second=a.getState();a.replay();await new Promise(r=>setTimeout(r,300));a.setPaused(true);const played=a.getState();return {states,pauseFrozen:before.time===pause.time&&before.frames===pause.frames,pausedInputIgnored:ignored===false,clearRemoved:cleared.events.length===0,clearPreservedTime:cleared.time===before.time,fixedRepeat:JSON.stringify(first.events)===JSON.stringify(second.events)&&first.time===second.time,played};});console.log(JSON.stringify(result));})(page);
+```
+### Events
+- New console entries: .playwright-cli/console-2026-10-18T14-07-14-751Z.log#L5

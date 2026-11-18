@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 
 import './index.css';
 import './resume.css';
-import './bootstrapRippleField';
 import { App } from './App';
 
 const rootEl = document.getElementById('react-root');
@@ -13,6 +12,6 @@ if (!rootEl) {
 
 createRoot(rootEl).render(
   <StrictMode>
-    <App />
+    <App page={rootEl.dataset.page === 'water' ? 'water' : 'portfolio'} />
   </StrictMode>,
 );

@@ -1,0 +1,39 @@
+### Result
+{
+  "playing": false,
+  "reducedMotion": true,
+  "revision": {
+    "commit": "4841159a0fdd535e05a2623fb9db5b8d7d225d7a",
+    "files": {
+      "src/engine/constants.ts": "7635de8a88e5a7291653396651d115c6d07dd23f30beae6e0dd81117efda1a97",
+      "src/engine/rippleFieldMaterial.ts": "60abb82f4e932cb985c2f53e4e5ff632a4f86ecac9f24ef9158a496681418727",
+      "src/engine/swellSourceBuffer.ts": "6cfe9a93ea8d28e4e7a81e734911252d95509194c6275f6e49f3d1b12fb9aafb",
+      "studies/ripple-baseline/main.tsx": "4005b97f3bfc9229b4fb472950d9da8d76bf1960c2cd4402ba7edbcfe4a285e3",
+      "studies/ripple-baseline/replay.mjs": "c25105dfaf5cc1b5fd73c2731f21c83a97f420464fe5698c299c8bcb24bf190d"
+    }
+  },
+  "geometry": {
+    "hash": "2bbc56f2",
+    "hashAlgorithm": "FNV1a32 Float32 bytes, positions then seeds",
+    "cols": 65,
+    "rows": 140
+  },
+  "viewport": {
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "rawDpr": 1,
+    "appliedDpr": 1,
+    "framebufferWidth": 390,
+    "framebufferHeight": 844,
+    "budget": {
+      "tier": "efficient",
+      "gridCols": 65,
+      "rendererPixelRatioCap": 1.25,
+      "estimatedPointCount": 9100
+    }
+  }
+}
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const a=window.rippleStudy;await a.awaitReady();const s=a.exportState();return {playing:s.playing,reducedMotion:s.reducedMotion,revision:s.revision,geometry:s.geometry,viewport:s.viewport};}');
+```

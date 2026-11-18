@@ -1,0 +1,15 @@
+✔ central slope converges to analytic Gaussian derivative in world coordinates (1.470168ms)
+✔ flat and zero-source field has exact multiplier one for either light (0.934855ms)
+✔ normal-based tone agrees with independently calculated directional response (0.182032ms)
+✔ reversing planar light reverses modulation without changing its mean (0.207521ms)
+✔ extreme finite gradients stay finite and bounded; undefined math is rejected (4.916682ms)
+✔ shader injection rejects missing or duplicated revision-sensitive boundaries (4.173748ms)
+✔ shader construction rejects invalid numerical coefficients (0.77145ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 102.914999

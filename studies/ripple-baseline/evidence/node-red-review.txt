@@ -1,0 +1,54 @@
+✔ seeded streams repeat and distinct seeds diverge (3.156353ms)
+✔ event boundary includes exact time and filters only auto layer (0.467161ms)
+✔ replay is independent of earlier forward and backward seeks (2.473524ms)
+✔ capacity recycles oldest and first index on ties (0.283568ms)
+✔ automatic tape has five events per window with bounded current distributions (1.865832ms)
+✔ geometry and scripted burst are reproducible and cross capacity (29.831021ms)
+✖ inactive uniform payload is canonical while active Float32 values are retained (3.008777ms)
+✖ import rejects incompatible experiments instead of silently reconstructing (1.914315ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 6
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 194.814704
+
+✖ failing tests:
+
+test at studies/ripple-baseline/replay.test.mjs:50:1
+✖ inactive uniform payload is canonical while active Float32 values are retained (3.008777ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   9,
+  -   0,
+      0.25
+    ]
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-baseline/replay.test.mjs:54:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 9, 0.25 ],
+    expected: [ 0, 0.25 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-baseline/replay.test.mjs:59:1
+✖ import rejects incompatible experiments instead of silently reconstructing (1.914315ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-baseline/replay.test.mjs:65:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /incompatible/i,
+    operator: 'throws',
+    diff: 'simple'
+  }

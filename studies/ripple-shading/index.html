@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Ripple surface · Stage 1 shading diagnostic</title></head><body>
+<canvas id="field" aria-label="Ripple surface diagnostic. Enable manual input for pointer impulses."></canvas>
+<details id="panel" open><summary>Stage 1 · Directional tone diagnostic</summary><div class="controls">
+<p>Same disturbance, dots, size, opacity and motion. B adds directional tone from a height proxy; it does not simulate water.</p>
+<label>Transfer<select id="transfer"><option value="A">A · Exact baseline tone</option><option value="B">B · Slope-to-tone</option></select></label>
+<label>Scenario<select id="scenario"><option value="single">Single center · 1s</option><option value="pair">Simultaneous pair · 1s</option><option value="null">Null · no sources</option></select></label>
+<label class="check"><input type="checkbox" id="reverse">Reverse planar light (diagnostic)</label>
+<label>Seed<input id="seed" type="number" min="0" max="4294967295" value="47" step="1"></label>
+<label>Time, seconds<input id="time" type="number" min="0" max="6" step=".01" value="0"></label>
+<input type="range" aria-label="Seek exact time" id="scrub" min="0" max="6" step=".01" value="0">
+<div class="buttons"><button id="play">Play</button><button id="restart">Restart (hold)</button><button id="export">Export JSON</button></div>
+<label class="check"><input type="checkbox" id="manual">Enable recorded manual impulses</label><button id="clear">Clear manual tape</button>
+<output id="status" aria-live="polite"></output><output id="error" role="alert"></output>
+<p>Frozen: h=.0025 world · height=.06 · gain=.45 · light35°. Ambient, auto, polish and safe zone off.</p>
+<p id="motion"></p><p>Hold before changing transfer. Manual events persist until cleared. Collapse/hide this panel for captures. Software WebGL is appearance evidence, not hardware-performance evidence.</p>
+</div></details><script type="module" src="./main.ts"></script></body></html>

@@ -1,0 +1,96 @@
+✖ analytic full-field gradient matches independent finite differences including overlap and ambient (8.732612ms)
+✖ radial packet has signed crests and troughs with finite center (0.761131ms)
+✖ height is bounded and source onset/expiry are smooth null limits (2.340569ms)
+✖ mesh sampler bounds vertices and resolves waves on desktop and mobile (0.766881ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 116.823752
+
+✖ failing tests:
+
+test at src/water/field.test.mjs:5:1
+✖ analytic full-field gradient matches independent finite differences including overlap and ambient (8.732612ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(observedGradient>.01)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/src/water/field.test.mjs:14:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at src/water/field.test.mjs:17:1
+✖ radial packet has signed crests and troughs with finite center (0.761131ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(atRadius(PARAMS.speed*t).height>0)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/src/water/field.test.mjs:20:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at src/water/field.test.mjs:25:1
+✖ height is bounded and source onset/expiry are smooth null limits (2.340569ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Math.abs(f.height)>.02)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/src/water/field.test.mjs:33:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at src/water/field.test.mjs:38:1
+✖ mesh sampler bounds vertices and resolves waves on desktop and mobile (0.766881ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok((m.columns+1)*(m.rows+1)<=m.vertexBudget)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/src/water/field.test.mjs:40:52)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

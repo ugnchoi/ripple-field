@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="data:,">
+<title>Ripple Field · Stage 0 baseline study</title></head>
+<body><canvas id="field" aria-label="Ripple field study. Enable manual input to add recorded impulses."></canvas><div id="context"></div>
+<details id="panel" open><summary>Stage 0 · Reproducible baseline</summary>
+<div class="controls">
+<p>Isolate existing layers. No new surface algorithm. All conditions use the same seeded geometry and event tape.</p>
+<label>Condition<select id="condition"><option value="00">00 · Ambient off / Auto off</option><option value="10">10 · Ambient on / Auto off</option><option value="01">01 · Ambient off / Auto on</option><option value="11" selected>11 · Ambient on / Auto on</option></select></label>
+<label>Scenario<select id="scenario"><option value="ambient-only">No scripted impulses (ambient-only scenario)</option><option value="single">Single center · 1s</option><option value="pair">Simultaneous pair · 1s</option><option value="delayed-pair">Delayed pair · 1s / 1.5s</option><option value="burst">20-event burst · 1–4.04s</option><option value="edge">Edge impulse · 1s</option></select></label>
+<label>Geometry / tape seed<input id="seed" type="number" min="0" max="4294967295" step="1" value="47"></label>
+<label>Time, seconds<input id="time" type="number" min="0" max="30" step="0.01" value="0"></label>
+<input id="scrub" aria-label="Seek trial time" type="range" min="0" max="30" step="0.01" value="0">
+<div class="buttons"><button id="play">Play</button><button id="restart">Restart (hold)</button><button id="export">Export JSON</button><button id="import">Import JSON</button><input id="file" type="file" accept="application/json" hidden></div>
+<label class="check"><input id="resume" type="checkbox"> Unchanged Resume context</label>
+<label class="check"><input id="manual" type="checkbox"> Record manual pointer / key impulses (separate tape)</label>
+<button id="clear">Clear manual tape</button>
+<output id="status" aria-live="polite"></output>
+<p id="motion"></p><p class="caveat">Context checks readability; it is not pixel-identical production integration. Software-renderer captures are appearance evidence, not device-performance results. Collapse this panel for captures.</p>
+</div></details><script type="module" src="./main.tsx"></script></body></html>

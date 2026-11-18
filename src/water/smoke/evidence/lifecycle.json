@@ -1,0 +1,63 @@
+{
+  "pauseFrozen": true,
+  "clear": {
+    "sources": 0,
+    "paused": true,
+    "ambient": false,
+    "raf": false
+  },
+  "dispose": {
+    "disposed": true,
+    "sources": 0,
+    "raf": false
+  },
+  "recreated": {
+    "status": "ready",
+    "paused": true,
+    "geometries": 1
+  },
+  "context": {
+    "lost": "lost",
+    "restored": "ready",
+    "noLostQueue": true,
+    "timeFrozen": true,
+    "paused": true,
+    "losses": 1,
+    "restores": 1
+  },
+  "changes": [
+    {
+      "status": "ready",
+      "paused": false
+    },
+    {
+      "status": "ready",
+      "paused": false
+    },
+    {
+      "status": "ready",
+      "paused": true
+    },
+    {
+      "status": "ready",
+      "paused": true
+    },
+    {
+      "status": "ready",
+      "paused": false
+    },
+    {
+      "status": "ready",
+      "paused": true
+    },
+    {
+      "status": "lost",
+      "paused": true
+    },
+    {
+      "status": "ready",
+      "paused": true
+    }
+  ],
+  "errors": []
+}

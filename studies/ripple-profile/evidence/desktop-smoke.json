@@ -1,0 +1,49 @@
+{
+  "nullEqual": true,
+  "repeat": true,
+  "controlEqual": true,
+  "fieldDiffers": true,
+  "sourceUniformsEqual": true,
+  "pixelsDiffer": true,
+  "shaderErrors": [],
+  "linked": [
+    {
+      "profile": "P",
+      "linked": true
+    },
+    {
+      "profile": "S",
+      "linked": true
+    }
+  ],
+  "negativeTransfer": {
+    "provenance": "CPU reference of existing guards, not measured GPU output; rest seed=.5/ambient=0",
+    "samples": [
+      {
+        "field": 0,
+        "pointSizeFramebuffer": 3.2,
+        "opacity": 0.215
+      },
+      {
+        "field": -0.25,
+        "pointSizeFramebuffer": 1.6,
+        "opacity": 0.14781249999999999
+      },
+      {
+        "field": -0.5,
+        "pointSizeFramebuffer": 0.5,
+        "opacity": 0.080625
+      },
+      {
+        "field": -0.8,
+        "pointSizeFramebuffer": 0.5,
+        "opacity": 0
+      },
+      {
+        "field": -0.9803921568627451,
+        "pointSizeFramebuffer": 0.5,
+        "opacity": 0
+      }
+    ]
+  }
+}

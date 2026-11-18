@@ -1,0 +1,29 @@
+{
+  "nullEqual": true,
+  "repeat": true,
+  "controlEqual": true,
+  "playing": false,
+  "reducedMotion": true,
+  "geometry": {
+    "hash": "2bbc56f2",
+    "hashAlgorithm": "FNV1a32 Float32 bytes, positions then seeds",
+    "cols": 65,
+    "rows": 140
+  },
+  "viewport": {
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "rawDpr": 1,
+    "appliedDpr": 1,
+    "framebufferWidth": 390,
+    "framebufferHeight": 844,
+    "budget": {
+      "tier": "efficient",
+      "gridCols": 65,
+      "rendererPixelRatioCap": 1.25,
+      "estimatedPointCount": 9100
+    }
+  },
+  "shaderErrors": [],
+  "overflow": false
+}

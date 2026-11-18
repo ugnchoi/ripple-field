@@ -10,6 +10,12 @@ export default defineConfig({
     // Keep webfonts inside the generated CSS so static hosts do not need
     // to accept separate .woff2 files. The 210 KB headshot remains a PNG.
     assetsInlineLimit: 32 * 1024,
+    rollupOptions: {
+      input: {
+        portfolio: resolve(__dirname, 'index.html'),
+        water: resolve(__dirname, 'water/index.html'),
+      },
+    },
   },
   resolve: {
     alias: {

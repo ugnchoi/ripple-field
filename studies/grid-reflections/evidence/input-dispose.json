@@ -1,0 +1,269 @@
+{
+  "secondaryIgnored": true,
+  "nonprimaryIgnored": true,
+  "keyboard": {
+    "mode": "B",
+    "scenario": "single",
+    "time": 1.1,
+    "paused": false,
+    "seed": 42,
+    "params": {
+      "pitch": 6,
+      "seed": 42,
+      "wavelength": 0.24,
+      "speed": 0.48,
+      "width": 0.24,
+      "decay": 0.65,
+      "rise": 0.12,
+      "lifetime": 8,
+      "core": 0.012,
+      "cap": 0.65,
+      "diameterBase": 0.47,
+      "diameterGain": 0.22,
+      "lumaBase": 0.44,
+      "lumaGain": 0.22,
+      "chroma": 0.008,
+      "maxSources": 16
+    },
+    "events": [
+      {
+        "x": 0,
+        "y": 0,
+        "start": 1.1,
+        "strength": 0.9
+      }
+    ],
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1
+    },
+    "grid": {
+      "cols": 213,
+      "rows": 120,
+      "count": 25560,
+      "anchorHash": "c905a5ba",
+      "currentHash": "c905a5ba",
+      "positionInvariant": true,
+      "z": 0,
+      "pitch": 6
+    },
+    "frames": 39,
+    "rafPending": true,
+    "hidden": false,
+    "lost": false,
+    "disposed": false,
+    "shaderErrors": [],
+    "pointSizeRange": [
+      1,
+      1023
+    ],
+    "revision": {
+      "field.mjs": "6cf563deae70bf3bf932d3cc59db31c0ba78ac1d5b1791ff9e56d8a20c1661d9",
+      "shaders.mjs": "936ae6b1b157327685f0a5fdaac40d44ec6899448b7a544eaf448a5e4d538244",
+      "main.mjs": "716e4cad3caa3fa0c6a7c7b4c66c0115c2443cf80e8834dc0146d8100cfaf2ec",
+      "style.css": "5bc41e9c1a4a36bb825034f7f462468bdcef84306f798b17577000b5a376ef5d",
+      "index.html": "fc81410a9533bc50959a994d5fa6ba42940c76a243ee5ed0f08382399006e288",
+      "vite.config.mjs": "8bb6b5dee359f779dd11b71e80c8d25cfb5900d2e565554b733dcdeafc737d91"
+    }
+  },
+  "pointer": {
+    "mode": "B",
+    "scenario": "single",
+    "time": 1.1,
+    "paused": false,
+    "seed": 42,
+    "params": {
+      "pitch": 6,
+      "seed": 42,
+      "wavelength": 0.24,
+      "speed": 0.48,
+      "width": 0.24,
+      "decay": 0.65,
+      "rise": 0.12,
+      "lifetime": 8,
+      "core": 0.012,
+      "cap": 0.65,
+      "diameterBase": 0.47,
+      "diameterGain": 0.22,
+      "lumaBase": 0.44,
+      "lumaGain": 0.22,
+      "chroma": 0.008,
+      "maxSources": 16
+    },
+    "events": [
+      {
+        "x": -1.2222222222222223,
+        "y": 0.16666666666666663,
+        "start": 1.1,
+        "strength": 0.9
+      }
+    ],
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1
+    },
+    "grid": {
+      "cols": 213,
+      "rows": 120,
+      "count": 25560,
+      "anchorHash": "c905a5ba",
+      "currentHash": "c905a5ba",
+      "positionInvariant": true,
+      "z": 0,
+      "pitch": 6
+    },
+    "frames": 40,
+    "rafPending": true,
+    "hidden": false,
+    "lost": false,
+    "disposed": false,
+    "shaderErrors": [],
+    "pointSizeRange": [
+      1,
+      1023
+    ],
+    "revision": {
+      "field.mjs": "6cf563deae70bf3bf932d3cc59db31c0ba78ac1d5b1791ff9e56d8a20c1661d9",
+      "shaders.mjs": "936ae6b1b157327685f0a5fdaac40d44ec6899448b7a544eaf448a5e4d538244",
+      "main.mjs": "716e4cad3caa3fa0c6a7c7b4c66c0115c2443cf80e8834dc0146d8100cfaf2ec",
+      "style.css": "5bc41e9c1a4a36bb825034f7f462468bdcef84306f798b17577000b5a376ef5d",
+      "index.html": "fc81410a9533bc50959a994d5fa6ba42940c76a243ee5ed0f08382399006e288",
+      "vite.config.mjs": "8bb6b5dee359f779dd11b71e80c8d25cfb5900d2e565554b733dcdeafc737d91"
+    }
+  },
+  "before": {
+    "mode": "B",
+    "scenario": "single",
+    "time": 1.1,
+    "paused": true,
+    "seed": 42,
+    "params": {
+      "pitch": 6,
+      "seed": 42,
+      "wavelength": 0.24,
+      "speed": 0.48,
+      "width": 0.24,
+      "decay": 0.65,
+      "rise": 0.12,
+      "lifetime": 8,
+      "core": 0.012,
+      "cap": 0.65,
+      "diameterBase": 0.47,
+      "diameterGain": 0.22,
+      "lumaBase": 0.44,
+      "lumaGain": 0.22,
+      "chroma": 0.008,
+      "maxSources": 16
+    },
+    "events": [
+      {
+        "x": -1.2222222222222223,
+        "y": 0.16666666666666663,
+        "start": 1.1,
+        "strength": 0.9
+      }
+    ],
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1
+    },
+    "grid": {
+      "cols": 213,
+      "rows": 120,
+      "count": 25560,
+      "anchorHash": "c905a5ba",
+      "currentHash": "c905a5ba",
+      "positionInvariant": true,
+      "z": 0,
+      "pitch": 6
+    },
+    "frames": 40,
+    "rafPending": false,
+    "hidden": false,
+    "lost": false,
+    "disposed": false,
+    "shaderErrors": [],
+    "pointSizeRange": [
+      1,
+      1023
+    ],
+    "revision": {
+      "field.mjs": "6cf563deae70bf3bf932d3cc59db31c0ba78ac1d5b1791ff9e56d8a20c1661d9",
+      "shaders.mjs": "936ae6b1b157327685f0a5fdaac40d44ec6899448b7a544eaf448a5e4d538244",
+      "main.mjs": "716e4cad3caa3fa0c6a7c7b4c66c0115c2443cf80e8834dc0146d8100cfaf2ec",
+      "style.css": "5bc41e9c1a4a36bb825034f7f462468bdcef84306f798b17577000b5a376ef5d",
+      "index.html": "fc81410a9533bc50959a994d5fa6ba42940c76a243ee5ed0f08382399006e288",
+      "vite.config.mjs": "8bb6b5dee359f779dd11b71e80c8d25cfb5900d2e565554b733dcdeafc737d91"
+    }
+  },
+  "after": {
+    "mode": "B",
+    "scenario": "single",
+    "time": 1.1,
+    "paused": true,
+    "seed": 42,
+    "params": {
+      "pitch": 6,
+      "seed": 42,
+      "wavelength": 0.24,
+      "speed": 0.48,
+      "width": 0.24,
+      "decay": 0.65,
+      "rise": 0.12,
+      "lifetime": 8,
+      "core": 0.012,
+      "cap": 0.65,
+      "diameterBase": 0.47,
+      "diameterGain": 0.22,
+      "lumaBase": 0.44,
+      "lumaGain": 0.22,
+      "chroma": 0.008,
+      "maxSources": 16
+    },
+    "events": [
+      {
+        "x": -1.2222222222222223,
+        "y": 0.16666666666666663,
+        "start": 1.1,
+        "strength": 0.9
+      }
+    ],
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1
+    },
+    "grid": {
+      "cols": 213,
+      "rows": 120,
+      "count": 25560,
+      "anchorHash": "c905a5ba",
+      "currentHash": "c905a5ba",
+      "positionInvariant": true,
+      "z": 0,
+      "pitch": 6
+    },
+    "frames": 40,
+    "rafPending": false,
+    "hidden": false,
+    "lost": false,
+    "disposed": true,
+    "shaderErrors": [],
+    "pointSizeRange": [
+      1,
+      1023
+    ],
+    "revision": {
+      "field.mjs": "6cf563deae70bf3bf932d3cc59db31c0ba78ac1d5b1791ff9e56d8a20c1661d9",
+      "shaders.mjs": "936ae6b1b157327685f0a5fdaac40d44ec6899448b7a544eaf448a5e4d538244",
+      "main.mjs": "716e4cad3caa3fa0c6a7c7b4c66c0115c2443cf80e8834dc0146d8100cfaf2ec",
+      "style.css": "5bc41e9c1a4a36bb825034f7f462468bdcef84306f798b17577000b5a376ef5d",
+      "index.html": "fc81410a9533bc50959a994d5fa6ba42940c76a243ee5ed0f08382399006e288",
+      "vite.config.mjs": "8bb6b5dee359f779dd11b71e80c8d25cfb5900d2e565554b733dcdeafc737d91"
+    }
+  },
+  "disposedNoRaf": true
+}

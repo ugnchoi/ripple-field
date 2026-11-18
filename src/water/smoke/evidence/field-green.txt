@@ -1,0 +1,12 @@
+✔ analytic full-field gradient matches independent finite differences including overlap and ambient (3.541388ms)
+✔ radial packet has signed crests and troughs with finite center (0.468505ms)
+✔ height is bounded and source onset/expiry are smooth null limits (1.707447ms)
+✔ mesh sampler bounds vertices and resolves waves on desktop and mobile (0.935746ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 104.3987

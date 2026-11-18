@@ -1,0 +1,118 @@
+✖ central slope converges to analytic Gaussian derivative in world coordinates (8.503808ms)
+✖ flat and zero-source field has exact multiplier one for either light (1.275593ms)
+✖ normal-based tone agrees with independently calculated directional response (0.682799ms)
+✖ reversing planar light reverses modulation without changing its mean (0.566874ms)
+✖ extreme finite gradients stay finite and bounded; undefined math is rejected (0.712095ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 127.531589
+
+✖ failing tests:
+
+test at studies/ripple-shading/math.test.mjs:5:1
+✖ central slope converges to analytic Gaussian derivative in world coordinates (8.503808ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Math.abs(g[0]-(-6.065306597126334))<.002)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-shading/math.test.mjs:8:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at studies/ripple-shading/math.test.mjs:13:1
+✖ flat and zero-source field has exact multiplier one for either light (1.275593ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-shading/math.test.mjs:15:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-shading/math.test.mjs:19:1
+✖ normal-based tone agrees with independently calculated directional response (0.682799ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Math.abs(toneMultiplier([3,4],[1,0],1,.45)-expected)<1e-14)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-shading/math.test.mjs:21:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at studies/ripple-shading/math.test.mjs:25:1
+✖ reversing planar light reverses modulation without changing its mean (0.566874ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Math.abs(a+b-2)<1e-14)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-shading/math.test.mjs:28:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at studies/ripple-shading/math.test.mjs:31:1
+✖ extreme finite gradients stay finite and bounded; undefined math is rejected (0.712095ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Number.isFinite(m)&&m>=.55&&m<=1.45)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-shading/math.test.mjs:32:102)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

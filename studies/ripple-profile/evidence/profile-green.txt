@@ -1,0 +1,14 @@
+✔ signed envelope has crest and trough lobes on both sides of origin (1.509265ms)
+✔ positive mode and null envelope remain unchanged (0.553369ms)
+✔ signed contributions cancel linearly before existing scalar cap (0.225094ms)
+✔ invalid profile inputs are rejected and valid envelopes stay bounded (1.403501ms)
+✔ signed shader injection guards exact single bump assignment (0.765439ms)
+✔ negative-transfer reference records the fixed point floor and opacity cutoff (1.649185ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 123.693121

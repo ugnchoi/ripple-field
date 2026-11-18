@@ -1,0 +1,25 @@
+{
+  "sourceHashesMatch": true,
+  "filesChecked": 10,
+  "compiledPrograms": [
+    {
+      "profile": "P",
+      "linked": true,
+      "vertexHash": "26459a22",
+      "fragmentHash": "690258a0"
+    },
+    {
+      "profile": "S",
+      "linked": true,
+      "vertexHash": "a13d8d95",
+      "fragmentHash": "690258a0"
+    }
+  ],
+  "shaderErrors": [],
+  "state": {
+    "time": 2,
+    "seed": 47,
+    "scenario": "pair",
+    "profile": "S"
+  }
+}

@@ -1,0 +1,38 @@
+✔ signed envelope has crest and trough lobes on both sides of origin (1.671939ms)
+✔ positive mode and null envelope remain unchanged (2.094776ms)
+✔ signed contributions cancel linearly before existing scalar cap (0.220084ms)
+✔ invalid profile inputs are rejected and valid envelopes stay bounded (0.963461ms)
+✔ signed shader injection guards exact single bump assignment (1.060258ms)
+✖ negative-transfer reference records the fixed point floor and opacity cutoff (3.523085ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 156.432738
+
+✖ failing tests:
+
+test at studies/ripple-profile/profile.test.mjs:39:1
+✖ negative-transfer reference records the fixed point floor and opacity cutoff (3.523085ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      opacity: 0,
+  +   pointSizeFramebuffer: 0
+  -   pointSizeFramebuffer: 0.5
+    }
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-profile/profile.test.mjs:42:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { pointSizeFramebuffer: 0, opacity: 0 },
+    expected: { pointSizeFramebuffer: 0.5, opacity: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

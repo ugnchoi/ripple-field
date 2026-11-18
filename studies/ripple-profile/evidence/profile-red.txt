@@ -1,0 +1,112 @@
+✖ signed envelope has crest and trough lobes on both sides of origin (2.425355ms)
+✖ positive mode and null envelope remain unchanged (1.672129ms)
+✖ signed contributions cancel linearly before existing scalar cap (6.167624ms)
+✖ invalid profile inputs are rejected and valid envelopes stay bounded (0.432466ms)
+✖ signed shader injection guards exact single bump assignment (0.267368ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.024438
+
+✖ failing tests:
+
+test at studies/ripple-profile/profile.test.mjs:6:1
+✖ signed envelope has crest and trough lobes on both sides of origin (2.425355ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 0.4
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-profile/profile.test.mjs:7:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0.4,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-profile/profile.test.mjs:13:1
+✖ positive mode and null envelope remain unchanged (1.672129ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 0.4
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-profile/profile.test.mjs:14:47)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0.4,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-profile/profile.test.mjs:18:1
+✖ signed contributions cancel linearly before existing scalar cap (6.167624ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Math.abs(profileBump(.2,0,'S')+profileBump(.2,0,'S')-.4)<1e-14)
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-profile/profile.test.mjs:21:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at studies/ripple-profile/profile.test.mjs:24:1
+✖ invalid profile inputs are rejected and valid envelopes stay bounded (0.432466ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-profile/profile.test.mjs:26:53)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /wavelength/i,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at studies/ripple-profile/profile.test.mjs:33:1
+✖ signed shader injection guards exact single bump assignment (0.267368ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-profile/profile.test.mjs:34:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /shader contract/i,
+    operator: 'throws',
+    diff: 'simple'
+  }

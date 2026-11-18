@@ -1,0 +1,35 @@
+{
+  "time": 0.6,
+  "activeSources": 3,
+  "sources": [
+    {
+      "x": -0.036966823041439056,
+      "y": 0,
+      "start": 0,
+      "strength": 0.699999988079071
+    },
+    {
+      "x": 0,
+      "y": -0.03999999910593033,
+      "start": 0.10000000149011612,
+      "strength": 0.699999988079071
+    },
+    {
+      "x": 0.036966823041439056,
+      "y": 0,
+      "start": 0.20000000298023224,
+      "strength": 0.699999988079071
+    }
+  ],
+  "sampling": {
+    "columns": 80,
+    "rows": 172,
+    "vertexBudget": 48000,
+    "stepX": 0.0115521327014218,
+    "stepY": 0.011627906976744186,
+    "samplesPerWavelength": 12.040000000000001,
+    "pixelRatioCap": 1.5
+  },
+  "shaderErrors": [],
+  "geometryBuilds": 1
+}

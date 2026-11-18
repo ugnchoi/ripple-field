@@ -1,0 +1,203 @@
+✖ seeded streams repeat and distinct seeds diverge (9.77108ms)
+✖ event boundary includes exact time and filters only auto layer (3.159188ms)
+✖ replay is independent of earlier forward and backward seeks (1.624696ms)
+✖ capacity recycles oldest and first index on ties (2.11342ms)
+✖ automatic tape has five events per window with bounded current distributions (1.502931ms)
+✖ geometry and scripted burst are reproducible and cross capacity (1.180449ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 0
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 215.322087
+
+✖ failing tests:
+
+test at studies/ripple-baseline/replay.test.mjs:5:1
+✖ seeded streams repeat and distinct seeds diverge (9.77108ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" not to be strictly deep-equal to:
+  
+  [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-baseline/replay.test.mjs:10:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ],
+    expected: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ],
+    operator: 'notDeepStrictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-baseline/replay.test.mjs:13:1
+✖ event boundary includes exact time and filters only auto layer (3.159188ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   's'
+  - ]
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-baseline/replay.test.mjs:16:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 's' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-baseline/replay.test.mjs:21:1
+✖ replay is independent of earlier forward and backward seeks (1.624696ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   '18',
+  -   '19',
+  -   '17'
+  - ]
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-baseline/replay.test.mjs:23:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ '18', '19', '17' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-baseline/replay.test.mjs:28:1
+✖ capacity recycles oldest and first index on ties (2.11342ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'c',
+  -   'd'
+  - ]
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-baseline/replay.test.mjs:30:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'c', 'd' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-baseline/replay.test.mjs:33:1
+✖ automatic tape has five events per window with bounded current distributions (1.502931ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 15
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-baseline/replay.test.mjs:36:32)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 15,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at studies/ripple-baseline/replay.test.mjs:42:1
+✖ geometry and scripted burst are reproducible and cross capacity (1.180449ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" not to be strictly deep-equal to: []
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/studies/ripple-baseline/replay.test.mjs:45:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [],
+    operator: 'notDeepStrictEqual',
+    diff: 'simple'
+  }

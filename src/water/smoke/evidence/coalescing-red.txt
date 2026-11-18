@@ -1,0 +1,41 @@
+✔ analytic full-field gradient matches independent finite differences including overlap and ambient (9.690099ms)
+✔ radial packet has signed crests and troughs with finite center (0.50904ms)
+✔ height is bounded and source onset/expiry are smooth null limits (2.013716ms)
+✔ mesh sampler bounds vertices and resolves waves on desktop and mobile (0.922186ms)
+✔ paused and suspended inputs never queue; user pause survives suspension (1.712025ms)
+✔ clock resumes without wall-clock jumps and expires old sources (3.52795ms)
+✔ source capacity recycles oldest, strength clamps, clear preserves time/settings (0.589947ms)
+✔ disposed state is idempotent and rejects lifecycle resurrection (0.270521ms)
+✔ normalized top-left input maps to orthographic world and rejects nonfinite input (1.268392ms)
+✖ near-identical impulses coalesce with bounded strength while separated inputs remain independent (1.659484ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 9
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 197.883942
+
+✖ failing tests:
+
+test at src/water/sourceState.test.mjs:42:1
+✖ near-identical impulses coalesce with bounded strength while separated inputs remain independent (1.659484ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  16 !== 1
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/src/water/sourceState.test.mjs:45:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 16,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

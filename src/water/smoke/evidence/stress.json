@@ -1,0 +1,18 @@
+{
+  "activeSources": 16,
+  "time": 0.6,
+  "sampling": {
+    "columns": 80,
+    "rows": 172,
+    "vertexBudget": 48000,
+    "stepX": 0.0115521327014218,
+    "stepY": 0.011627906976744186,
+    "samplesPerWavelength": 12.040000000000001,
+    "pixelRatioCap": 1.5
+  },
+  "errors": [],
+  "geometryBuilds": 1,
+  "geometries": 1,
+  "programs": 1,
+  "frames": 18
+}

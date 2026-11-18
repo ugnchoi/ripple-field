@@ -1,0 +1,18 @@
+✔ analytic full-field gradient matches independent finite differences including overlap and ambient (13.980077ms)
+✔ radial packet has signed crests and troughs with finite center (0.493139ms)
+✔ height is bounded and source onset/expiry are smooth null limits (2.314534ms)
+✔ mesh sampler bounds vertices and resolves waves on desktop and mobile (5.339877ms)
+✔ paused and suspended inputs never queue; user pause survives suspension (1.502722ms)
+✔ clock resumes without wall-clock jumps and expires old sources (2.742157ms)
+✔ source capacity recycles oldest, strength clamps, clear preserves time/settings (0.661684ms)
+✔ disposed state is idempotent and rejects lifecycle resurrection (0.213591ms)
+✔ normalized top-left input maps to orthographic world and rejects nonfinite input (1.067304ms)
+✔ near-identical impulses coalesce with bounded strength while separated inputs remain independent (0.303294ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 258.745072

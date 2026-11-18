@@ -1,0 +1,116 @@
+### Result
+{
+  "single": {
+    "fieldIdentity": "3836aa7a",
+    "step": 0.0025,
+    "samples": [
+      {
+        "x": 0.15,
+        "y": 0.07,
+        "seed": 0.37
+      },
+      {
+        "x": -0.2,
+        "y": 0.13,
+        "seed": 0.61
+      }
+    ],
+    "channels": [
+      "H",
+      "dHdx",
+      "dHdy"
+    ],
+    "h": [
+      [
+        0.5290388464927673,
+        2.091693878173828,
+        0.9639739990234375
+      ],
+      [
+        0.586409330368042,
+        1.0684490203857422,
+        -0.5779504776000977
+      ]
+    ],
+    "halfH": [
+      [
+        0.5290388464927673,
+        2.092099189758301,
+        0.9642601013183594
+      ],
+      [
+        0.586409330368042,
+        1.0685443878173828,
+        -0.5778312683105469
+      ]
+    ],
+    "limitations": "Float32 GPU finite differences; same seed per offset; diagnostic points need not be lattice points. Compare h/halfH away from source centers, not a physical-height measurement."
+  },
+  "pair": {
+    "fieldIdentity": "4e7dd738",
+    "step": 0.0025,
+    "samples": [
+      {
+        "x": 0,
+        "y": 0.7,
+        "seed": 0.37
+      },
+      {
+        "x": 0.15,
+        "y": 0.6,
+        "seed": 0.61
+      }
+    ],
+    "channels": [
+      "H",
+      "dHdx",
+      "dHdy"
+    ],
+    "h": [
+      [
+        0.6206810474395752,
+        0.21593570709228516,
+        1.0472297668457031
+      ],
+      [
+        0.42716747522354126,
+        -0.24733543395996094,
+        0.6669342517852783
+      ]
+    ],
+    "halfH": [
+      [
+        0.6206810474395752,
+        0.215911865234375,
+        1.0474920272827148
+      ],
+      [
+        0.42716747522354126,
+        -0.24721622467041016,
+        0.6669402122497559
+      ]
+    ],
+    "limitations": "Float32 GPU finite differences; same seed per offset; diagnostic points need not be lattice points. Compare h/halfH away from source centers, not a physical-height measurement."
+  },
+  "errors": [],
+  "shaders": {
+    "A": {
+      "vertex": "d63febaf96f0b9556d86c97f57fedea13691e9eaefe154378110b474394b9122",
+      "fragment": "0799adff8a60b84c550c1d8529b0afe5bb130343dc8de043b191697411613540"
+    },
+    "B": {
+      "vertex": "894dd784bc5c3d517b1de039aae04e91c1cdbd9523e69e63192df4f36bc8e923",
+      "fragment": "1f9e55afd8a1bbb56b5b0c63f59ce12263878a3bf0e6c2650ac6c11e8cdea0b6"
+    }
+  }
+}
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const a=window.rippleShading;if(!a)return {missing:true,error:document.body.innerText};await a.awaitReady();a.setState({scenario:"single",transfer:"B",time:1.25});const single=a.probeSlopes();a.setState({scenario:"pair",time:2});const pair=a.probeSlopes([{x:0,y:.7,seed:.37},{x:.15,y:.6,seed:.61}]);return {single,pair,errors:a.exportState().shaderErrors,shaders:{A:a.exportState().shaders.A.sha256,B:a.exportState().shaders.B.sha256}};}');
+```
+### Page
+- Page URL: http://localhost:5175/studies/ripple-shading/
+- Page Title: Ripple surface · Stage 1 shading diagnostic
+- Console: 0 errors, 4 warnings
+### Events
+- New console entries: .playwright-cli/console-2026-10-17T14-05-30-703Z.log#L2-L4

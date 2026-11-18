@@ -1,0 +1,26 @@
+{
+  "sourceHashesMatch": true,
+  "filesChecked": 11,
+  "compiledPrograms": [
+    {
+      "transfer": "A",
+      "linked": true,
+      "vertexHash": "26459a22",
+      "fragmentHash": "690258a0"
+    },
+    {
+      "transfer": "B",
+      "linked": true,
+      "vertexHash": "ecf963ef",
+      "fragmentHash": "118db8cc"
+    }
+  ],
+  "shaderErrors": [],
+  "state": {
+    "time": 2,
+    "seed": 47,
+    "scenario": "pair",
+    "transfer": "B",
+    "reverseLight": false
+  }
+}

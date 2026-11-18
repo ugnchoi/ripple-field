@@ -1,0 +1,39 @@
+{
+  "time": 0.6,
+  "activeSources": 1,
+  "sources": [
+    {
+      "x": 0,
+      "y": 0,
+      "start": 0,
+      "strength": 1
+    }
+  ],
+  "parameters": {
+    "wavelength": 0.14,
+    "speed": 0.42,
+    "width": 0.18,
+    "amplitude": 0.014,
+    "decay": 0.75,
+    "rise": 0.1,
+    "coreRadius": 0.018,
+    "heightCap": 0.035,
+    "lifetime": 8,
+    "fadeTail": 0.5,
+    "maxSources": 16,
+    "maxDelta": 0.05,
+    "mergeRadius": 0.012,
+    "mergeWindow": 0.035
+  },
+  "sampling": {
+    "columns": 80,
+    "rows": 172,
+    "vertexBudget": 48000,
+    "stepX": 0.0115521327014218,
+    "stepY": 0.011627906976744186,
+    "samplesPerWavelength": 12.040000000000001,
+    "pixelRatioCap": 1.5
+  },
+  "shaderErrors": [],
+  "geometryBuilds": 1
+}

@@ -1,0 +1,150 @@
+### Result
+{
+  "geometry": {
+    "hash": "a85ce90b",
+    "hashAlgorithm": "FNV1a32 Float32 bytes, positions then seeds",
+    "cols": 240,
+    "rows": 150
+  },
+  "viewport": {
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "rawDpr": 1,
+    "appliedDpr": 1,
+    "framebufferWidth": 1440,
+    "framebufferHeight": 900,
+    "budget": {
+      "tier": "full",
+      "gridCols": 240,
+      "rendererPixelRatioCap": 2,
+      "estimatedPointCount": 36000
+    }
+  },
+  "state": {
+    "time": 2,
+    "seed": 47,
+    "condition": "00",
+    "scenario": "single",
+    "context": false
+  },
+  "sourceUniforms": {
+    "uStartTime": [
+      1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    "uCenterX": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "uCenterY": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "uStrength": [
+      0.8500000238418579,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "uWidth": [
+      0.07500000298023224,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "uDecay": [
+      0.9800000190734863,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const a=window.rippleStudy;a.clearManual();a.setState({seed:47,condition:"00",scenario:"single",time:2,context:false});await a.awaitReady();a.setPanelVisible(false);const s=a.exportState();return {geometry:s.geometry,viewport:s.viewport,state:s.state,sourceUniforms:Object.fromEntries(Object.entries(s.uniforms).filter(([k])=>["uStartTime","uCenterX","uCenterY","uStrength","uWidth","uDecay"].includes(k)))};}');
+```
+### Page
+- Page URL: http://localhost:5174/studies/ripple-baseline/
+- Page Title: Ripple Field · Stage 0 baseline study
+- Console: 0 errors, 3 warnings
+### Events
+- New console entries: .playwright-cli/console-2026-10-17T14-07-45-111Z.log#L4

@@ -1,0 +1,34 @@
+### Result
+{
+  "nullEqual": true,
+  "repeat": true,
+  "identity": true,
+  "playing": false,
+  "reducedMotion": true,
+  "geometry": {
+    "hash": "2bbc56f2",
+    "hashAlgorithm": "FNV1a32 Float32 bytes, positions then seeds",
+    "cols": 65,
+    "rows": 140
+  },
+  "viewport": {
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "rawDpr": 1,
+    "appliedDpr": 1,
+    "framebufferWidth": 390,
+    "framebufferHeight": 844,
+    "budget": {
+      "tier": "efficient",
+      "gridCols": 65,
+      "rendererPixelRatioCap": 1.25,
+      "estimatedPointCount": 9100
+    }
+  },
+  "errors": [],
+  "overflow": false
+}
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const a=window.rippleShading;await a.awaitReady();a.clearManual();a.setState({transfer:"A",scenario:"null",time:2});const flat=document.querySelector("canvas").toDataURL();a.setState({transfer:"B"});const nullEqual=flat===document.querySelector("canvas").toDataURL();a.setState({scenario:"pair",time:2});const b=a.exportState(),pixels=document.querySelector("canvas").toDataURL();a.seek(5);a.seek(0);a.seek(2);const repeat=pixels===document.querySelector("canvas").toDataURL();a.setState({transfer:"A"});const identity=b.fieldIdentity===a.exportState().fieldIdentity;a.setState({transfer:"B"});a.setPanelVisible(true);return {nullEqual,repeat,identity,playing:a.getState().playing,reducedMotion:a.exportState().reducedMotion,geometry:b.geometry,viewport:b.viewport,errors:b.shaderErrors,overflow:document.documentElement.scrollWidth>innerWidth};}');
+```

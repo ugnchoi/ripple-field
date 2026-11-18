@@ -1,0 +1,5 @@
+{
+ "extends":"../../tsconfig.json",
+ "compilerOptions":{"noEmit":true},
+ "include":["./main.tsx","./replay.d.mts","../../src/vite-env.d.ts"]
+}

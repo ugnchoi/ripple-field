@@ -1,0 +1,16 @@
+✔ seeded streams repeat and distinct seeds diverge (2.210349ms)
+✔ event boundary includes exact time and filters only auto layer (0.304167ms)
+✔ replay is independent of earlier forward and backward seeks (1.249404ms)
+✔ capacity recycles oldest and first index on ties (0.221617ms)
+✔ automatic tape has five events per window with bounded current distributions (1.059716ms)
+✔ geometry and scripted burst are reproducible and cross capacity (15.512219ms)
+✔ inactive uniform payload is canonical while active Float32 values are retained (0.539312ms)
+✔ import rejects incompatible experiments instead of silently reconstructing (1.168798ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.137546

@@ -1,0 +1,54 @@
+✖ opening cue is claimed once across policies sharing session storage (1.939355ms)
+✔ reduced motion skips the cue and consumes the visit (0.312584ms)
+✔ direct fragment and history return skip the opening (0.178465ms)
+✖ blocked session storage still permits one cue and suppresses subsequent claims (0.278068ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 147.832617
+
+✖ failing tests:
+
+test at src/experience/introPolicy.test.mjs:12:1
+✖ opening cue is claimed once across policies sharing session storage (1.939355ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/src/experience/introPolicy.test.mjs:14:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at src/experience/introPolicy.test.mjs:33:1
+✖ blocked session storage still permits one cue and suppresses subsequent claims (0.278068ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///home/ugnchoi/projects/ripple-field/src/experience/introPolicy.test.mjs:35:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

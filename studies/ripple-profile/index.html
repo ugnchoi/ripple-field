@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Ripple surface · Stage 2 profile diagnostic</title></head><body>
+<canvas id="field" aria-label="Ripple profile diagnostic. Enable manual input for pointer impulses."></canvas>
+<details id="panel" open><summary>Stage 2 · Signed profile diagnostic</summary><div class="controls">
+<p>P is the exact positive baseline. S multiplies the same envelope by a cosine carrier. Original point transfer stays fixed.</p>
+<label>Profile<select id="profile"><option value="P">P · Original positive swell</option><option value="S">S · Signed cosine swell</option></select></label>
+<label>Scenario<select id="scenario"><option value="single">Single center · 1s</option><option value="pair">Simultaneous pair · 1s</option><option value="null">Null · no sources</option></select></label>
+<label>Seed<input id="seed" type="number" min="0" max="4294967295" value="47" step="1"></label>
+<label>Time, seconds<input id="time" type="number" min="0" max="6" step=".01" value="0"></label>
+<input type="range" aria-label="Seek exact time" id="scrub" min="0" max="6" step=".01" value="0">
+<div class="buttons"><button id="play">Play</button><button id="restart">Restart (hold)</button><button id="export">Export JSON</button></div>
+<label class="check"><input type="checkbox" id="manual">Enable recorded manual impulses</label><button id="clear">Clear manual tape</button>
+<output id="status" aria-live="polite"></output><output id="error" role="alert"></output>
+<p>Frozen wavelength .14 world. Ambient, auto, polish, safe zone and slope shading off. Negative troughs can shrink/fade dots under existing output guards.</p>
+<p id="motion"></p><p>Analytic signed superposition, not a physical water solver. Clear manual tape before scripted captures. Collapse/hide panel for captures.</p>
+</div></details><script type="module" src="./main.ts"></script></body></html>
