@@ -56,9 +56,9 @@ export const createGridSurface=((canvas:HTMLCanvasElement,options:SurfaceOptions
   raf=0;if(model.disposed)return;
   try{
    model.advance(stamp);
-   pointerX+=(targetPointerX-pointerX)*0.08;
-   pointerY+=(targetPointerY-pointerY)*0.08;
-   pull+=(targetPull-pull)*0.04;
+   pointerX+=(targetPointerX-pointerX)*0.14;
+   pointerY+=(targetPointerY-pointerY)*0.14;
+   pull+=(targetPull-pull)*0.09;
    if(pull<=0.002&&targetPull===0)pull=0;
    draw();
    if(needsFrame())raf=requestAnimationFrame(frame);

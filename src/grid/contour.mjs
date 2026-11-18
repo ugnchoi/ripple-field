@@ -138,11 +138,18 @@ float ambFbm(vec2 x) {
  * lattice can resolve, so it would spend evaluations producing aliasing rather than shape.
  */
 vec3 ambientSurface(vec2 q, float t, float worldPerPx) {
+  // Dramatic cursor influence: warp the domain slightly away from the cursor and elevate
+  // the height field before computing contour level sets, pushing ~5-6 rings outward.
+  vec2 pDelta = q - uPointer;
+  float pd2 = dot(pDelta, pDelta);
+  float pBump = exp(-pd2 * 1.65) * uPull;
+  vec2 qWarped = q - pDelta * (0.32 * pBump);
+
   // The lattice offset is load-bearing, not decoration. ambHash folds on x*y*(x+y), which
   // collapses toward zero around the origin — and the origin is screen centre. Sampled in place
   // the field goes slack across the middle of the viewport and only develops texture at the
   // corners. Pushing the domain well away from zero keeps the gradients well distributed.
-  vec2 p = q * A_NOISE_F + vec2(137.0, 219.0);
+  vec2 p = qWarped * A_NOISE_F + vec2(137.0, 219.0);
   vec2 drift = vec2(t * 0.11, t * 0.07) * A_WARP_SP * A_TIME;
 
   // The two warp components travel in opposite directions, so cells reshape in place rather
@@ -153,6 +160,11 @@ vec3 ambientSurface(vec2 q, float t, float worldPerPx) {
   );
 
   vec3 n = ambFbmd(p + A_WARP_AMP * w);
+
+  float bumpH = pBump * 0.72;
+  vec2 bumpG = pDelta * (-3.3 * bumpH);
+  n.x += bumpH;
+  n.yz += bumpG / A_NOISE_F;
 
   // Position within a contour band, folded about its midpoint to give distance to the nearest
   // band edge. Unclamped on purpose: clamping height would flatten the outermost rings into a

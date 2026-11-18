@@ -20,11 +20,10 @@ void main(){
   raw+=clamp(source.w,0.0,1.0)*(1.0-exp(-age/${f(P.rise)}))*exp(-${f(P.decay)}*age)*fade*exp(-.5*d*d/${f(P.width**2)})*cos(6.283185307179586*d/${f(P.wavelength)});
  }
  float pd=length(p-uPointer);
- float bump=exp(-pd*pd*2.5)*uPull;
- raw+=bump*0.45;
+ float bump=exp(-pd*pd*1.65)*uPull;
  float s=smoothCap(raw/${f(P.cap)});
  float y=${f(P.lumaBase)}-${f(P.lumaGain)}*s;
- float tint=uMode>1.5?${f(P.chroma)}*smoothCap(-.65*p.x+.35*p.y+.6*s+bump*0.85):0.0;
+ float tint=uMode>1.5?${f(P.chroma)}*smoothCap(-.65*p.x+.35*p.y+.6*s+bump*1.15):0.0;
  vInk=vec3(y+tint,y+.15*tint,y-${f((.2126+.7152*.15)/.0722)}*tint);
  gl_PointSize=${f(P.pitch)}*(${f(P.diameterBase)}+(uMode>.5?${f(P.diameterGain)}*s:0.0))*uDpr;
  gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
