@@ -21,9 +21,9 @@ interface CalloutItem {
 
 const CHAPTER_CALLOUTS: readonly (readonly CalloutItem[])[] = [
   [
-    { label: 'Define', nx: -0.46, ny: 0.14, strong: true },
-    { label: 'Map', nx: 0.0, ny: 0.0 },
-    { label: 'Validate', nx: 0.46, ny: -0.14, strong: true },
+    { label: 'Define', nx: -0.62, ny: 0.16, strong: true },
+    { label: 'Map', nx: 0.0, ny: -0.44 },
+    { label: 'Validate', nx: 0.62, ny: 0.16, strong: true },
   ],
   [
     { label: 'Design', nx: 0.0, ny: -0.48 },
@@ -32,9 +32,9 @@ const CHAPTER_CALLOUTS: readonly (readonly CalloutItem[])[] = [
     { label: 'Aligned', nx: 0.0, ny: 0.04, strong: true },
   ],
   [
-    { label: 'Sketch', nx: -0.46, ny: 0.22 },
-    { label: 'Prototype', nx: 0.0, ny: -0.14 },
-    { label: 'Shipped', nx: 0.46, ny: 0.12, strong: true },
+    { label: 'Sketch', nx: -0.56, ny: 0.30 },
+    { label: 'Prototype', nx: 0.0, ny: -0.46 },
+    { label: 'Shipped', nx: 0.56, ny: 0.30, strong: true },
   ],
 ];
 
@@ -61,44 +61,44 @@ function smoothstep(edge0: number, edge1: number, x: number): number {
 
 /**
  * Scalar field 0: UX Expert
- * Focused elliptical ripple resonance between Define (-0.46, 0.14) and Validate (0.46, -0.14),
- * passing through Map (0.0, 0.0).
+ * Diverging then converging left-to-right braided river streams across [-0.9, 0.9],
+ * widening into a braided delta around Map (0.0, -0.44) and converging into Validate (0.62, 0.16).
  */
 function fieldUxExpert(nx: number, ny: number, time: number): { energy: number; accent: number } {
-  const d1 = Math.hypot(nx + 0.46, ny - 0.14);
-  const d2 = Math.hypot(nx - 0.46, ny + 0.14);
-  const ellipticSum = d1 + d2;
+  // Smooth horizontal envelope across [-0.9, 0.9]
+  const xMask = 1 - smoothstep(0.74, 0.96, Math.abs(nx));
+  if (xMask <= 0.001) return { energy: 0, accent: 0 };
 
-  // Elliptical wave-lens standing contours connecting both foci
-  const ellipticEnvelope = Math.exp(-Math.max(0, ellipticSum - 1.0) * 1.65);
-  const ellipticContours =
-    Math.pow(Math.max(0, Math.cos((ellipticSum - 1.0) * 16.0 - time * 0.75)), 2) *
-    0.46 *
-    ellipticEnvelope;
+  // Narrow at left (nx <= -0.55) and right (nx >= 0.55), broad braided delta in the middle
+  const spread = Math.exp(-nx * nx * 3.4);
 
-  // Expanding ripple from Define & converging/focusing ripple into Validate
-  const waveDefine = Math.max(0, Math.sin(d1 * 22.0 - time * 2.2)) * Math.exp(-d1 * 1.85);
-  const waveValidate = Math.max(0, Math.sin(d2 * 22.0 + time * 2.2)) * Math.exp(-d2 * 1.85);
-  const focusRipples = (waveDefine + waveValidate) * 0.48;
+  let streamSum = 0;
+  let streamMax = 0;
 
-  // Crisp focal drop cores and subtle halos at Define & Validate, plus gentle Map center
-  const defineCore = Math.exp(-(d1 * d1) / 0.0052);
-  const validateCore = Math.exp(-(d2 * d2) / 0.0056);
-  const dMap = Math.hypot(nx, ny);
-  const mapNode = Math.exp(-(dMap * dMap) / 0.0042) * 0.55;
+  for (let k = -2; k <= 2; k++) {
+    const cy = spread * k * 0.22 + 0.055 * Math.sin(nx * 5.2 - time * 1.4 + k * 1.3);
+    const w = 0.032 + 0.018 * spread;
+    const dy = ny - cy;
+    const profile = Math.exp(-(dy * dy) / (w * w));
+    const flow = 0.55 + 0.45 * Math.sin(nx * 13.0 - time * 3.4 + k * 0.9);
+    const contribution = profile * flow;
+    streamSum += contribution;
+    if (contribution > streamMax) streamMax = contribution;
+  }
 
-  const focalHalos =
-    0.32 * Math.exp(-Math.pow((d1 - 0.11) / 0.032, 2)) +
-    0.38 * Math.exp(-Math.pow((d2 - 0.11) / 0.032, 2));
+  // Subtle ambient ripple eddies around the braided center
+  const eddies =
+    Math.max(0, Math.sin(nx * 9.5 - time * 2.2 + ny * 7.5)) *
+    0.18 *
+    spread *
+    Math.exp(-ny * ny * 3.2);
 
-  const energy = clamp01(
-    ellipticContours + focusRipples + defineCore * 0.92 + validateCore * 0.95 + mapNode + focalHalos,
-  );
+  // Brighten the convergent exit stream on the right (nx > 0.35) with slate accent
+  const exitBoost = smoothstep(0.35, 0.78, nx);
+
+  const energy = clamp01((streamMax * 0.78 + streamSum * 0.24 + eddies) * xMask);
   const accent = clamp01(
-    validateCore * 0.95 +
-      defineCore * 0.65 +
-      ellipticContours * 0.7 +
-      Math.max(0, waveValidate - 0.2) * 0.85,
+    (streamMax * (0.18 + 0.82 * exitBoost) + exitBoost * streamSum * 0.28) * xMask,
   );
   return { energy, accent };
 }
@@ -140,54 +140,75 @@ function fieldCommunicator(nx: number, ny: number, time: number): { energy: numb
   return { energy, accent };
 }
 
-const JUST_MAKE_IT_DROPS = [
-  { x: -0.46, y: 0.22 }, // Sketch
-  { x: 0.0, y: -0.14 },  // Prototype
-  { x: 0.46, y: 0.12 },  // Shipped
-] as const;
-
 /**
  * Scalar field 2: Just Make It
- * Cascading multi-drop ripple interference across Sketch (-0.46, 0.22),
- * Prototype (0.0, -0.14), and Shipped (0.46, 0.12) on a 4.2s 3-beat cadence.
+ * Looping 6.0s cycle: abstract blurred surface -> sharpens into a seeded random organic shape ->
+ * disperses with outward concentric ripples and drifting wavelets -> fades back to blurred surface.
  */
 function fieldJustMakeIt(nx: number, ny: number, time: number): { energy: number; accent: number } {
-  const cycle = 4.2;
-  const stagger = 1.4;
-  const speed = 0.58;
-  const width = 0.24;
-  const wavelength = 0.19;
-  const twoPiOverLambda = (Math.PI * 2) / wavelength;
+  const CYCLE = 6.0;
+  const cycleIdx = Math.floor(time / CYCLE);
+  const p = (((time % CYCLE) + CYCLE) % CYCLE) / CYCLE;
 
-  let waveSum = 0;
-  let coreSum = 0;
-  let shippedBoost = 0;
+  const r = Math.hypot(nx, ny);
+  const theta = Math.atan2(ny, nx);
 
-  for (let k = 0; k < JUST_MAKE_IT_DROPS.length; k++) {
-    const drop = JUST_MAKE_IT_DROPS[k];
-    const r = Math.hypot(nx - drop.x, ny - drop.y);
-    const age = (((time - k * stagger) % cycle) + cycle) % cycle;
+  // Deterministic harmonic seeds per cycle
+  const s1 = cycleIdx * 2.39996 + 0.7;
+  const s2 = cycleIdx * 3.713 + 1.4;
+  const s3 = cycleIdx * 5.137 + 2.1;
 
-    const onset = 1 - Math.exp(-age / 0.15);
-    const decay = Math.exp(-0.45 * age) * Math.exp(-r * 0.9);
-    const front = speed * age;
-    const packet = Math.exp(-0.5 * Math.pow((r - front) / width, 2));
-    const harmonic = 0.5 + 0.5 * Math.cos(twoPiOverLambda * (r - front));
+  const baseR =
+    0.36 +
+    0.12 * Math.sin(2 * theta + s1) +
+    0.09 * Math.cos(3 * theta - s2) +
+    0.06 * Math.sin(5 * theta + s3);
 
-    const train = onset * decay * packet * harmonic;
-    waveSum += train;
+  // Phase weights:
+  // 1. Blurred surface near p = 0 / 1
+  // 2. Sharpens into random shape around p = 0.25..0.52
+  // 3. Disperses outward around p = 0.52..0.82, then fades back to blurred surface (0.82..1.0)
+  const sharpness = smoothstep(0.08, 0.26, p) * (1 - smoothstep(0.50, 0.62, p));
+  const disperseProgress = smoothstep(0.50, 0.82, p);
+  const disperseEnvelope = smoothstep(0.48, 0.56, p) * (1 - smoothstep(0.78, 0.94, p));
+  const blurAmount = clamp01(1 - sharpness * 0.9 - disperseEnvelope * 0.55);
 
-    const impact = Math.exp(-age / 0.55) * 0.6 + 0.4;
-    const core = Math.exp(-(r * r) / 0.005) * impact;
-    coreSum += core;
+  // Phase 1: Broad, soft low-frequency surface swell with gentle organic drift
+  const drift =
+    0.12 * Math.sin(nx * 2.8 + time * 0.75) * Math.cos(ny * 2.6 - time * 0.65) +
+    0.06 * Math.cos((nx - ny) * 2.1 + time * 0.5);
+  const blurredSurface = clamp01(Math.exp(-r * r * 1.6) * (0.58 + drift));
 
-    if (k === 2) {
-      shippedBoost = core + train * 0.75;
-    }
-  }
+  // Phase 2: Crisp random shape boundary with tight edge = 0.025
+  const edge = 0.025 + 0.18 * (1 - sharpness);
+  const shapeFill = 1 - smoothstep(-edge, edge, r - baseR);
+  const crispRim = Math.exp(-Math.pow((r - baseR) / 0.036, 2)) * sharpness;
 
-  const energy = clamp01(waveSum * 0.78 + coreSum * 0.85);
-  const accent = clamp01(shippedBoost * 0.85 + Math.max(0, waveSum - 0.35) * 0.9);
+  // Phase 3: Outward expansion, concentric dispersion ripples, and drifting wavelets
+  const expandedR = baseR + disperseProgress * 0.45;
+  const dispersionRipple = Math.max(0, Math.sin((r - disperseProgress * 0.8) * 24.0));
+  const wavelets = 0.5 + 0.5 * Math.sin(theta * 6.0 + r * 10.0 - time * 2.6);
+  const dispersedShell =
+    Math.exp(-Math.pow((r - expandedR) / 0.14, 2)) *
+    (0.42 + 0.58 * dispersionRipple) *
+    (0.35 + 0.65 * wavelets);
+  const dispersedCore =
+    (1 - smoothstep(-0.08, 0.12, r - expandedR)) *
+    0.45 *
+    (1 - disperseProgress * 0.85) *
+    (0.5 + 0.5 * dispersionRipple);
+
+  const energy = clamp01(
+    blurredSurface * blurAmount * 0.75 +
+      shapeFill * sharpness * 0.88 +
+      crispRim * 0.35 +
+      (dispersedShell + dispersedCore) * disperseEnvelope * 0.95,
+  );
+  const accent = clamp01(
+    crispRim * 0.95 +
+      shapeFill * sharpness * 0.22 +
+      dispersedShell * disperseEnvelope * 0.85,
+  );
   return { energy, accent };
 }
 
