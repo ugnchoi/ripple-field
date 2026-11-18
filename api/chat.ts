@@ -96,13 +96,14 @@ export async function POST(request: Request): Promise<Response> {
 
   const model = (process.env.GEMINI_MODEL || 'gemini-2.5-flash').trim();
   // Vertex AI Express Mode keys start with "AQ.", while Google AI Studio keys start with "AIza".
-  const endpoint = apiKey.startsWith('AQ.')
+  const isVertexExpress = apiKey.startsWith('AQ.');
+  const endpoint = isVertexExpress
     ? `https://aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(
         model,
-      )}:generateContent?key=${encodeURIComponent(apiKey)}`
+      )}:generateContent`
     : `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
         model,
-      )}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      )}:generateContent`;
 
   const payload = {
     systemInstruction: {
@@ -122,10 +123,14 @@ export async function POST(request: Request): Promise<Response> {
   try {
     upstream = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
       body: JSON.stringify(payload),
     });
-  } catch {
+  } catch (err) {
+    console.error('Gemini fetch failed:', err);
     return Response.json(
       { error: 'Unable to reach the assistant service right now.' },
       { status: 502 },
@@ -133,8 +138,21 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   if (!upstream.ok) {
+    const rawError = await upstream.text().catch(() => '');
+    let detail = '';
+    try {
+      const parsed = JSON.parse(rawError) as { error?: { message?: string } };
+      detail = parsed?.error?.message ?? '';
+    } catch {
+      detail = rawError.slice(0, 200);
+    }
+    console.error('Gemini upstream error:', upstream.status, detail || rawError.slice(0, 300));
     return Response.json(
-      { error: 'The assistant service returned an error.' },
+      {
+        error: detail
+          ? `The assistant service returned an error (${upstream.status}): ${detail}`
+          : `The assistant service returned an error (${upstream.status}).`,
+      },
       { status: 502 },
     );
   }
