@@ -49,19 +49,136 @@ const resumeData = require('../docs/resume/resume.json') as Record<string, unkno
 
 const MAX_MESSAGES = 12;
 const MAX_CONTENT_LENGTH = 1000;
-const OLLAMA_TIMEOUT_MS = 25000;
+const OLLAMA_TIMEOUT_MS = 45000;
 const GEMINI_FALLBACK_MODELS = ['gemini-2.5-flash-lite', 'gemini-3.8-flash'];
+
+function formatCompactResume(resume: Record<string, unknown>): string {
+  const r = resume as {
+    basics?: {
+      name?: string;
+      title?: string;
+      specialties?: string[];
+      tagline?: string;
+      summary?: string;
+      location?: { current?: string; openToWork?: string[] };
+      email?: string;
+      phone?: string;
+      profiles?: Array<{ network?: string; url?: string }>;
+    };
+    pillars?: Array<{ title?: string; description?: string }>;
+    work?: Array<{
+      company?: string;
+      position?: string;
+      team?: string;
+      location?: string;
+      startDate?: string;
+      endDate?: string | null;
+      summary?: string;
+      highlights?: string[];
+      recognition?: string;
+    }>;
+    skills?: Array<{ category?: string; keywords?: string[] }>;
+    education?: Array<{ institution?: string; degree?: string; area?: string; startDate?: string; endDate?: string }>;
+    certifications?: Array<{ name?: string; issuer?: string; date?: string }>;
+    awards?: Array<{ title?: string; result?: string; date?: string; category?: string }>;
+    languages?: Array<{ language?: string; fluency?: string }>;
+    volunteerAndOther?: Array<{ role?: string; organization?: string; startDate?: string; endDate?: string; summary?: string }>;
+    recommendations?: Array<{ name?: string; title?: string; text?: string }>;
+  };
+
+  const lines: string[] = [];
+  const b = r.basics;
+  if (b) {
+    lines.push(`${b.name ?? 'Yoojin Choi'} — ${b.title ?? ''}`);
+    if (b.specialties?.length) lines.push(`Specialties: ${b.specialties.join(', ')}`);
+    if (b.tagline) lines.push(`Tagline: ${b.tagline}`);
+    if (b.summary) lines.push(`Summary: ${b.summary}`);
+    if (b.location) {
+      lines.push(
+        `Location: ${b.location.current ?? ''}; Open to: ${(b.location.openToWork ?? []).join(', ')}`,
+      );
+    }
+    const linkedin = b.profiles?.find((p) => p.url)?.url ?? '';
+    lines.push(`Contact: ${b.email ?? ''} | ${b.phone ?? ''} | ${linkedin}`);
+  }
+
+  if (r.pillars?.length) {
+    lines.push('', 'Approach:');
+    for (const p of r.pillars) {
+      lines.push(`- ${p.title}: ${p.description}`);
+    }
+  }
+
+  if (r.work?.length) {
+    lines.push('', 'Experience:');
+    for (const w of r.work) {
+      const period = `${w.startDate ?? ''}–${w.endDate ?? 'Present'}`;
+      const team = w.team ? ` (${w.team})` : '';
+      lines.push(`- ${w.position} at ${w.company}${team} [${period}, ${w.location ?? ''}]`);
+      if (w.summary) lines.push(`  ${w.summary}`);
+      if (w.highlights?.length) lines.push(`  Highlights: ${w.highlights.join(' ')}`);
+      if (w.recognition) lines.push(`  Recognition: ${w.recognition}`);
+    }
+  }
+
+  if (r.skills?.length) {
+    lines.push('', 'Skills:');
+    for (const s of r.skills) {
+      lines.push(`- ${s.category}: ${(s.keywords ?? []).join(', ')}`);
+    }
+  }
+
+  if (r.education?.length) {
+    lines.push('', 'Education:');
+    for (const e of r.education) {
+      lines.push(`- ${e.institution}: ${e.degree} in ${e.area} (${e.startDate}–${e.endDate})`);
+    }
+  }
+
+  if (r.awards?.length) {
+    lines.push('', 'Awards:');
+    for (const a of r.awards) {
+      lines.push(`- ${a.title}: ${a.result} (${a.date}, ${a.category})`);
+    }
+  }
+
+  if (r.certifications?.length) {
+    lines.push(
+      '',
+      `Certifications (8 total IxDF): ${r.certifications.map((c) => `${c.name} (${c.date})`).join('; ')}`,
+    );
+  }
+
+  if (r.languages?.length) {
+    lines.push('', `Languages: ${r.languages.map((l) => `${l.language} (${l.fluency})`).join(', ')}`);
+  }
+
+  if (r.volunteerAndOther?.length) {
+    lines.push('', 'Other:');
+    for (const v of r.volunteerAndOther) {
+      lines.push(`- ${v.role}, ${v.organization} (${v.startDate}–${v.endDate})${v.summary ? `: ${v.summary}` : ''}`);
+    }
+  }
+
+  if (r.recommendations?.length) {
+    lines.push('', 'Recommendation:');
+    for (const rec of r.recommendations) {
+      lines.push(`- ${rec.name} (${rec.title}): "${rec.text}"`);
+    }
+  }
+
+  return lines.join('\n');
+}
 
 function buildSystemInstruction(resume: Record<string, unknown>): string {
   return [
     "You are Yoojin Choi's portfolio and resume assistant.",
     'Answer concisely, warmly, and clearly in a helpful tone.',
-    'Use ONLY facts present in the resume JSON below.',
+    'Use ONLY facts present in the resume below.',
     'Never invent projects, companies, metrics, skills, or dates.',
-    'If asked something not covered by the resume JSON, say so honestly and offer to reach Yoojin directly at ugn.choi@gmail.com or https://www.linkedin.com/in/ugnchoi.',
+    'If asked something not covered below, say so honestly and offer to reach Yoojin directly at ugn.choi@gmail.com or https://www.linkedin.com/in/ugnchoi.',
     '',
-    'Resume JSON:',
-    JSON.stringify(resume),
+    formatCompactResume(resume),
   ].join('\n');
 }
 
@@ -134,7 +251,7 @@ async function tryOllama(
         keep_alive: '30m',
         options: {
           num_ctx: 4096,
-          num_predict: 256,
+          num_predict: 200,
         },
         messages: [{ role: 'system', content: systemPrompt }, ...messages],
       }),
