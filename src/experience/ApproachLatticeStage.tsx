@@ -112,94 +112,154 @@ function sdTriangle(
   return -Math.sqrt(minD) * Math.sign(minC);
 }
 
-/** 0: Paper plane (tilted upward-right dart with fold notch) */
+/** 0: Paper plane (iconic 3/4 perspective dart with separated wings & lower keel) */
 function sdfPaperPlane(nx: number, ny: number): number {
-  const cos = 0.92;
-  const sin = 0.39;
-  const x = nx * cos + ny * sin;
-  const y = -nx * sin + ny * cos;
-  const topWing = sdTriangle(x, y, 0.56, 0.0, -0.48, -0.38, -0.30, 0.02);
-  const bottomWing = sdTriangle(x, y, 0.56, 0.0, -0.30, 0.02, -0.44, 0.36);
-  const keel = sdTriangle(x, y, 0.56, 0.0, -0.30, 0.02, -0.18, 0.22);
-  const plane = Math.min(topWing, bottomWing, keel);
-  // Subtle center fold groove for paper-plane definition
-  const crease = sdCapsule(x, y, 0.42, 0.0, -0.32, 0.02, 0.018);
-  return Math.max(plane, -crease * 0.5);
+  const x = nx;
+  const y = ny;
+  // Upper-left wing
+  const upperWing = sdTriangle(x, y, 0.52, -0.26, -0.50, -0.02, -0.12, 0.12);
+  // Lower-right wing
+  const lowerWing = sdTriangle(x, y, 0.52, -0.26, -0.02, 0.18, 0.22, 0.44);
+  // Lower folded keel fin
+  const keel = sdTriangle(x, y, -0.04, 0.16, -0.18, 0.36, 0.06, 0.24);
+  // Carve a crisp fold gap between the two wings so the 3D fold reads clearly
+  const foldGap = sdCapsule(x, y, 0.42, -0.20, -0.12, 0.15, 0.028);
+  const wings = Math.max(Math.min(upperWing, lowerWing), -foldGap);
+  return Math.min(wings, keel);
 }
 
-/** 1: Balloon dog toy */
-function sdfBalloonDog(nx: number, ny: number): number {
+/** 1: Alpaca silhouette in profile (tall neck, perked ears, fluffy fleece torso, 4 legs, short tail) */
+function sdfAlpaca(nx: number, ny: number): number {
   const x = nx;
   const y = ny + 0.04;
-  // Snout + head
-  const snout = sdCapsule(x, y, -0.46, -0.26, -0.26, -0.28, 0.11);
-  // Two tall balloon ears
-  const ear1 = sdCapsule(x, y, -0.25, -0.32, -0.29, -0.56, 0.085);
-  const ear2 = sdCapsule(x, y, -0.17, -0.30, -0.13, -0.54, 0.08);
-  // Neck + torso
-  const neck = sdCapsule(x, y, -0.22, -0.24, -0.22, 0.04, 0.095);
-  const torso = sdCapsule(x, y, -0.22, 0.04, 0.26, 0.04, 0.11);
-  // Front & back legs
-  const frontLeg = sdCapsule(x, y, -0.22, 0.06, -0.26, 0.40, 0.088);
-  const backLeg = sdCapsule(x, y, 0.26, 0.06, 0.30, 0.40, 0.088);
-  // Upright tail + pom-pom tip
-  const tail = sdCapsule(x, y, 0.26, 0.02, 0.42, -0.26, 0.075);
-  const tailTip = sdCircle(x, y, 0.44, -0.31, 0.09);
+  // Head & short muzzle facing left
+  const head = sdCircle(x, y, -0.20, -0.34, 0.082);
+  const muzzle = sdCapsule(x, y, -0.20, -0.34, -0.34, -0.32, 0.052);
+  // Two perked-up alpaca ears
+  const ear1 = sdCapsule(x, y, -0.19, -0.40, -0.22, -0.55, 0.030);
+  const ear2 = sdCapsule(x, y, -0.13, -0.39, -0.10, -0.53, 0.028);
+  // Long upright neck
+  const neck = sdCapsule(x, y, -0.18, -0.30, -0.14, 0.04, 0.082);
+  // Fluffy fleece torso
+  const torso = sdCapsule(x, y, -0.14, 0.06, 0.24, 0.08, 0.135);
+  const fleece = sdCircle(x, y, 0.05, 0.01, 0.135);
+  // Four slender legs
+  const legFL = sdCapsule(x, y, -0.16, 0.12, -0.18, 0.44, 0.042);
+  const legFR = sdCapsule(x, y, -0.07, 0.12, -0.06, 0.42, 0.040);
+  const legBL = sdCapsule(x, y, 0.17, 0.12, 0.16, 0.42, 0.040);
+  const legBR = sdCapsule(x, y, 0.26, 0.12, 0.28, 0.44, 0.042);
+  // Short fluffy tail
+  const tail = sdCapsule(x, y, 0.28, 0.04, 0.39, -0.02, 0.052);
 
-  let d = smin(snout, ear1, 0.04);
-  d = smin(d, ear2, 0.04);
+  let d = smin(head, muzzle, 0.03);
+  d = smin(d, ear1, 0.02);
+  d = smin(d, ear2, 0.02);
   d = smin(d, neck, 0.04);
-  d = smin(d, torso, 0.04);
-  d = smin(d, frontLeg, 0.04);
-  d = smin(d, backLeg, 0.04);
-  d = smin(d, tail, 0.04);
-  d = smin(d, tailTip, 0.03);
+  d = smin(d, torso, 0.05);
+  d = smin(d, fleece, 0.05);
+  d = smin(d, legFL, 0.025);
+  d = smin(d, legFR, 0.025);
+  d = smin(d, legBL, 0.025);
+  d = smin(d, legBR, 0.025);
+  d = smin(d, tail, 0.03);
   return d;
 }
 
-/** 2: Flying dove silhouette */
+/** 2: Flying dove silhouette (graceful profile with distinct swept wings & fanned tail) */
 function sdfDove(nx: number, ny: number): number {
   const x = nx;
-  const y = ny + 0.04;
-  // Curved body & breast
-  const body = sdCapsule(x, y, -0.16, 0.08, 0.22, 0.16, 0.12);
-  // Head & beak pointing left-upward
-  const head = sdCircle(x, y, -0.26, -0.06, 0.095);
-  const beak = sdTriangle(x, y, -0.33, -0.09, -0.45, -0.05, -0.33, -0.02);
-  // Swept-up wings (primary & secondary)
-  const wingFront = sdTriangle(x, y, -0.10, 0.06, 0.18, -0.52, 0.18, 0.04);
-  const wingBack = sdTriangle(x, y, -0.02, 0.02, 0.38, -0.42, 0.22, 0.10);
-  // Fanned tail
-  const tail = sdTriangle(x, y, 0.18, 0.14, 0.50, 0.08, 0.44, 0.34);
+  const y = ny + 0.05;
+  // Curved breast & slender body tapering toward tail
+  const breast = sdCapsule(x, y, -0.22, -0.04, -0.04, 0.12, 0.095);
+  const body = sdCapsule(x, y, -0.04, 0.12, 0.24, 0.18, 0.08);
+  // Neck, head & pointed beak facing left
+  const neck = sdCapsule(x, y, -0.22, -0.04, -0.28, -0.18, 0.062);
+  const head = sdCircle(x, y, -0.29, -0.20, 0.072);
+  const beak = sdTriangle(x, y, -0.35, -0.23, -0.48, -0.19, -0.35, -0.16);
+  // Two distinct swept-up wings with a clear V-notch between them
+  const wingFront = sdTriangle(x, y, -0.10, 0.04, 0.04, -0.54, 0.12, -0.04);
+  const wingTipFront = sdCapsule(x, y, 0.02, -0.44, 0.06, -0.54, 0.03);
+  const wingBack = sdTriangle(x, y, 0.04, 0.04, 0.38, -0.42, 0.22, 0.08);
+  const wingTipBack = sdCapsule(x, y, 0.30, -0.32, 0.40, -0.42, 0.03);
+  // Fanned tail feathers
+  const tail = sdTriangle(x, y, 0.20, 0.16, 0.54, 0.12, 0.46, 0.38);
 
-  let d = smin(body, head, 0.06);
+  let d = smin(breast, body, 0.05);
+  d = smin(d, neck, 0.04);
+  d = smin(d, head, 0.03);
   d = Math.min(d, beak);
-  d = smin(d, wingFront, 0.05);
-  d = smin(d, wingBack, 0.05);
-  d = smin(d, tail, 0.04);
+  d = smin(d, Math.min(wingFront, wingTipFront), 0.035);
+  d = smin(d, Math.min(wingBack, wingTipBack), 0.035);
+  d = smin(d, tail, 0.035);
   return d;
 }
 
-/** 3: Fingers shaping heart (two curved finger-and-thumb arcs framing a heart) */
-function sdfFingerHeart(nx: number, ny: number): number {
-  // Center heart (flipped y so top lobes are at -ny)
-  const hx = Math.abs(nx) * 1.45;
-  const hy = (-ny + 0.06) * 1.45;
-  let heart: number;
-  if (hy + hx > 0.42) {
-    heart = Math.hypot(hx - 0.21, hy - 0.21) - 0.15;
-  } else {
-    const a = Math.hypot(hx, hy - 0.42);
-    const b = Math.hypot(hx - 0.5 * Math.max(hx + hy, 0), hy - 0.5 * Math.max(hx + hy, 0));
-    heart = Math.min(a, b) * Math.sign(hx - hy) * 0.65;
+/** 3: Classic heart silhouette (Inigo Quilez exact 2D heart SDF) */
+function sdfHeart(nx: number, ny: number): number {
+  const px = Math.abs(nx) * 1.15;
+  const py = (-ny + 0.44) * 1.15;
+  if (py + px > 1.0) {
+    const dx = px - 0.25;
+    const dy = py - 0.75;
+    return (Math.hypot(dx, dy) - Math.SQRT2 / 4.0) / 1.15;
   }
-  // Symmetric finger/hand arcs cradling the lower sides of the heart
-  const ax = Math.abs(nx);
-  const indexFinger = sdCapsule(ax, ny, 0.10, -0.26, 0.38, -0.02, 0.055);
-  const thumbArc = sdCapsule(ax, ny, 0.38, -0.02, 0.14, 0.34, 0.065);
-  const wrist = sdCapsule(ax, ny, 0.14, 0.34, 0.22, 0.52, 0.075);
-  const hands = smin(smin(indexFinger, thumbArc, 0.05), wrist, 0.05);
-  return Math.min(heart * 0.72, hands);
+  const d1x = px;
+  const d1y = py - 1.0;
+  const m = 0.5 * Math.max(px + py, 0.0);
+  const d2x = px - m;
+  const d2y = py - m;
+  const distSq = Math.min(d1x * d1x + d1y * d1y, d2x * d2x + d2y * d2y);
+  return (Math.sqrt(distSq) * Math.sign(px - py)) / 1.15;
+}
+
+const THANK_YOU_STROKES: ReadonlyArray<readonly [number, number, number, number]> = [
+  // Row 1: T H A N K (y from -0.26 to -0.04)
+  // T
+  [-0.58, -0.26, -0.44, -0.26],
+  [-0.51, -0.26, -0.51, -0.04],
+  // H
+  [-0.36, -0.26, -0.36, -0.04],
+  [-0.24, -0.26, -0.24, -0.04],
+  [-0.36, -0.15, -0.24, -0.15],
+  // A
+  [-0.14, -0.04, -0.08, -0.26],
+  [-0.08, -0.26, -0.02, -0.04],
+  [-0.12, -0.12, -0.04, -0.12],
+  // N
+  [0.06, -0.04, 0.06, -0.26],
+  [0.06, -0.26, 0.18, -0.04],
+  [0.18, -0.04, 0.18, -0.26],
+  // K
+  [0.27, -0.26, 0.27, -0.04],
+  [0.39, -0.26, 0.27, -0.15],
+  [0.27, -0.15, 0.40, -0.04],
+
+  // Row 2: Y O U (y from 0.06 to 0.28)
+  // Y
+  [-0.36, 0.06, -0.29, 0.17],
+  [-0.22, 0.06, -0.29, 0.17],
+  [-0.29, 0.17, -0.29, 0.28],
+  // O
+  [-0.10, 0.06, 0.02, 0.06],
+  [0.02, 0.06, 0.02, 0.28],
+  [0.02, 0.28, -0.10, 0.28],
+  [-0.10, 0.28, -0.10, 0.06],
+  // U
+  [0.12, 0.06, 0.12, 0.28],
+  [0.12, 0.28, 0.24, 0.28],
+  [0.24, 0.28, 0.24, 0.06],
+];
+
+/** 4: "THANK YOU" typographic silhouette */
+function sdfThankYou(nx: number, ny: number): number {
+  let d = 1e6;
+  const r = 0.026;
+  for (let i = 0; i < THANK_YOU_STROKES.length; i += 1) {
+    const [ax, ay, bx, by] = THANK_YOU_STROKES[i];
+    const seg = sdCapsule(nx, ny, ax, ay, bx, by, r);
+    if (seg < d) d = seg;
+  }
+  return d;
 }
 
 function smoothstep(edge0: number, edge1: number, x: number): number {
@@ -291,12 +351,12 @@ function fieldCommunicator(nx: number, ny: number, time: number): { energy: numb
 /**
  * Scalar field 2: Just Make It
  * Looping 6.0s cycle: waves of dispersed particles converge inward to assemble into
- * tangible silhouettes (paper plane, balloon toy, dove, fingers shaping heart) ->
+ * tangible silhouettes (paper plane, alpaca, dove, heart, thank you) ->
  * hold crisp form -> disperse outward as waves again.
  */
 function fieldJustMakeIt(nx: number, ny: number, time: number): { energy: number; accent: number } {
   const CYCLE = 6.0;
-  const cycleIdx = ((Math.floor(time / CYCLE) % 4) + 4) % 4;
+  const cycleIdx = ((Math.floor(time / CYCLE) % 5) + 5) % 5;
   const p = (((time % CYCLE) + CYCLE) % CYCLE) / CYCLE;
 
   const r = Math.hypot(nx, ny);
@@ -306,11 +366,13 @@ function fieldJustMakeIt(nx: number, ny: number, time: number): { energy: number
   if (cycleIdx === 0) {
     sdf = sdfPaperPlane(nx, ny);
   } else if (cycleIdx === 1) {
-    sdf = sdfBalloonDog(nx, ny);
+    sdf = sdfAlpaca(nx, ny);
   } else if (cycleIdx === 2) {
     sdf = sdfDove(nx, ny);
+  } else if (cycleIdx === 3) {
+    sdf = sdfHeart(nx, ny);
   } else {
-    sdf = sdfFingerHeart(nx, ny);
+    sdf = sdfThankYou(nx, ny);
   }
 
   // Phase weights:
