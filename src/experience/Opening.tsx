@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { resume } from '../data/resume';
 import { HeroPretextHeadline } from './HeroPretextHeadline';
 import { introSession } from './introPolicy';
@@ -18,14 +18,10 @@ export interface OpeningProps {
 
 export function Opening({
   createSurface,
-  resumeHref = '#resume',
-  playgroundHref = '/water/',
-  onReadResume,
   heroChatAnchorRef,
   children,
 }: OpeningProps) {
   const reducedMotion = useMotionPreference();
-  const hintId = useId();
   const [paused, setPaused] = useSurfacePause(reducedMotion);
   const [intro, setIntro] = useState(false);
   const [status, setStatus] = useState<SurfaceStatus | null>(null);
@@ -74,7 +70,7 @@ export function Opening({
 
   return <section className="water-opening" aria-label="Portfolio opening">
     <SurfaceCanvas createSurface={createSurface} paused={paused} strength={0.7}
-      ambient={true} allowPageScroll describedBy={hintId}
+      ambient={true} allowPageScroll
       onInteract={() => setIntro(false)}
       onController={next => { controller.current = next; }}
       onChange={next => { setStatus(next.status); setPaused(next.paused); }} />
@@ -86,23 +82,6 @@ export function Opening({
         </div>
         <div ref={heroChatAnchorRef} className="water-opening__chat" aria-hidden="true" />
       </div>
-      <p id={hintId} className="water-opening__hint">{paused ? 'Surface motion is paused.' : 'Tap the surface to make a ripple, or focus it and press Enter.'}</p>
-      <nav className="water-opening__navigation" aria-label="Explore the portfolio">
-        <a
-          href={resumeHref}
-          className="water-link"
-          onClick={event => {
-            finishCue();
-            if (onReadResume) {
-              event.preventDefault();
-              onReadResume();
-            }
-          }}
-        >
-          Read resume
-        </a>
-        <a href={playgroundHref} className="water-link">Explore the water</a>
-      </nav>
     </div>
     {children}
   </section>;

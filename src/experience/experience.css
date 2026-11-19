@@ -455,7 +455,8 @@
 .intro__chapter-index,
 .intro__chapter-title,
 .intro__chapter-desc,
-.intro__practice {
+.intro__practice,
+.intro__chapter-cta {
   opacity: 0;
   transform: translateY(22px);
   transition:
@@ -474,10 +475,15 @@
 .intro__practice {
   transition-delay: 240ms;
 }
+.intro__chapter-cta {
+  margin-top: 0.75rem;
+  transition-delay: 300ms;
+}
 .intro__chapter.is-revealed .intro__chapter-index,
 .intro__chapter.is-revealed .intro__chapter-title,
 .intro__chapter.is-revealed .intro__chapter-desc,
-.intro__chapter.is-revealed .intro__practice {
+.intro__chapter.is-revealed .intro__practice,
+.intro__chapter.is-revealed .intro__chapter-cta {
   opacity: 1;
   transform: translateY(0);
 }
@@ -625,11 +631,26 @@
 }
 .intro__actions {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 1rem 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--line, rgba(22, 24, 31, 0.12));
+  padding-top: 2rem;
+}
+.intro__explore {
+  color: rgba(22, 24, 31, 0.44);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  transition: color 0.16s ease;
+}
+.intro__explore:hover {
+  color: var(--water-ink);
+}
+.intro__explore:focus-visible {
+  outline: 2px solid var(--water-ink);
+  outline-offset: 4px;
 }
 .intro__cta {
   appearance: none;

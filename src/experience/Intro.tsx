@@ -182,6 +182,13 @@ export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps)
                         <p className="intro__practice-text">{IN_PRACTICE[index]}</p>
                       </div>
                     ) : null}
+                    {index === pillars.length - 1 ? (
+                      <div className="intro__chapter-cta">
+                        <button type="button" className="intro__cta" onClick={onReadResume}>
+                          Read full resume
+                        </button>
+                      </div>
+                    ) : null}
                     <div className="intro__chapter-visual-mobile">
                       <ApproachLatticeStage
                         progress={index}
@@ -202,10 +209,7 @@ export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps)
         </section>
 
         <footer className="intro__actions">
-          <button type="button" className="intro__cta" onClick={onReadResume}>
-            Read full resume
-          </button>
-          <a href={playgroundHref} className="water-link">
+          <a href={playgroundHref} className="intro__explore">
             Explore the water
           </a>
         </footer>
