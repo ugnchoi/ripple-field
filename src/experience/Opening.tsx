@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useRef, useState, type RefObject } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { resume } from '../data/resume';
 import { HeroPretextHeadline } from './HeroPretextHeadline';
 import { introSession } from './introPolicy';
@@ -13,6 +13,7 @@ export interface OpeningProps {
   playgroundHref?: string;
   onReadResume?: () => void;
   heroChatAnchorRef?: RefObject<HTMLDivElement | null>;
+  children?: ReactNode;
 }
 
 export function Opening({
@@ -21,6 +22,7 @@ export function Opening({
   playgroundHref = '/water/',
   onReadResume,
   heroChatAnchorRef,
+  children,
 }: OpeningProps) {
   const reducedMotion = useMotionPreference();
   const hintId = useId();
@@ -76,29 +78,32 @@ export function Opening({
       onInteract={() => setIntro(false)}
       onController={next => { controller.current = next; }}
       onChange={next => { setStatus(next.status); setPaused(next.paused); }} />
-    <div className="water-opening__main">
-      <div className="water-opening__copy">
-        <HeroPretextHeadline text={resume.basics.tagline} />
-        <p>{resume.basics.title}</p>
+    <div className="water-opening__viewport">
+      <div className="water-opening__main">
+        <div className="water-opening__copy">
+          <HeroPretextHeadline text={resume.basics.tagline} />
+          <p>{resume.basics.title}</p>
+        </div>
+        <div ref={heroChatAnchorRef} className="water-opening__chat" aria-hidden="true" />
       </div>
-      <div ref={heroChatAnchorRef} className="water-opening__chat" aria-hidden="true" />
+      <p id={hintId} className="water-opening__hint">{paused ? 'Surface motion is paused.' : 'Tap the surface to make a ripple, or focus it and press Enter.'}</p>
+      <nav className="water-opening__navigation" aria-label="Explore the portfolio">
+        <a
+          href={resumeHref}
+          className="water-link"
+          onClick={event => {
+            finishCue();
+            if (onReadResume) {
+              event.preventDefault();
+              onReadResume();
+            }
+          }}
+        >
+          Read resume
+        </a>
+        <a href={playgroundHref} className="water-link">Explore the water</a>
+      </nav>
     </div>
-    <p id={hintId} className="water-opening__hint">{paused ? 'Surface motion is paused.' : 'Tap the surface to make a ripple, or focus it and press Enter.'}</p>
-    <nav className="water-opening__navigation" aria-label="Explore the portfolio">
-      <a
-        href={resumeHref}
-        className="water-link"
-        onClick={event => {
-          finishCue();
-          if (onReadResume) {
-            event.preventDefault();
-            onReadResume();
-          }
-        }}
-      >
-        Read resume
-      </a>
-      <a href={playgroundHref} className="water-link">Explore the water</a>
-    </nav>
+    {children}
   </section>;
 }

@@ -13,8 +13,45 @@ const IN_PRACTICE: readonly string[] = [
   'Designed a construction MVP and starter design system, turning concepts into functional AI prototypes in hours.',
 ];
 
+export function IntroBand() {
+  const { basics, work, awards, languages } = resume;
+  const currentTeam = work[0]?.team ?? work[0]?.company ?? 'BCG Design Studios';
+  const previousCompany =
+    work[1]?.company === 'Vaco (onsite Google)' ? 'Google (via Vaco)' : work[1]?.company;
+  const recognitionLabel = `${work[0]?.recognition ? 'BCG Star Awards · ' : ''}${awards.length}× Design & UX Awards`;
+  const languageSummary = languages
+    .slice(0, 3)
+    .map((item) => item.language)
+    .join(' / ');
+
+  const trackRecord = [
+    { label: 'Current', value: currentTeam },
+    { label: 'Previously', value: previousCompany },
+    { label: 'Recognition', value: recognitionLabel },
+    { label: 'Languages', value: languageSummary },
+  ];
+
+  return (
+    <div className="intro__band" aria-label="Overview and track record">
+      <header className="intro__hero">
+        <h2 className="intro__headline">{basics.oneLiner}</h2>
+        <p className="intro__summary">{basics.summary}</p>
+      </header>
+
+      <dl className="intro__track-record" aria-label="Track record at a glance">
+        {trackRecord.map((item) => (
+          <div className="intro__stat" key={item.label}>
+            <dt className="intro__stat-label">{item.label}</dt>
+            <dd className="intro__stat-value">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
 export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps) {
-  const { basics, pillars, work, awards, languages } = resume;
+  const { pillars } = resume;
   const [scrollProgress, setScrollProgress] = useState(0);
   const [revealedChapters, setRevealedChapters] = useState<boolean[]>(() =>
     pillars.map(() => false),
@@ -110,41 +147,11 @@ export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps)
   }, [pillars.length]);
 
   const activeChapter = Math.max(0, Math.min(pillars.length - 1, Math.round(scrollProgress)));
-
-  const currentTeam = work[0]?.team ?? work[0]?.company ?? 'BCG Design Studios';
-  const previousCompany = work[1]?.company === 'Vaco (onsite Google)' ? 'Google (via Vaco)' : work[1]?.company;
-  const recognitionLabel = `${work[0]?.recognition ? 'BCG Star Awards · ' : ''}${awards.length}× Design & UX Awards`;
-  const languageSummary = languages
-    .slice(0, 3)
-    .map((item) => item.language)
-    .join(' / ');
-
-  const trackRecord = [
-    { label: 'Current', value: currentTeam },
-    { label: 'Previously', value: previousCompany },
-    { label: 'Recognition', value: recognitionLabel },
-    { label: 'Languages', value: languageSummary },
-  ];
-
   const totalChapters = String(pillars.length).padStart(2, '0');
 
   return (
     <section className="intro" aria-label="Self introduction">
       <div className="intro__sheet">
-        <header className="intro__hero">
-          <h2 className="intro__headline">{basics.oneLiner}</h2>
-          <p className="intro__summary">{basics.summary}</p>
-        </header>
-
-        <dl className="intro__track-record" aria-label="Track record at a glance">
-          {trackRecord.map((item) => (
-            <div className="intro__stat" key={item.label}>
-              <dt className="intro__stat-label">{item.label}</dt>
-              <dd className="intro__stat-value">{item.value}</dd>
-            </div>
-          ))}
-        </dl>
-
         <section className="intro__approach" aria-labelledby="intro-approach-heading">
           <div className="intro__section-head">
             <span className="section__index">01</span>

@@ -147,6 +147,13 @@ body {
   padding-bottom: clamp(1.75rem, 4vw, 2.75rem);
   border-bottom: 1px solid var(--line);
 }
+.hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  flex-wrap: wrap;
+}
 .hero__eyebrow {
   font-size: 0.75rem;
   font-weight: 600;

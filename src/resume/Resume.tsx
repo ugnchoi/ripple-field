@@ -156,37 +156,18 @@ export const Resume = () => {
 
   return (
     <div className="page">
-      <header className="masthead">
-        <span className="masthead__name">{basics.name}</span>
-        <div className="masthead__right">
-          <nav className="masthead__contact" aria-label="Contact">
-            {basics.email ? (
-              <a href={`mailto:${basics.email}`}>{basics.email}</a>
-            ) : null}
-            {basics.phone ? (
-              <a href={`tel:${basics.phone.replace(/[^+\d]/g, '')}`}>
-                {basics.phone}
-              </a>
-            ) : null}
-            {basics.profiles.map((p) => (
-              <a key={p.url} href={p.url} target="_blank" rel="noreferrer">
-                {p.network}
-              </a>
-            ))}
-          </nav>
-          <button
-            type="button"
-            className="masthead__action no-print"
-            onClick={downloadPdf}
-          >
-            Download PDF
-          </button>
-        </div>
-      </header>
-
       <main className="sheet" data-ripple-safe="primary">
         <div className="hero">
-          <span className="hero__eyebrow">{basics.title}</span>
+          <div className="hero__top">
+            <span className="hero__eyebrow">{basics.title}</span>
+            <button
+              type="button"
+              className="masthead__action no-print"
+              onClick={downloadPdf}
+            >
+              Download PDF
+            </button>
+          </div>
           <h1 className="hero__tagline">{basics.tagline}</h1>
           <div className="hero__meta">
             <img
