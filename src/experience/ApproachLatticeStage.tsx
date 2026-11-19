@@ -112,23 +112,7 @@ function sdTriangle(
   return -Math.sqrt(minD) * Math.sign(minC);
 }
 
-/** 0: Paper plane (iconic 3/4 perspective dart with separated wings & lower keel) */
-function sdfPaperPlane(nx: number, ny: number): number {
-  const x = nx;
-  const y = ny;
-  // Upper-left wing
-  const upperWing = sdTriangle(x, y, 0.52, -0.26, -0.50, -0.02, -0.12, 0.12);
-  // Lower-right wing
-  const lowerWing = sdTriangle(x, y, 0.52, -0.26, -0.02, 0.18, 0.22, 0.44);
-  // Lower folded keel fin
-  const keel = sdTriangle(x, y, -0.04, 0.16, -0.18, 0.36, 0.06, 0.24);
-  // Carve a crisp fold gap between the two wings so the 3D fold reads clearly
-  const foldGap = sdCapsule(x, y, 0.42, -0.20, -0.12, 0.15, 0.028);
-  const wings = Math.max(Math.min(upperWing, lowerWing), -foldGap);
-  return Math.min(wings, keel);
-}
-
-/** 1: Alpaca silhouette in profile (tall neck, perked ears, fluffy fleece torso, 4 legs, short tail) */
+/** 0: Alpaca silhouette in profile (tall neck, perked ears, fluffy fleece torso, 4 legs, short tail) */
 function sdfAlpaca(nx: number, ny: number): number {
   const x = nx;
   const y = ny + 0.04;
@@ -192,49 +176,6 @@ function sdfDove(nx: number, ny: number): number {
   d = smin(d, Math.min(wingUp, wingUpTip), 0.04);
   d = smin(d, Math.min(wingLeft, wingLeftTip), 0.04);
   return d;
-}
-
-function sdHeart2D(px: number, py: number): number {
-  const ax = Math.abs(px);
-  if (py + ax > 1.0) {
-    return Math.hypot(ax - 0.25, py - 0.75) - Math.SQRT2 / 4.0;
-  }
-  const d1 = ax * ax + (py - 1.0) * (py - 1.0);
-  const m = 0.5 * Math.max(ax + py, 0.0);
-  const d2 = (ax - m) * (ax - m) + (py - m) * (py - m);
-  return Math.sqrt(Math.min(d1, d2)) * Math.sign(ax - py);
-}
-
-/** 3: Korean finger heart (floating heart above crossed thumb & index finger + curled hand) */
-function sdfHeart(nx: number, ny: number): number {
-  // Small floating heart centered near top (0, -0.42)
-  const scale = 3.1;
-  const heart = sdHeart2D(nx * scale, (-ny - 0.29) * scale) / scale;
-
-  // Crossed index finger (pointing up-left) & thumb (pointing up-right)
-  const indexFinger = sdCapsule(nx, ny, 0.02, 0.02, -0.15, -0.22, 0.052);
-  const thumb = sdCapsule(nx, ny, -0.18, 0.12, 0.11, -0.21, 0.054);
-
-  // Palm & wrist below
-  const palmLeft = sdCapsule(nx, ny, -0.18, 0.14, -0.08, 0.34, 0.085);
-  const palmCore = sdCircle(nx, ny, 0.01, 0.22, 0.155);
-  const wrist = sdTriangle(nx, ny, -0.13, 0.28, 0.11, 0.28, -0.18, 0.54);
-  const wristR = sdTriangle(nx, ny, 0.11, 0.28, 0.08, 0.54, -0.18, 0.54);
-
-  // Three curled fingers on the right side
-  const middleFinger = sdCapsule(nx, ny, 0.04, 0.02, 0.14, 0.14, 0.048);
-  const ringFinger = sdCapsule(nx, ny, 0.12, 0.08, 0.20, 0.20, 0.045);
-  const pinky = sdCapsule(nx, ny, 0.18, 0.16, 0.23, 0.28, 0.042);
-
-  let hand = smin(indexFinger, thumb, 0.02);
-  hand = smin(hand, palmLeft, 0.04);
-  hand = smin(hand, palmCore, 0.04);
-  hand = smin(hand, Math.min(wrist, wristR), 0.04);
-  hand = smin(hand, middleFinger, 0.02);
-  hand = smin(hand, ringFinger, 0.02);
-  hand = smin(hand, pinky, 0.02);
-
-  return Math.min(heart, hand);
 }
 
 const THANK_YOU_STROKES: ReadonlyArray<readonly [number, number, number, number]> = [
@@ -375,13 +316,12 @@ function fieldCommunicator(nx: number, ny: number, time: number): { energy: numb
 
 /**
  * Scalar field 2: Just Make It
- * Looping 6.0s cycle: waves of dispersed particles converge inward to assemble into
- * tangible silhouettes (paper plane, alpaca, dove, heart, thank you) ->
- * hold crisp form -> disperse outward as waves again.
+ * Looping 5.0s cycle: waves of dispersed particles converge inward to assemble into
+ * tangible silhouettes (alpaca, dove, thank you) -> hold crisp form -> disperse outward.
  */
 function fieldJustMakeIt(nx: number, ny: number, time: number): { energy: number; accent: number } {
-  const CYCLE = 6.0;
-  const cycleIdx = ((Math.floor(time / CYCLE) % 5) + 5) % 5;
+  const CYCLE = 5.0;
+  const cycleIdx = ((Math.floor(time / CYCLE) % 3) + 3) % 3;
   const p = (((time % CYCLE) + CYCLE) % CYCLE) / CYCLE;
 
   const r = Math.hypot(nx, ny);
@@ -389,26 +329,22 @@ function fieldJustMakeIt(nx: number, ny: number, time: number): { energy: number
 
   let sdf: number;
   if (cycleIdx === 0) {
-    sdf = sdfPaperPlane(nx, ny);
-  } else if (cycleIdx === 1) {
     sdf = sdfAlpaca(nx, ny);
-  } else if (cycleIdx === 2) {
+  } else if (cycleIdx === 1) {
     sdf = sdfDove(nx, ny);
-  } else if (cycleIdx === 3) {
-    sdf = sdfHeart(nx, ny);
   } else {
     sdf = sdfThankYou(nx, ny);
   }
 
-  // Phase weights:
-  // 1. Assembly (p = 0.00..0.32): inward-traveling particle waves converging onto the silhouette
-  // 2. Crisp form (p = 0.24..0.58): sharp silhouette with slate-accented rim
-  // 3. Dispersion (p = 0.54..0.95): outward-traveling wavelets scattering back into the field
-  const assembleProgress = smoothstep(0.0, 0.30, p);
-  const assembleEnvelope = smoothstep(0.0, 0.08, p) * (1 - smoothstep(0.24, 0.34, p));
-  const sharpness = smoothstep(0.20, 0.32, p) * (1 - smoothstep(0.54, 0.66, p));
-  const disperseProgress = smoothstep(0.54, 0.90, p);
-  const disperseEnvelope = smoothstep(0.52, 0.60, p) * (1 - smoothstep(0.86, 0.98, p));
+  // Phase weights (5.0s cycle with snappy intro/outro and longer crisp hold):
+  // 1. Assembly (p = 0.00..0.18): inward-traveling particle waves converging onto the silhouette
+  // 2. Crisp form (p = 0.12..0.84): sharp silhouette with slate-accented rim
+  // 3. Dispersion (p = 0.76..0.98): outward-traveling wavelets scattering back into the field
+  const assembleProgress = smoothstep(0.0, 0.18, p);
+  const assembleEnvelope = smoothstep(0.0, 0.04, p) * (1 - smoothstep(0.14, 0.20, p));
+  const sharpness = smoothstep(0.12, 0.20, p) * (1 - smoothstep(0.76, 0.84, p));
+  const disperseProgress = smoothstep(0.76, 0.96, p);
+  const disperseEnvelope = smoothstep(0.74, 0.80, p) * (1 - smoothstep(0.94, 1.0, p));
 
   // Ambient scattered wavelets between cycles so the stage never goes dead
   const ambientWavelets =

@@ -161,10 +161,15 @@
   background: transparent;
   border-bottom: 1px solid transparent;
   pointer-events: none;
-  transition: background-color 0.22s ease, border-color 0.22s ease, backdrop-filter 0.22s ease;
+  transition:
+    padding 0.22s ease,
+    background-color 0.22s ease,
+    border-color 0.22s ease,
+    backdrop-filter 0.22s ease;
 }
 .portfolio-tabs--scrolled {
-  background: rgba(247, 247, 251, 0.72);
+  padding-block: 0.45rem;
+  background: rgba(247, 247, 251, 0.74);
   backdrop-filter: blur(14px) saturate(1.15);
   -webkit-backdrop-filter: blur(14px) saturate(1.15);
   border-bottom-color: var(--line, rgba(22, 24, 31, 0.1));
@@ -176,6 +181,10 @@
   font-size: 1rem;
   color: var(--ink, #16181f);
   pointer-events: auto;
+  transition: font-size 0.22s ease;
+}
+.portfolio-tabs--scrolled .portfolio-tabs__name {
+  font-size: 0.9375rem;
 }
 .portfolio-tabs__list {
   pointer-events: auto;
@@ -186,6 +195,15 @@
   border-radius: 999px;
   border: 1px solid var(--line, rgba(22, 24, 31, 0.12));
   background: rgba(247, 247, 251, 0.72);
+  transition: padding 0.22s ease, gap 0.22s ease;
+}
+.portfolio-tabs--scrolled .portfolio-tabs__list {
+  padding: 0.18rem;
+  gap: 0.15rem;
+}
+.portfolio-tabs--scrolled .portfolio-tabs__tab {
+  font-size: 0.75rem;
+  padding: 0.32rem 0.9rem;
 }
 #panel-resume {
   padding-top: 4.5rem;
