@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { resume } from '../data/resume';
 import { introSession } from './introPolicy';
 import { SurfaceCanvas } from './SurfaceCanvas';
 import type { SurfaceController, SurfaceFactory, SurfaceStatus } from './types';
 import { useMotionPreference, useSurfacePause } from './useMotionPreference';
-import yoojinAvatar from './yoojin-avatar.jpg';
 
 export interface OpeningProps {
   createSurface: SurfaceFactory;
@@ -12,9 +11,7 @@ export interface OpeningProps {
   resumeHref?: string;
   playgroundHref?: string;
   onReadResume?: () => void;
-  onOpenChat?: () => void;
-  chatOpen?: boolean;
-  onHeroChatVisibilityChange?: (visible: boolean) => void;
+  heroChatAnchorRef?: RefObject<HTMLDivElement | null>;
 }
 
 export function Opening({
@@ -22,9 +19,7 @@ export function Opening({
   resumeHref = '#resume',
   playgroundHref = '/water/',
   onReadResume,
-  onOpenChat,
-  chatOpen = false,
-  onHeroChatVisibilityChange,
+  heroChatAnchorRef,
 }: OpeningProps) {
   const reducedMotion = useMotionPreference();
   const hintId = useId();
@@ -32,7 +27,6 @@ export function Opening({
   const [intro, setIntro] = useState(false);
   const [status, setStatus] = useState<SurfaceStatus | null>(null);
   const controller = useRef<SurfaceController | null>(null);
-  const heroChatRef = useRef<HTMLDivElement>(null);
   const visit = useRef<boolean | null>(null);
   const emitted = useRef(false);
   const finishCue = useCallback(() => {
@@ -75,24 +69,6 @@ export function Opening({
     }
   }, [intro, paused, status]);
 
-  useEffect(() => {
-    const el = heroChatRef.current;
-    if (!el || !onHeroChatVisibilityChange || typeof IntersectionObserver === 'undefined') {
-      return;
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        onHeroChatVisibilityChange(entry.isIntersecting);
-      },
-      { threshold: 0.1 },
-    );
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      onHeroChatVisibilityChange(false);
-    };
-  }, [onHeroChatVisibilityChange]);
-
   return <section className="water-opening" aria-label="Portfolio opening">
     <SurfaceCanvas createSurface={createSurface} paused={paused} strength={0.7}
       ambient={true} allowPageScroll describedBy={hintId}
@@ -111,26 +87,7 @@ export function Opening({
         <h1>{resume.basics.tagline}</h1>
         <p>{resume.basics.title}</p>
       </div>
-      {onOpenChat && (
-        <div ref={heroChatRef} className="water-opening__chat">
-          <button
-            type="button"
-            className="chat-fab chat-fab--hero"
-            aria-expanded={chatOpen}
-            aria-controls="yoojin-chat-panel"
-            onClick={onOpenChat}
-          >
-            <img
-              src={yoojinAvatar}
-              alt=""
-              width={52}
-              height={52}
-              className="chat-fab__avatar"
-            />
-            <span className="chat-fab__label">Ask about Yoojin</span>
-          </button>
-        </div>
-      )}
+      <div ref={heroChatAnchorRef} className="water-opening__chat" aria-hidden="true" />
     </div>
     <p id={hintId} className="water-opening__hint">{paused ? 'Surface motion is paused.' : 'Tap the surface to make a ripple, or focus it and press Enter.'}</p>
     <nav className="water-opening__navigation" aria-label="Explore the portfolio">

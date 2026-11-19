@@ -165,51 +165,76 @@ function sdfAlpaca(nx: number, ny: number): number {
   return d;
 }
 
-/** 2: Flying dove silhouette (graceful profile with distinct swept wings & fanned tail) */
+/** 2: Flying dove silhouette (facing right, tall upright wing + swept left wing + tail down-left) */
 function sdfDove(nx: number, ny: number): number {
   const x = nx;
-  const y = ny + 0.05;
-  // Curved breast & slender body tapering toward tail
-  const breast = sdCapsule(x, y, -0.22, -0.04, -0.04, 0.12, 0.095);
-  const body = sdCapsule(x, y, -0.04, 0.12, 0.24, 0.18, 0.08);
-  // Neck, head & pointed beak facing left
-  const neck = sdCapsule(x, y, -0.22, -0.04, -0.28, -0.18, 0.062);
-  const head = sdCircle(x, y, -0.29, -0.20, 0.072);
-  const beak = sdTriangle(x, y, -0.35, -0.23, -0.48, -0.19, -0.35, -0.16);
-  // Two distinct swept-up wings with a clear V-notch between them
-  const wingFront = sdTriangle(x, y, -0.10, 0.04, 0.04, -0.54, 0.12, -0.04);
-  const wingTipFront = sdCapsule(x, y, 0.02, -0.44, 0.06, -0.54, 0.03);
-  const wingBack = sdTriangle(x, y, 0.04, 0.04, 0.38, -0.42, 0.22, 0.08);
-  const wingTipBack = sdCapsule(x, y, 0.30, -0.32, 0.40, -0.42, 0.03);
-  // Fanned tail feathers
-  const tail = sdTriangle(x, y, 0.20, 0.16, 0.54, 0.12, 0.46, 0.38);
+  const y = ny;
+  // Curved body & plump breast facing right
+  const breast = sdCapsule(x, y, 0.06, 0.16, 0.28, -0.02, 0.115);
+  const belly = sdCapsule(x, y, -0.14, 0.22, 0.12, 0.14, 0.095);
+  // Head & small pointed beak pointing right
+  const head = sdCircle(x, y, 0.30, -0.06, 0.085);
+  const beak = sdTriangle(x, y, 0.36, -0.08, 0.48, -0.04, 0.36, -0.01);
+  // Tail sweeping down-left
+  const tail = sdTriangle(x, y, -0.08, 0.18, -0.48, 0.38, -0.22, 0.26);
+  const tailTip = sdCapsule(x, y, -0.22, 0.24, -0.46, 0.36, 0.038);
+  // Tall upright wing (slightly scalloped/curved)
+  const wingUp = sdTriangle(x, y, -0.02, 0.08, -0.03, -0.52, 0.18, -0.06);
+  const wingUpTip = sdCapsule(x, y, -0.03, -0.34, -0.03, -0.52, 0.032);
+  // Left-sweeping back wing with V-notch separation
+  const wingLeft = sdTriangle(x, y, -0.08, 0.12, -0.44, -0.24, 0.02, -0.04);
+  const wingLeftTip = sdCapsule(x, y, -0.28, -0.12, -0.44, -0.24, 0.030);
 
-  let d = smin(breast, body, 0.05);
-  d = smin(d, neck, 0.04);
-  d = smin(d, head, 0.03);
+  let d = smin(breast, belly, 0.06);
+  d = smin(d, head, 0.04);
   d = Math.min(d, beak);
-  d = smin(d, Math.min(wingFront, wingTipFront), 0.035);
-  d = smin(d, Math.min(wingBack, wingTipBack), 0.035);
-  d = smin(d, tail, 0.035);
+  d = smin(d, Math.min(tail, tailTip), 0.04);
+  d = smin(d, Math.min(wingUp, wingUpTip), 0.04);
+  d = smin(d, Math.min(wingLeft, wingLeftTip), 0.04);
   return d;
 }
 
-/** 3: Classic heart silhouette (Inigo Quilez exact 2D heart SDF) */
-function sdfHeart(nx: number, ny: number): number {
-  const px = Math.abs(nx) * 1.15;
-  const py = (-ny + 0.44) * 1.15;
-  if (py + px > 1.0) {
-    const dx = px - 0.25;
-    const dy = py - 0.75;
-    return (Math.hypot(dx, dy) - Math.SQRT2 / 4.0) / 1.15;
+function sdHeart2D(px: number, py: number): number {
+  const ax = Math.abs(px);
+  if (py + ax > 1.0) {
+    return Math.hypot(ax - 0.25, py - 0.75) - Math.SQRT2 / 4.0;
   }
-  const d1x = px;
-  const d1y = py - 1.0;
-  const m = 0.5 * Math.max(px + py, 0.0);
-  const d2x = px - m;
-  const d2y = py - m;
-  const distSq = Math.min(d1x * d1x + d1y * d1y, d2x * d2x + d2y * d2y);
-  return (Math.sqrt(distSq) * Math.sign(px - py)) / 1.15;
+  const d1 = ax * ax + (py - 1.0) * (py - 1.0);
+  const m = 0.5 * Math.max(ax + py, 0.0);
+  const d2 = (ax - m) * (ax - m) + (py - m) * (py - m);
+  return Math.sqrt(Math.min(d1, d2)) * Math.sign(ax - py);
+}
+
+/** 3: Korean finger heart (floating heart above crossed thumb & index finger + curled hand) */
+function sdfHeart(nx: number, ny: number): number {
+  // Small floating heart centered near top (0, -0.42)
+  const scale = 3.1;
+  const heart = sdHeart2D(nx * scale, (-ny - 0.29) * scale) / scale;
+
+  // Crossed index finger (pointing up-left) & thumb (pointing up-right)
+  const indexFinger = sdCapsule(nx, ny, 0.02, 0.02, -0.15, -0.22, 0.052);
+  const thumb = sdCapsule(nx, ny, -0.18, 0.12, 0.11, -0.21, 0.054);
+
+  // Palm & wrist below
+  const palmLeft = sdCapsule(nx, ny, -0.18, 0.14, -0.08, 0.34, 0.085);
+  const palmCore = sdCircle(nx, ny, 0.01, 0.22, 0.155);
+  const wrist = sdTriangle(nx, ny, -0.13, 0.28, 0.11, 0.28, -0.18, 0.54);
+  const wristR = sdTriangle(nx, ny, 0.11, 0.28, 0.08, 0.54, -0.18, 0.54);
+
+  // Three curled fingers on the right side
+  const middleFinger = sdCapsule(nx, ny, 0.04, 0.02, 0.14, 0.14, 0.048);
+  const ringFinger = sdCapsule(nx, ny, 0.12, 0.08, 0.20, 0.20, 0.045);
+  const pinky = sdCapsule(nx, ny, 0.18, 0.16, 0.23, 0.28, 0.042);
+
+  let hand = smin(indexFinger, thumb, 0.02);
+  hand = smin(hand, palmLeft, 0.04);
+  hand = smin(hand, palmCore, 0.04);
+  hand = smin(hand, Math.min(wrist, wristR), 0.04);
+  hand = smin(hand, middleFinger, 0.02);
+  hand = smin(hand, ringFinger, 0.02);
+  hand = smin(hand, pinky, 0.02);
+
+  return Math.min(heart, hand);
 }
 
 const THANK_YOU_STROKES: ReadonlyArray<readonly [number, number, number, number]> = [

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type KeyboardEvent, type RefObject } from 'react';
 import { resume } from '@/data/resume';
 import yoojinAvatar from './yoojin-avatar.jpg';
 
@@ -15,32 +15,99 @@ const STARTER_PROMPTS = [
 ] as const;
 
 interface ChatWidgetProps {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  hideFab?: boolean;
+  heroAnchorRef?: RefObject<HTMLDivElement | null>;
+  dockedOnly?: boolean;
 }
 
-export function ChatWidget({ open: controlledOpen, onOpenChange, hideFab = false }: ChatWidgetProps = {}) {
-  const [internalOpen, setInternalOpen] = useState(false);
-  const open = controlledOpen ?? internalOpen;
-  const setOpen = (next: boolean | ((prev: boolean) => boolean)) => {
-    const resolved = typeof next === 'function' ? next(open) : next;
-    if (controlledOpen === undefined) {
-      setInternalOpen(resolved);
-    }
-    onOpenChange?.(resolved);
-  };
+function clamp01(v: number): number {
+  return v < 0 ? 0 : v > 1 ? 1 : v;
+}
+
+export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProps = {}) {
+  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
+  const [heroInput, setHeroInput] = useState('');
+  const [heroFocused, setHeroFocused] = useState(false);
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(dockedOnly ? 1 : 0);
+  const [dockOffset, setDockOffset] = useState<{ dx: number; dy: number }>({ dx: 0, dy: 0 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const dockRef = useRef<HTMLDivElement>(null);
   const fabRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const contactEmail = resume.basics.email ?? 'ugn.choi@gmail.com';
   const hasUserMessage = messages.some((message) => message.role === 'user');
+  const isDocked = dockedOnly || open || scrollProgress >= 0.72;
+
+  useEffect(() => {
+    if (heroFocused || heroInput.trim() || isDocked) return;
+    const timer = window.setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % STARTER_PROMPTS.length);
+    }, 3200);
+    return () => window.clearInterval(timer);
+  }, [heroFocused, heroInput, isDocked]);
+
+  useLayoutEffect(() => {
+    if (dockedOnly) {
+      setScrollProgress(1);
+      setDockOffset({ dx: 0, dy: 0 });
+      return;
+    }
+
+    let rafId = 0;
+    const updatePosition = () => {
+      rafId = 0;
+      const anchor = heroAnchorRef?.current;
+      const dock = dockRef.current;
+      if (!anchor || !dock || open) {
+        setScrollProgress(1);
+        setDockOffset({ dx: 0, dy: 0 });
+        return;
+      }
+
+      const range = Math.max(window.innerHeight * 0.42, 220);
+      const t = clamp01(window.scrollY / range);
+      setScrollProgress(t);
+
+      if (t >= 1) {
+        setDockOffset({ dx: 0, dy: 0 });
+        return;
+      }
+
+      const anchorRect = anchor.getBoundingClientRect();
+      const dockRect = dock.getBoundingClientRect();
+      const margin = 20;
+      const targetCenterX = window.innerWidth - margin - dockRect.width / 2;
+      const targetCenterY = window.innerHeight - margin - dockRect.height / 2;
+      const anchorCenterX = anchorRect.left + anchorRect.width / 2;
+      const anchorCenterY = anchorRect.top + anchorRect.height / 2;
+
+      setDockOffset({
+        dx: (anchorCenterX - targetCenterX) * (1 - t),
+        dy: (anchorCenterY - targetCenterY) * (1 - t),
+      });
+    };
+
+    const scheduleUpdate = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(updatePosition);
+      }
+    };
+
+    updatePosition();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    return () => {
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, [heroAnchorRef, dockedOnly, open, isDocked]);
 
   useEffect(() => {
     if (!open) return;
@@ -132,6 +199,15 @@ export function ChatWidget({ open: controlledOpen, onOpenChange, hideFab = false
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     void sendMessage(input);
+  };
+
+  const handleHeroSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = heroInput.trim();
+    if (!trimmed) return;
+    setHeroInput('');
+    setOpen(true);
+    void sendMessage(trimmed);
   };
 
   return (
@@ -255,25 +331,93 @@ export function ChatWidget({ open: controlledOpen, onOpenChange, hideFab = false
         </div>
       )}
 
-      <button
-        ref={fabRef}
-        type="button"
-        className={`chat-fab no-print${hideFab && !open ? ' chat-fab--hidden' : ''}`}
-        aria-expanded={open}
-        aria-controls="yoojin-chat-panel"
-        aria-hidden={hideFab && !open ? true : undefined}
-        tabIndex={hideFab && !open ? -1 : undefined}
-        onClick={() => setOpen((prev) => !prev)}
+      <div
+        ref={dockRef}
+        className={`chat-dock no-print${isDocked ? ' chat-dock--docked' : ' chat-dock--hero'}`}
+        style={
+          isDocked
+            ? undefined
+            : { transform: `translate3d(${dockOffset.dx}px, ${dockOffset.dy}px, 0)` }
+        }
       >
-        <img
-          src={yoojinAvatar}
-          alt=""
-          width={36}
-          height={36}
-          className="chat-fab__avatar"
-        />
-        <span className="chat-fab__label">Ask about Yoojin</span>
-      </button>
+        {isDocked ? (
+          <button
+            ref={fabRef}
+            type="button"
+            className="chat-fab"
+            aria-expanded={open}
+            aria-controls="yoojin-chat-panel"
+            onClick={() => setOpen((prev) => !prev)}
+          >
+            <img
+              src={yoojinAvatar}
+              alt=""
+              width={36}
+              height={36}
+              className="chat-fab__avatar"
+            />
+            <span className="chat-fab__label">Ask about Yoojin</span>
+          </button>
+        ) : (
+          <div className="chat-hero-pill">
+            <img
+              src={yoojinAvatar}
+              alt="Yoojin Choi"
+              width={48}
+              height={48}
+              className="chat-hero-pill__avatar"
+            />
+            <form className="chat-hero-pill__form" onSubmit={handleHeroSubmit}>
+              <label htmlFor="yoojin-hero-chat-input" className="chat-sr-only">
+                Ask a question about Yoojin
+              </label>
+              <input
+                id="yoojin-hero-chat-input"
+                type="text"
+                className="chat-hero-pill__input"
+                value={heroInput}
+                onChange={(event) => setHeroInput(event.target.value)}
+                onFocus={() => setHeroFocused(true)}
+                onBlur={() => setHeroFocused(false)}
+                placeholder={STARTER_PROMPTS[placeholderIndex]}
+                maxLength={1000}
+                disabled={loading}
+              />
+              {heroInput.trim() && (
+                <button
+                  type="submit"
+                  className="chat-hero-pill__send"
+                  aria-label="Ask question"
+                  disabled={loading}
+                >
+                  →
+                </button>
+              )}
+            </form>
+            <a
+              href={`mailto:${contactEmail}`}
+              className="chat-hero-pill__mail"
+              aria-label={`Email Yoojin at ${contactEmail}`}
+              title={`Email ${contactEmail}`}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+            </a>
+          </div>
+        )}
+      </div>
     </>
   );
 }
