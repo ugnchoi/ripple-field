@@ -132,28 +132,7 @@ export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps)
     <section className="intro" aria-label="Self introduction">
       <div className="intro__sheet">
         <header className="intro__hero">
-          <span className="intro__eyebrow">{basics.title}</span>
           <h2 className="intro__headline">{basics.oneLiner}</h2>
-          <p className="intro__tagline">{basics.tagline}</p>
-
-          <div className="intro__meta">
-            <span className="intro__name">{basics.name}</span>
-            <span className="intro__location">{basics.location.current}</span>
-            {basics.location.openToWork?.length ? (
-              <span className="intro__location">
-                Open to {basics.location.openToWork.join(', ')}
-              </span>
-            ) : null}
-          </div>
-
-          <div className="chips" aria-label="Specialties">
-            {basics.specialties.map((specialty) => (
-              <span className="chip" key={specialty}>
-                {specialty}
-              </span>
-            ))}
-          </div>
-
           <p className="intro__summary">{basics.summary}</p>
         </header>
 

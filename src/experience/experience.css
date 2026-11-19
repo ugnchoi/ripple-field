@@ -245,7 +245,7 @@
   --water-secondary: #555761;
   width: 100%;
   padding-inline: clamp(1.5rem, 5vw, 5.5rem);
-  padding-block: clamp(3rem, 7vw, 6.5rem);
+  padding-block: 0 clamp(3rem, 7vw, 6.5rem);
   background: var(--water-paper);
   color: var(--water-ink);
   font-family: var(--sans, 'Figtree Variable', system-ui, sans-serif);
@@ -257,55 +257,47 @@
   gap: clamp(3rem, 6vw, 5rem);
 }
 .intro__hero {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  padding-bottom: clamp(2.25rem, 5vw, 3.5rem);
-  border-bottom: 1px solid var(--line, rgba(22, 24, 31, 0.12));
+  gap: 1.5rem;
+  margin-inline: calc(clamp(1.5rem, 5vw, 5.5rem) * -1);
+  padding: clamp(3.5rem, 8vw, 6.25rem) clamp(1.5rem, 5vw, 5.5rem);
+  background:
+    radial-gradient(ellipse 72% 95% at 88% 22%, rgba(54, 79, 110, 0.48) 0%, rgba(22, 24, 31, 0) 68%),
+    var(--water-ink);
+  color: var(--water-paper);
 }
-.intro__eyebrow {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-mute, rgba(22, 24, 31, 0.5));
+.intro__hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(247, 247, 251, 0.14) 1px, transparent 1px);
+  background-size: 6px 6px;
+  mask-image: radial-gradient(ellipse 75% 85% at 85% 45%, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.25) 55%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 85% at 85% 45%, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.25) 55%, transparent 85%);
 }
 .intro__headline {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-family: var(--serif, Georgia, serif);
   font-weight: 400;
   font-size: clamp(2.5rem, 5.2vw, 4.5rem);
   line-height: 1.04;
   letter-spacing: -0.03em;
-  color: var(--water-ink);
-  max-width: 22ch;
-}
-.intro__tagline {
-  margin: 0;
-  font-size: 1rem;
-  color: var(--water-secondary);
-}
-.intro__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.4rem 1.25rem;
-  font-size: 0.9375rem;
-}
-.intro__name {
-  font-weight: 650;
-  color: var(--water-ink);
-}
-.intro__location {
-  color: var(--water-secondary);
-  padding-left: 1.25rem;
-  border-left: 1px solid var(--line, rgba(22, 24, 31, 0.12));
+  color: var(--water-paper);
+  max-width: 20ch;
 }
 .intro__summary {
-  margin: 0.35rem 0 0;
+  position: relative;
+  z-index: 1;
+  margin: 0;
   font-size: 1.0625rem;
   line-height: 1.72;
-  color: var(--water-secondary);
+  color: rgba(247, 247, 251, 0.78);
   max-width: 54ch;
 }
 .intro__approach {
