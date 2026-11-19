@@ -20,8 +20,8 @@ void main(){
   float fade=min(1.0,(${f(P.lifetime)}-age)/.5);fade=fade*fade*(3.0-2.0*fade);
   float env=clamp(source.w,0.0,1.0)*(1.0-exp(-age/${f(P.rise)}))*exp(-${f(P.decay)}*age)*fade*exp(-.5*d*d/${f(P.width**2)});
   float phase=6.283185307179586*d/${f(P.wavelength)};
-  raw+=env*cos(phase);
-  waveEdge+=env*(-sin(phase))*((p.x-source.x)/max(r,1e-4))*2.2;
+  raw+=env*1.45*cos(phase);
+  waveEdge+=env*(-sin(phase))*((p.x-source.x)/max(r,1e-4))*2.6;
  }
  float pd=length(p-uPointer);
  float bump=exp(-pd*pd*1.65)*uPull;

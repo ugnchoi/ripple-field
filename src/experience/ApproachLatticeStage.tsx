@@ -257,7 +257,7 @@ function fieldUxExpert(nx: number, ny: number, time: number): { energy: number; 
     const w = 0.032 + 0.018 * spread;
     const dy = ny - cy;
     const profile = Math.exp(-(dy * dy) / (w * w));
-    const flow = 0.55 + 0.45 * Math.sin(nx * 13.0 - time * 3.4 + k * 0.9);
+    const flow = 0.86 + 0.14 * Math.sin(nx * 13.0 - time * 3.4 + k * 0.9);
     const contribution = profile * flow;
     streamSum += contribution;
     if (contribution > streamMax) streamMax = contribution;
@@ -349,42 +349,39 @@ function fieldJustMakeIt(nx: number, ny: number, time: number): { energy: number
   const disperseProgress = smoothstep(0.76, 0.96, p);
   const disperseEnvelope = smoothstep(0.74, 0.80, p) * (1 - smoothstep(0.94, 1.0, p));
 
+  // Organic irregular wave distortion during assembly & disassembly
+  const distort =
+    0.14 * Math.sin(theta * 3.0 + nx * 4.5 + time * 2.2 + cycleIdx * 1.9) +
+    0.09 * Math.cos(theta * 5.0 - ny * 5.2 - time * 1.7 + cycleIdx * 3.1) +
+    0.06 * Math.sin((nx - ny) * 6.5 + time * 2.9);
+
   // Ambient scattered wavelets between cycles so the stage never goes dead
   const ambientWavelets =
     Math.exp(-r * r * 1.35) *
-    (0.32 + 0.28 * Math.sin(nx * 5.2 + time * 1.4) * Math.cos(ny * 4.8 - time * 1.2));
+    (0.18 + 0.16 * Math.sin(nx * 5.2 + time * 1.4) * Math.cos(ny * 4.8 - time * 1.2));
 
-  // Phase 1: Inward-converging waves of dispersed particles assembling into the shape
-  const inwardSdf = sdf - (1 - assembleProgress) * 0.44;
-  const inwardRipple = Math.max(0, Math.sin((sdf + assembleProgress * 0.82) * 24.0));
-  const inwardWavelets = 0.5 + 0.5 * Math.sin(theta * 7.0 - r * 12.0 + time * 2.8);
-  const assemblingShell =
-    Math.exp(-Math.pow(inwardSdf / 0.14, 2)) *
-    (0.38 + 0.62 * inwardRipple) *
-    (0.32 + 0.68 * inwardWavelets);
+  // Phase 1: One major distorted inward-converging wave + very subtle trailing echoes
+  const inwardSdf = sdf + distort * (1 - assembleProgress * 0.72) - (1 - assembleProgress) * 0.46;
+  const inwardMajor = Math.exp(-Math.pow(inwardSdf / 0.10, 2));
+  const inwardEcho = Math.max(0, Math.sin((inwardSdf + assembleProgress * 0.65) * 18.0)) * 0.14;
+  const inwardBreakup = 0.55 + 0.45 * Math.sin(theta * 4.0 - r * 7.5 + time * 2.4 + distort * 6.0);
+  const assemblingShell = (inwardMajor * 0.92 + inwardEcho) * inwardBreakup;
   const assemblingCore =
-    (1 - smoothstep(-0.08, 0.10, inwardSdf)) *
-    (0.25 + 0.45 * assembleProgress) *
-    (0.45 + 0.55 * inwardRipple);
+    (1 - smoothstep(-0.08, 0.10, inwardSdf)) * (0.28 + 0.52 * assembleProgress) * 0.75;
 
   // Phase 2: Crisp silhouette boundary
   const edge = 0.022 + 0.12 * (1 - sharpness);
   const shapeFill = 1 - smoothstep(-edge, edge, sdf);
   const crispRim = Math.exp(-Math.pow(sdf / 0.032, 2)) * sharpness;
 
-  // Phase 3: Outward expansion, concentric dispersion ripples along silhouette, and drifting wavelets
-  const expandedSdf = sdf - disperseProgress * 0.42;
-  const dispersionRipple = Math.max(0, Math.sin((sdf - disperseProgress * 0.78) * 24.0));
-  const wavelets = 0.5 + 0.5 * Math.sin(theta * 7.0 + r * 11.0 - time * 2.8);
-  const dispersedShell =
-    Math.exp(-Math.pow(expandedSdf / 0.14, 2)) *
-    (0.38 + 0.62 * dispersionRipple) *
-    (0.32 + 0.68 * wavelets);
+  // Phase 3: One major distorted outward-expanding wave + very subtle trailing echoes
+  const expandedSdf = sdf + distort * disperseProgress - disperseProgress * 0.46;
+  const outwardMajor = Math.exp(-Math.pow(expandedSdf / 0.10, 2));
+  const outwardEcho = Math.max(0, Math.sin((expandedSdf - disperseProgress * 0.65) * 18.0)) * 0.14;
+  const outwardBreakup = 0.55 + 0.45 * Math.sin(theta * 4.0 + r * 7.5 - time * 2.4 + distort * 6.0);
+  const dispersedShell = (outwardMajor * 0.92 + outwardEcho) * outwardBreakup;
   const dispersedCore =
-    (1 - smoothstep(-0.08, 0.12, expandedSdf)) *
-    0.45 *
-    (1 - disperseProgress * 0.85) *
-    (0.45 + 0.55 * dispersionRipple);
+    (1 - smoothstep(-0.08, 0.12, expandedSdf)) * 0.42 * (1 - disperseProgress * 0.85);
 
   const energy = clamp01(
     ambientWavelets * (1 - sharpness * 0.85) * 0.45 +

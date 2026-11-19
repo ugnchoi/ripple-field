@@ -145,6 +145,28 @@ vec3 ambientSurface(vec2 q, float t, float worldPerPx) {
   float pBump = exp(-pd2 * 1.65) * uPull;
   vec2 qWarped = q - pDelta * (0.32 * pBump);
 
+  // Click ripples also warp the contour domain and elevate the height field before
+  // quantization so the swell reshapes the ambient texture itself.
+  float clickH = 0.0;
+  vec2 clickG = vec2(0.0);
+  for (int i = 0; i < 16; i++) {
+    vec4 src = uSources[i];
+    float age = t - src.z;
+    if (src.z < 0.0 || age <= 0.0 || age >= 8.0) continue;
+    vec2 diff = q - src.xy;
+    float r = sqrt(dot(diff, diff) + 0.000144);
+    float d = r - 0.48 * age;
+    float fade = min(1.0, (8.0 - age) / 0.5);
+    fade = fade * fade * (3.0 - 2.0 * fade);
+    float env = clamp(src.w, 0.0, 1.0) * (1.0 - exp(-age / 0.12)) * exp(-0.65 * age) * fade * exp(-0.5 * d * d / 0.0576);
+    float phase = 26.17993878 * d;
+    float w = env * cos(phase);
+    vec2 dir = diff / max(r, 1e-4);
+    qWarped -= dir * (0.24 * w);
+    clickH += 0.34 * w;
+    clickG += dir * (0.34 * env * (-26.17993878 * sin(phase)));
+  }
+
   // The lattice offset is load-bearing, not decoration. ambHash folds on x*y*(x+y), which
   // collapses toward zero around the origin — and the origin is screen centre. Sampled in place
   // the field goes slack across the middle of the viewport and only develops texture at the
@@ -163,8 +185,8 @@ vec3 ambientSurface(vec2 q, float t, float worldPerPx) {
 
   float bumpH = pBump * 0.72;
   vec2 bumpG = pDelta * (-3.3 * bumpH);
-  n.x += bumpH;
-  n.yz += bumpG / A_NOISE_F;
+  n.x += bumpH + clickH;
+  n.yz += (bumpG + clickG) / A_NOISE_F;
 
   // Position within a contour band, folded about its midpoint to give distance to the nearest
   // band edge. Unclamped on purpose: clamping height would flatten the outermost rings into a
