@@ -1,0 +1,56 @@
+{
+  "source": "https://www.linkedin.com/in/ugnchoi",
+  "toneNotes": [
+    "Candid, grounded, and warm—never stiff or corporate-buzzwordy.",
+    "Short, direct sentences with occasional dry, self-deprecating humor.",
+    "Comfortable with nuance and honesty ('Honestly, I don't know', 'Still learning').",
+    "Centers on problem framing ('protecting the question'), shaping product DNA, empathy for teammates, and learning by making."
+  ],
+  "posts": [
+    {
+      "title": "Ever notice how AI always has an answer?",
+      "url": "https://www.linkedin.com/posts/ugnchoi_ever-notice-how-ai-always-has-an-answer-activity-7455170986221621248-Clnd",
+      "takeaway": "AI is strong at 'how' and 'what', but 'why' requires human judgment, context, taste, and responsibility. When making becomes cheap, deciding what deserves to be made is the real work—protecting the question."
+    },
+    {
+      "title": "Remember when 'AI in design' meant Adobe Illustrator?",
+      "url": "https://www.linkedin.com/posts/ugnchoi_remember-when-ai-in-design-meant-adobe-activity-7425512887860883456-nHh3",
+      "takeaway": "Designers now do two things around AI: (1) design AI—how it starts conversations, admits uncertainty, and fails gracefully; (2) design with AI—using it as a copilot/rapid prototyper while focusing human effort on problem alignment, guardrails, and product DNA."
+    },
+    {
+      "title": "Remember when the job was nudging pixels by 2px?",
+      "url": "https://www.linkedin.com/posts/ugnchoi_remember-when-the-job-was-nudging-pixels-activity-7440023041855770624-P_xn",
+      "takeaway": "When PMs can drop vibe-coded prototypes in Slack, a designer's core value is shaping product DNA—making sure the product still feels delightful, trustworthy, and distinct even when interfaces are generated."
+    },
+    {
+      "title": "To be an AI coach",
+      "url": "https://www.linkedin.com/posts/ugnchoi_to-be-an-ai-coach-i-started-taking-pilates-activity-7427652796163862529-Yxc2",
+      "takeaway": "Working with AI is like coaching (inspired by Pilates): instruct, refine, show examples, and know what 'good' looks like. The skill is learning how to coach intelligence."
+    },
+    {
+      "title": "Are you vibe-prototyping and somehow ran out of credits in 3 days?",
+      "url": "https://www.linkedin.com/posts/ugnchoi_are-you-vibe-prototyping-and-somehow-ran-activity-7444303515432177664-VGoF",
+      "takeaway": "Keep vibe-prototypes lean: ask for a front-end demo with fake data instead of a full backend; plan what to test in normal AI chat before opening Lovable/Figma Make/Cursor; lean on a UI library like shadcn + Radix; give specific, targeted fixes."
+    },
+    {
+      "title": "To Be on the Same Page",
+      "url": "https://www.linkedin.com/posts/ugnchoi_to-be-on-the-same-page-joining-a-new-team-activity-7442148243842691072-sOgd",
+      "takeaway": "Getting on the same page is an underrated design skill. Empathy extends to PMs, developers, clients, and fellow designers—reading the brief, one-pager, proposal, and research builds trust fast."
+    },
+    {
+      "title": "Will I Be a Designer Forever?",
+      "url": "https://www.linkedin.com/posts/ugnchoi_will-i-be-a-designer-forever-honestly-activity-7391491896432529408-5Wfo",
+      "takeaway": "Job titles may shift with GenAI, but shaping, connecting, and making things (including vibe coding with V0 and Cursor) is a continuation of always loving to build."
+    },
+    {
+      "title": "What Do I Need to Become a Designer?",
+      "url": "https://www.linkedin.com/posts/ugnchoi_what-do-i-need-to-become-a-designer-my-activity-7373271888371830784-QrrD",
+      "takeaway": "Started his design career twice: first in brand design after college, then stepped away to move countries and raise his daughter, and returned via online courses, a bootcamp, meetups, freelancing, and design competitions."
+    },
+    {
+      "title": "Honored to be recognized at BCG Star Awards",
+      "url": "https://www.linkedin.com/posts/ugnchoi_im-honored-to-be-recognized-at-star-awards-activity-7471387309481840640-drno",
+      "takeaway": "Credited his colleagues and BCG Design Studios leadership for building a strong team and growth opportunities."
+    }
+  ]
+}

@@ -9,13 +9,27 @@ interface ChatMessage {
 }
 
 const STARTER_PROMPTS = [
-  'What does Yoojin lead at BCG?',
-  'Tell me about his AI & prototyping work',
-  'Is he open to relocating to Montreal?',
+  'What kind of work does Yoojin do?',
+  "Tell me about Yoojin's design approach",
+  'How does Yoojin think about AI and design?',
 ] as const;
 
-export function ChatWidget() {
-  const [open, setOpen] = useState(false);
+interface ChatWidgetProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  hideFab?: boolean;
+}
+
+export function ChatWidget({ open: controlledOpen, onOpenChange, hideFab = false }: ChatWidgetProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = (next: boolean | ((prev: boolean) => boolean)) => {
+    const resolved = typeof next === 'function' ? next(open) : next;
+    if (controlledOpen === undefined) {
+      setInternalOpen(resolved);
+    }
+    onOpenChange?.(resolved);
+  };
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -158,8 +172,8 @@ export function ChatWidget() {
             <div className="chat-panel__messages" aria-live="polite">
               <div className="chat-msg chat-msg--assistant">
                 <p>
-                  Hi! I can answer questions about Yoojin&apos;s design leadership at
-                  BCG, AI prototyping work, background, and availability.
+                  Hi! I can answer questions about Yoojin&apos;s work, design
+                  approach, background, and writing on AI &amp; product craft.
                 </p>
               </div>
 
@@ -226,7 +240,7 @@ export function ChatWidget() {
               className="chat-panel__input"
               value={input}
               onChange={(event) => setInput(event.target.value)}
-              placeholder="Ask about experience, AI work, relocation…"
+              placeholder="Ask about Yoojin’s work, approach, or thinking…"
               maxLength={1000}
               disabled={loading}
             />
@@ -244,9 +258,11 @@ export function ChatWidget() {
       <button
         ref={fabRef}
         type="button"
-        className="chat-fab no-print"
+        className={`chat-fab no-print${hideFab && !open ? ' chat-fab--hidden' : ''}`}
         aria-expanded={open}
         aria-controls="yoojin-chat-panel"
+        aria-hidden={hideFab && !open ? true : undefined}
+        tabIndex={hideFab && !open ? -1 : undefined}
         onClick={() => setOpen((prev) => !prev)}
       >
         <img

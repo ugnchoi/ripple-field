@@ -54,6 +54,154 @@ function clamp01(v: number): number {
   return v < 0 ? 0 : v > 1 ? 1 : v;
 }
 
+function smin(a: number, b: number, k: number): number {
+  const h = Math.max(k - Math.abs(a - b), 0) / k;
+  return Math.min(a, b) - h * h * k * 0.25;
+}
+
+function sdCapsule(px: number, py: number, ax: number, ay: number, bx: number, by: number, r: number): number {
+  const pax = px - ax;
+  const pay = py - ay;
+  const bax = bx - ax;
+  const bay = by - ay;
+  const denom = bax * bax + bay * bay || 1e-6;
+  const h = clamp01((pax * bax + pay * bay) / denom);
+  return Math.hypot(pax - bax * h, pay - bay * h) - r;
+}
+
+function sdCircle(px: number, py: number, cx: number, cy: number, r: number): number {
+  return Math.hypot(px - cx, py - cy) - r;
+}
+
+function sdTriangle(
+  px: number,
+  py: number,
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+  cx: number,
+  cy: number,
+): number {
+  const e0x = bx - ax, e0y = by - ay;
+  const e1x = cx - bx, e1y = cy - by;
+  const e2x = ax - cx, e2y = ay - cy;
+  const v0x = px - ax, v0y = py - ay;
+  const v1x = px - bx, v1y = py - by;
+  const v2x = px - cx, v2y = py - cy;
+
+  const t0 = clamp01((v0x * e0x + v0y * e0y) / (e0x * e0x + e0y * e0y || 1e-6));
+  const t1 = clamp01((v1x * e1x + v1y * e1y) / (e1x * e1x + e1y * e1y || 1e-6));
+  const t2 = clamp01((v2x * e2x + v2y * e2y) / (e2x * e2x + e2y * e2y || 1e-6));
+
+  const pq0x = v0x - e0x * t0, pq0y = v0y - e0y * t0;
+  const pq1x = v1x - e1x * t1, pq1y = v1y - e1y * t1;
+  const pq2x = v2x - e2x * t2, pq2y = v2y - e2y * t2;
+
+  const s = Math.sign(e0x * e2y - e0y * e2x) || 1;
+  const d0 = pq0x * pq0x + pq0y * pq0y;
+  const d1 = pq1x * pq1x + pq1y * pq1y;
+  const d2 = pq2x * pq2x + pq2y * pq2y;
+
+  const c0 = s * (v0x * e0y - v0y * e0x);
+  const c1 = s * (v1x * e1y - v1y * e1x);
+  const c2 = s * (v2x * e2y - v2y * e2x);
+
+  const minD = Math.min(d0, d1, d2);
+  const minC = Math.min(c0, c1, c2);
+  return -Math.sqrt(minD) * Math.sign(minC);
+}
+
+/** 0: Paper plane (tilted upward-right dart with fold notch) */
+function sdfPaperPlane(nx: number, ny: number): number {
+  const cos = 0.92;
+  const sin = 0.39;
+  const x = nx * cos + ny * sin;
+  const y = -nx * sin + ny * cos;
+  const topWing = sdTriangle(x, y, 0.56, 0.0, -0.48, -0.38, -0.30, 0.02);
+  const bottomWing = sdTriangle(x, y, 0.56, 0.0, -0.30, 0.02, -0.44, 0.36);
+  const keel = sdTriangle(x, y, 0.56, 0.0, -0.30, 0.02, -0.18, 0.22);
+  const plane = Math.min(topWing, bottomWing, keel);
+  // Subtle center fold groove for paper-plane definition
+  const crease = sdCapsule(x, y, 0.42, 0.0, -0.32, 0.02, 0.018);
+  return Math.max(plane, -crease * 0.5);
+}
+
+/** 1: Balloon dog toy */
+function sdfBalloonDog(nx: number, ny: number): number {
+  const x = nx;
+  const y = ny + 0.04;
+  // Snout + head
+  const snout = sdCapsule(x, y, -0.46, -0.26, -0.26, -0.28, 0.11);
+  // Two tall balloon ears
+  const ear1 = sdCapsule(x, y, -0.25, -0.32, -0.29, -0.56, 0.085);
+  const ear2 = sdCapsule(x, y, -0.17, -0.30, -0.13, -0.54, 0.08);
+  // Neck + torso
+  const neck = sdCapsule(x, y, -0.22, -0.24, -0.22, 0.04, 0.095);
+  const torso = sdCapsule(x, y, -0.22, 0.04, 0.26, 0.04, 0.11);
+  // Front & back legs
+  const frontLeg = sdCapsule(x, y, -0.22, 0.06, -0.26, 0.40, 0.088);
+  const backLeg = sdCapsule(x, y, 0.26, 0.06, 0.30, 0.40, 0.088);
+  // Upright tail + pom-pom tip
+  const tail = sdCapsule(x, y, 0.26, 0.02, 0.42, -0.26, 0.075);
+  const tailTip = sdCircle(x, y, 0.44, -0.31, 0.09);
+
+  let d = smin(snout, ear1, 0.04);
+  d = smin(d, ear2, 0.04);
+  d = smin(d, neck, 0.04);
+  d = smin(d, torso, 0.04);
+  d = smin(d, frontLeg, 0.04);
+  d = smin(d, backLeg, 0.04);
+  d = smin(d, tail, 0.04);
+  d = smin(d, tailTip, 0.03);
+  return d;
+}
+
+/** 2: Flying dove silhouette */
+function sdfDove(nx: number, ny: number): number {
+  const x = nx;
+  const y = ny + 0.04;
+  // Curved body & breast
+  const body = sdCapsule(x, y, -0.16, 0.08, 0.22, 0.16, 0.12);
+  // Head & beak pointing left-upward
+  const head = sdCircle(x, y, -0.26, -0.06, 0.095);
+  const beak = sdTriangle(x, y, -0.33, -0.09, -0.45, -0.05, -0.33, -0.02);
+  // Swept-up wings (primary & secondary)
+  const wingFront = sdTriangle(x, y, -0.10, 0.06, 0.18, -0.52, 0.18, 0.04);
+  const wingBack = sdTriangle(x, y, -0.02, 0.02, 0.38, -0.42, 0.22, 0.10);
+  // Fanned tail
+  const tail = sdTriangle(x, y, 0.18, 0.14, 0.50, 0.08, 0.44, 0.34);
+
+  let d = smin(body, head, 0.06);
+  d = Math.min(d, beak);
+  d = smin(d, wingFront, 0.05);
+  d = smin(d, wingBack, 0.05);
+  d = smin(d, tail, 0.04);
+  return d;
+}
+
+/** 3: Fingers shaping heart (two curved finger-and-thumb arcs framing a heart) */
+function sdfFingerHeart(nx: number, ny: number): number {
+  // Center heart (flipped y so top lobes are at -ny)
+  const hx = Math.abs(nx) * 1.45;
+  const hy = (-ny + 0.06) * 1.45;
+  let heart: number;
+  if (hy + hx > 0.42) {
+    heart = Math.hypot(hx - 0.21, hy - 0.21) - 0.15;
+  } else {
+    const a = Math.hypot(hx, hy - 0.42);
+    const b = Math.hypot(hx - 0.5 * Math.max(hx + hy, 0), hy - 0.5 * Math.max(hx + hy, 0));
+    heart = Math.min(a, b) * Math.sign(hx - hy) * 0.65;
+  }
+  // Symmetric finger/hand arcs cradling the lower sides of the heart
+  const ax = Math.abs(nx);
+  const indexFinger = sdCapsule(ax, ny, 0.10, -0.26, 0.38, -0.02, 0.055);
+  const thumbArc = sdCapsule(ax, ny, 0.38, -0.02, 0.14, 0.34, 0.065);
+  const wrist = sdCapsule(ax, ny, 0.14, 0.34, 0.22, 0.52, 0.075);
+  const hands = smin(smin(indexFinger, thumbArc, 0.05), wrist, 0.05);
+  return Math.min(heart * 0.72, hands);
+}
+
 function smoothstep(edge0: number, edge1: number, x: number): number {
   const t = clamp01((x - edge0) / (edge1 - edge0));
   return t * t * (3 - 2 * t);
@@ -142,70 +290,86 @@ function fieldCommunicator(nx: number, ny: number, time: number): { energy: numb
 
 /**
  * Scalar field 2: Just Make It
- * Looping 6.0s cycle: abstract blurred surface -> sharpens into a seeded random organic shape ->
- * disperses with outward concentric ripples and drifting wavelets -> fades back to blurred surface.
+ * Looping 6.0s cycle: waves of dispersed particles converge inward to assemble into
+ * tangible silhouettes (paper plane, balloon toy, dove, fingers shaping heart) ->
+ * hold crisp form -> disperse outward as waves again.
  */
 function fieldJustMakeIt(nx: number, ny: number, time: number): { energy: number; accent: number } {
   const CYCLE = 6.0;
-  const cycleIdx = Math.floor(time / CYCLE);
+  const cycleIdx = ((Math.floor(time / CYCLE) % 4) + 4) % 4;
   const p = (((time % CYCLE) + CYCLE) % CYCLE) / CYCLE;
 
   const r = Math.hypot(nx, ny);
   const theta = Math.atan2(ny, nx);
 
-  // Deterministic harmonic seeds per cycle
-  const s1 = cycleIdx * 2.39996 + 0.7;
-  const s2 = cycleIdx * 3.713 + 1.4;
-  const s3 = cycleIdx * 5.137 + 2.1;
-
-  const baseR =
-    0.36 +
-    0.12 * Math.sin(2 * theta + s1) +
-    0.09 * Math.cos(3 * theta - s2) +
-    0.06 * Math.sin(5 * theta + s3);
+  let sdf: number;
+  if (cycleIdx === 0) {
+    sdf = sdfPaperPlane(nx, ny);
+  } else if (cycleIdx === 1) {
+    sdf = sdfBalloonDog(nx, ny);
+  } else if (cycleIdx === 2) {
+    sdf = sdfDove(nx, ny);
+  } else {
+    sdf = sdfFingerHeart(nx, ny);
+  }
 
   // Phase weights:
-  // 1. Blurred surface near p = 0 / 1
-  // 2. Sharpens into random shape around p = 0.25..0.52
-  // 3. Disperses outward around p = 0.52..0.82, then fades back to blurred surface (0.82..1.0)
-  const sharpness = smoothstep(0.08, 0.26, p) * (1 - smoothstep(0.50, 0.62, p));
-  const disperseProgress = smoothstep(0.50, 0.82, p);
-  const disperseEnvelope = smoothstep(0.48, 0.56, p) * (1 - smoothstep(0.78, 0.94, p));
-  const blurAmount = clamp01(1 - sharpness * 0.9 - disperseEnvelope * 0.55);
+  // 1. Assembly (p = 0.00..0.32): inward-traveling particle waves converging onto the silhouette
+  // 2. Crisp form (p = 0.24..0.58): sharp silhouette with slate-accented rim
+  // 3. Dispersion (p = 0.54..0.95): outward-traveling wavelets scattering back into the field
+  const assembleProgress = smoothstep(0.0, 0.30, p);
+  const assembleEnvelope = smoothstep(0.0, 0.08, p) * (1 - smoothstep(0.24, 0.34, p));
+  const sharpness = smoothstep(0.20, 0.32, p) * (1 - smoothstep(0.54, 0.66, p));
+  const disperseProgress = smoothstep(0.54, 0.90, p);
+  const disperseEnvelope = smoothstep(0.52, 0.60, p) * (1 - smoothstep(0.86, 0.98, p));
 
-  // Phase 1: Broad, soft low-frequency surface swell with gentle organic drift
-  const drift =
-    0.12 * Math.sin(nx * 2.8 + time * 0.75) * Math.cos(ny * 2.6 - time * 0.65) +
-    0.06 * Math.cos((nx - ny) * 2.1 + time * 0.5);
-  const blurredSurface = clamp01(Math.exp(-r * r * 1.6) * (0.58 + drift));
+  // Ambient scattered wavelets between cycles so the stage never goes dead
+  const ambientWavelets =
+    Math.exp(-r * r * 1.35) *
+    (0.32 + 0.28 * Math.sin(nx * 5.2 + time * 1.4) * Math.cos(ny * 4.8 - time * 1.2));
 
-  // Phase 2: Crisp random shape boundary with tight edge = 0.025
-  const edge = 0.025 + 0.18 * (1 - sharpness);
-  const shapeFill = 1 - smoothstep(-edge, edge, r - baseR);
-  const crispRim = Math.exp(-Math.pow((r - baseR) / 0.036, 2)) * sharpness;
+  // Phase 1: Inward-converging waves of dispersed particles assembling into the shape
+  const inwardSdf = sdf - (1 - assembleProgress) * 0.44;
+  const inwardRipple = Math.max(0, Math.sin((sdf + assembleProgress * 0.82) * 24.0));
+  const inwardWavelets = 0.5 + 0.5 * Math.sin(theta * 7.0 - r * 12.0 + time * 2.8);
+  const assemblingShell =
+    Math.exp(-Math.pow(inwardSdf / 0.14, 2)) *
+    (0.38 + 0.62 * inwardRipple) *
+    (0.32 + 0.68 * inwardWavelets);
+  const assemblingCore =
+    (1 - smoothstep(-0.08, 0.10, inwardSdf)) *
+    (0.25 + 0.45 * assembleProgress) *
+    (0.45 + 0.55 * inwardRipple);
 
-  // Phase 3: Outward expansion, concentric dispersion ripples, and drifting wavelets
-  const expandedR = baseR + disperseProgress * 0.45;
-  const dispersionRipple = Math.max(0, Math.sin((r - disperseProgress * 0.8) * 24.0));
-  const wavelets = 0.5 + 0.5 * Math.sin(theta * 6.0 + r * 10.0 - time * 2.6);
+  // Phase 2: Crisp silhouette boundary
+  const edge = 0.022 + 0.12 * (1 - sharpness);
+  const shapeFill = 1 - smoothstep(-edge, edge, sdf);
+  const crispRim = Math.exp(-Math.pow(sdf / 0.032, 2)) * sharpness;
+
+  // Phase 3: Outward expansion, concentric dispersion ripples along silhouette, and drifting wavelets
+  const expandedSdf = sdf - disperseProgress * 0.42;
+  const dispersionRipple = Math.max(0, Math.sin((sdf - disperseProgress * 0.78) * 24.0));
+  const wavelets = 0.5 + 0.5 * Math.sin(theta * 7.0 + r * 11.0 - time * 2.8);
   const dispersedShell =
-    Math.exp(-Math.pow((r - expandedR) / 0.14, 2)) *
-    (0.42 + 0.58 * dispersionRipple) *
-    (0.35 + 0.65 * wavelets);
+    Math.exp(-Math.pow(expandedSdf / 0.14, 2)) *
+    (0.38 + 0.62 * dispersionRipple) *
+    (0.32 + 0.68 * wavelets);
   const dispersedCore =
-    (1 - smoothstep(-0.08, 0.12, r - expandedR)) *
+    (1 - smoothstep(-0.08, 0.12, expandedSdf)) *
     0.45 *
     (1 - disperseProgress * 0.85) *
-    (0.5 + 0.5 * dispersionRipple);
+    (0.45 + 0.55 * dispersionRipple);
 
   const energy = clamp01(
-    blurredSurface * blurAmount * 0.75 +
-      shapeFill * sharpness * 0.88 +
+    ambientWavelets * (1 - sharpness * 0.85) * 0.45 +
+      (assemblingShell + assemblingCore) * assembleEnvelope * 0.95 +
+      shapeFill * sharpness * 0.90 +
       crispRim * 0.35 +
       (dispersedShell + dispersedCore) * disperseEnvelope * 0.95,
   );
   const accent = clamp01(
-    crispRim * 0.95 +
+    assemblingShell * assembleEnvelope * 0.80 +
+      crispRim * 0.95 +
       shapeFill * sharpness * 0.22 +
       dispersedShell * disperseEnvelope * 0.85,
   );

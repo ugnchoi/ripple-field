@@ -16,6 +16,8 @@ const tabFromHash = (): PortfolioTab =>
 
 function PortfolioTabs() {
   const [activeTab, setActiveTab] = useState<PortfolioTab>(tabFromHash);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [heroChatVisible, setHeroChatVisible] = useState(() => tabFromHash() === 'intro');
   const reducedMotion = useMotionPreference();
   const introTabRef = useRef<HTMLButtonElement>(null);
   const resumeTabRef = useRef<HTMLButtonElement>(null);
@@ -114,6 +116,9 @@ function PortfolioTabs() {
             createSurface={createGridSurface}
             playgroundHref="./water/"
             onReadResume={() => selectTab('resume', { scrollTop: true })}
+            onOpenChat={() => setChatOpen((prev) => !prev)}
+            chatOpen={chatOpen}
+            onHeroChatVisibilityChange={setHeroChatVisible}
           />
           <Intro
             playgroundHref="./water/"
@@ -145,7 +150,11 @@ function PortfolioTabs() {
           </section>
         </div>
       )}
-      <ChatWidget />
+      <ChatWidget
+        open={chatOpen}
+        onOpenChange={setChatOpen}
+        hideFab={activeTab === 'intro' && heroChatVisible}
+      />
     </>
   );
 }

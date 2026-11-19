@@ -46,6 +46,10 @@ interface ProviderResult {
 
 const require = createRequire(import.meta.url);
 const resumeData = require('../docs/resume/resume.json') as Record<string, unknown>;
+const linkedinData = require('../docs/resume/linkedin-posts.json') as {
+  toneNotes?: string[];
+  posts?: Array<{ title?: string; takeaway?: string }>;
+};
 
 const MAX_MESSAGES = 12;
 const MAX_CONTENT_LENGTH = 1000;
@@ -93,10 +97,8 @@ function formatCompactResume(resume: Record<string, unknown>): string {
     if (b.specialties?.length) lines.push(`Specialties: ${b.specialties.join(', ')}`);
     if (b.tagline) lines.push(`Tagline: ${b.tagline}`);
     if (b.summary) lines.push(`Summary: ${b.summary}`);
-    if (b.location) {
-      lines.push(
-        `Location: ${b.location.current ?? ''}; Open to: ${(b.location.openToWork ?? []).join(', ')}`,
-      );
+    if (b.location?.current) {
+      lines.push(`Location: ${b.location.current}`);
     }
     const linkedin = b.profiles?.find((p) => p.url)?.url ?? '';
     lines.push(`Contact: ${b.email ?? ''} | ${b.phone ?? ''} | ${linkedin}`);
@@ -170,16 +172,36 @@ function formatCompactResume(resume: Record<string, unknown>): string {
   return lines.join('\n');
 }
 
-function buildSystemInstruction(resume: Record<string, unknown>): string {
+function buildSystemInstruction(
+  resume: Record<string, unknown>,
+  linkedin: { toneNotes?: string[]; posts?: Array<{ title?: string; takeaway?: string }> },
+): string {
+  const toneBlock = linkedin.toneNotes?.length
+    ? ['Tone & Voice (inspired by Yoojin’s writing):', ...linkedin.toneNotes.map((t) => `- ${t}`)].join('\n')
+    : '';
+
+  const postsBlock = linkedin.posts?.length
+    ? [
+        'LinkedIn Writing & Perspectives:',
+        ...linkedin.posts.map((p) => `- ${p.title}: ${p.takeaway}`),
+      ].join('\n')
+    : '';
+
   return [
     "You are Yoojin Choi's portfolio and resume assistant.",
-    'Answer concisely, warmly, and clearly in a helpful tone.',
-    'Use ONLY facts present in the resume below.',
+    'Answer concisely, warmly, and clearly in a candid, grounded tone—never stiff or corporate-buzzwordy.',
+    'Use ONLY facts and perspectives present in the resume and LinkedIn notes below.',
     'Never invent projects, companies, metrics, skills, or dates.',
     'If asked something not covered below, say so honestly and offer to reach Yoojin directly at ugn.choi@gmail.com or https://www.linkedin.com/in/ugnchoi.',
     '',
+    toneBlock,
+    '',
     formatCompactResume(resume),
-  ].join('\n');
+    '',
+    postsBlock,
+  ]
+    .filter(Boolean)
+    .join('\n');
 }
 
 function validateMessages(raw: unknown): ChatMessage[] | null {
@@ -477,7 +499,7 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const systemPrompt = buildSystemInstruction(resumeData);
+  const systemPrompt = buildSystemInstruction(resumeData, linkedinData);
   let lastError = 'The assistant service is unavailable.';
 
   if (ollamaBaseUrl) {

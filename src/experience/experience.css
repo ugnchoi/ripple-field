@@ -23,7 +23,9 @@
     linear-gradient(to top, rgba(247, 247, 251, 0.72) 0%, rgba(247, 247, 251, 0) 30%);
 }
 .water-opening__header,
+.water-opening__main,
 .water-opening__copy,
+.water-opening__chat,
 .water-opening__hint,
 .water-opening__navigation {
   position: relative;
@@ -34,6 +36,7 @@
 .water-opening__header button,
 .water-opening__copy a,
 .water-opening__copy button,
+.water-opening__chat button,
 .water-opening__navigation a,
 .water-opening__navigation button {
   pointer-events: auto;
@@ -49,7 +52,33 @@
 .water-opening__header,
 .water-playground__header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .water-opening__name { margin: 0; font-weight: 550; font-size: 1rem; }
-.water-opening__copy { margin-block: auto; padding-block: 6rem; width: min(100%, 49rem); }
+.water-opening__main {
+  margin-block: auto;
+  padding-block: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+}
+.water-opening__copy { width: min(100%, 44rem); flex: 1 1 0; }
+.water-opening__chat {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 860px) {
+  .water-opening__main {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: 3.5rem;
+    gap: 2rem;
+  }
+  .water-opening__chat {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+  }
+}
 .water-opening__copy h1 { font-family: var(--serif, Georgia, serif); font-weight: 400; font-size: clamp(2.75rem, 6.3vw, 5.5rem); line-height: 1.07; letter-spacing: -0.03em; text-wrap: balance; margin: 0; max-width: 15ch; }
 .water-opening__copy p { margin: 1.5rem 0 0; color: var(--water-secondary); font-size: 1rem; }
 .water-opening__hint { color: var(--water-secondary); font-size: 0.875rem; line-height: 1.5; margin: 0 0 1rem; max-width: 42ch; pointer-events: none; }
@@ -601,6 +630,34 @@
 
 .chat-fab__label {
   letter-spacing: -0.01em;
+}
+
+.chat-fab--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+.chat-fab--hero {
+  position: static;
+  z-index: 1;
+  gap: 0.9rem;
+  padding: 0.55rem 1.75rem 0.55rem 0.55rem;
+  background: rgba(247, 247, 251, 0.94);
+  backdrop-filter: blur(8px);
+  border-color: rgba(22, 24, 31, 0.2);
+  font-size: 1.125rem;
+  box-shadow: 0 12px 32px rgba(22, 24, 31, 0.12);
+}
+
+.chat-fab--hero:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(22, 24, 31, 0.16);
+}
+
+.chat-fab--hero .chat-fab__avatar {
+  width: 3.25rem;
+  height: 3.25rem;
 }
 
 .chat-panel {
