@@ -23,8 +23,47 @@ function clamp01(v: number): number {
   return v < 0 ? 0 : v > 1 ? 1 : v;
 }
 
+function renderInlineBold(text: string, keyPrefix: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, idx) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+      return <strong key={`${keyPrefix}-${idx}`}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+}
+
+function renderFormattedMessage(content: string) {
+  const blocks = content.split(/\n{2,}/);
+  return blocks.map((block, bIdx) => {
+    const lines = block.split('\n').filter((line) => line.trim().length > 0);
+    if (lines.length > 0 && lines.every((line) => /^\s*[-*•]\s+/.test(line))) {
+      return (
+        <ul key={`b-${bIdx}`} className="chat-msg__list">
+          {lines.map((line, lIdx) => (
+            <li key={`b-${bIdx}-l-${lIdx}`}>
+              {renderInlineBold(line.replace(/^\s*[-*•]\s+/, ''), `b-${bIdx}-l-${lIdx}`)}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+    return (
+      <p key={`b-${bIdx}`}>
+        {lines.map((line, lIdx) => (
+          <span key={`b-${bIdx}-p-${lIdx}`}>
+            {lIdx > 0 ? <br /> : null}
+            {renderInlineBold(line, `b-${bIdx}-p-${lIdx}`)}
+          </span>
+        ))}
+      </p>
+    );
+  });
+}
+
 export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProps = {}) {
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [heroInput, setHeroInput] = useState('');
@@ -215,7 +254,7 @@ export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProp
       {open && (
         <div
           id="yoojin-chat-panel"
-          className="chat-panel no-print"
+          className={`chat-panel no-print${expanded ? ' chat-panel--expanded' : ''}`}
           role="dialog"
           aria-label="Ask about Yoojin"
           onKeyDown={handlePanelKeyDown}
@@ -234,14 +273,60 @@ export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProp
                 <p className="chat-panel__subtitle">Portfolio &amp; resume assistant</p>
               </div>
             </div>
-            <button
-              type="button"
-              className="chat-panel__close"
-              onClick={closePanel}
-              aria-label="Close chat"
-            >
-              ×
-            </button>
+            <div className="chat-panel__actions">
+              <button
+                type="button"
+                className="chat-panel__expand"
+                onClick={() => setExpanded((prev) => !prev)}
+                aria-label={expanded ? 'Shrink chat' : 'Expand chat to side sheet'}
+                aria-pressed={expanded}
+                title={expanded ? 'Shrink' : 'Expand'}
+              >
+                {expanded ? (
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="4 14 10 14 10 20" />
+                    <polyline points="20 10 14 10 14 4" />
+                    <line x1="14" y1="10" x2="21" y2="3" />
+                    <line x1="3" y1="21" x2="10" y2="14" />
+                  </svg>
+                ) : (
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="15 3 21 3 21 9" />
+                    <polyline points="9 21 3 21 3 15" />
+                    <line x1="21" y1="3" x2="14" y2="10" />
+                    <line x1="3" y1="21" x2="10" y2="14" />
+                  </svg>
+                )}
+              </button>
+              <button
+                type="button"
+                className="chat-panel__close"
+                onClick={closePanel}
+                aria-label="Close chat"
+              >
+                ×
+              </button>
+            </div>
           </header>
 
           <div className="chat-panel__body">
@@ -274,7 +359,7 @@ export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProp
                   key={message.id}
                   className={`chat-msg chat-msg--${message.role}`}
                 >
-                  <p>{message.content}</p>
+                  {renderFormattedMessage(message.content)}
                 </div>
               ))}
 
