@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module';
+import { CHAT_POLICY } from './chat-policy.mjs';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -190,6 +191,7 @@ function buildSystemInstruction(
   return [
     "You are Yoojin Choi's portfolio and resume assistant.",
     'Answer concisely, warmly, and clearly in a candid, grounded tone—never stiff or corporate-buzzwordy.',
+    CHAT_POLICY,
     'Use ONLY facts and perspectives present in the resume and LinkedIn notes below.',
     'Never invent projects, companies, metrics, skills, or dates.',
     'If asked something not covered below, say so honestly and offer to reach Yoojin directly at ugn.choi@gmail.com or https://www.linkedin.com/in/ugnchoi.',
@@ -273,7 +275,7 @@ async function tryOllama(
         keep_alive: '30m',
         options: {
           num_ctx: 4096,
-          num_predict: 200,
+          num_predict: 320,
         },
         messages: [{ role: 'system', content: systemPrompt }, ...messages],
       }),
