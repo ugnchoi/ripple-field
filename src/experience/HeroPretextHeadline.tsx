@@ -5,7 +5,7 @@ interface HeroPretextHeadlineProps {
   text: string;
 }
 
-const CELL = 3;
+const CELL = 2;
 const RADIUS = 165;
 const PAD = 24;
 
@@ -14,10 +14,15 @@ function smoothstep(edge0: number, edge1: number, x: number): number {
   return t * t * (3 - 2 * t);
 }
 
-function hash2(ix: number, iy: number): [number, number] {
+function hash3(ix: number, iy: number): [number, number, number] {
   const h1 = Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453123;
   const h2 = Math.sin(ix * 269.5 + iy * 183.3) * 43758.5453123;
-  return [(h1 - Math.floor(h1)) * 2 - 1, (h2 - Math.floor(h2)) * 2 - 1];
+  const h3 = Math.sin(ix * 419.2 + iy * 371.9) * 43758.5453123;
+  return [
+    (h1 - Math.floor(h1)) * 2 - 1,
+    (h2 - Math.floor(h2)) * 2 - 1,
+    h3 - Math.floor(h3),
+  ];
 }
 
 /**
@@ -212,16 +217,19 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
           }
 
           // Deterministic grain scatter + radial dispersion strongest at cursor center
-          const [hx, hy] = hash2(col, row);
+          const [hx, hy, hs] = hash3(col, row);
           const dxFromPtr = cx - pointer.x;
           const dyFromPtr = cy - pointer.y;
           const ptrLen = Math.max(1, Math.hypot(dxFromPtr, dyFromPtr));
-          const scatter = inf * inf * 10.0;
+          const scatter = inf * inf * 10.5;
           const gx = cx + hx * scatter + (dxFromPtr / ptrLen) * inf * 4.5;
           const gy = cy + hy * scatter + (dyFromPtr / ptrLen) * inf * 4.5;
 
           const baseCoverage = Math.max(aCenter, Math.max(aLeft, aRight) * 0.85);
-          const grainRadius = (0.65 + 0.85 * baseCoverage) * (0.7 + 0.45 * (1 - inf * 0.4));
+          // Most grains are small/fine; sparingly (~5%) produce a larger accent grain
+          const sizeCurve = Math.pow(hs, 4.5);
+          const grainRadius =
+            (0.45 + 0.55 * baseCoverage + 1.55 * sizeCurve) * (0.72 + 0.4 * (1 - inf * 0.35));
           const alpha = Math.min(1, baseCoverage * (0.55 + 0.55 * inf) * 1.15);
 
           ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha.toFixed(3)})`;
