@@ -5,13 +5,19 @@ interface HeroPretextHeadlineProps {
   text: string;
 }
 
-const CELL = 7;
-const RADIUS = 155;
-const PAD = 16;
+const CELL = 5;
+const RADIUS = 165;
+const PAD = 24;
 
 function smoothstep(edge0: number, edge1: number, x: number): number {
   const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
   return t * t * (3 - 2 * t);
+}
+
+function hash2(ix: number, iy: number): [number, number] {
+  const h1 = Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453123;
+  const h2 = Math.sin(ix * 269.5 + iy * 183.3) * 43758.5453123;
+  return [(h1 - Math.floor(h1)) * 2 - 1, (h2 - Math.floor(h2)) * 2 - 1];
 }
 
 /**
@@ -154,6 +160,7 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
       const cols = Math.ceil(width / CELL);
       const rows = Math.ceil(height / CELL);
       const shift = 3.2;
+      const sigma = RADIUS * 0.42;
 
       for (let row = 0; row < rows; row++) {
         const y0 = row * CELL;
@@ -162,8 +169,13 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
           const x0 = col * CELL;
           const cx = x0 + CELL * 0.5;
           const dist = Math.hypot(cx - pointer.x, cy - pointer.y);
-          const inf = smoothstep(RADIUS, 18, dist) * pointer.pull;
-          if (inf <= 0.04) continue;
+          if (dist >= RADIUS) continue;
+
+          // Smooth radial gradient: strongest at the cursor center, tapering softly outward
+          const gaussian = Math.exp(-(dist * dist) / (2 * sigma * sigma));
+          const edgeFade = 1 - smoothstep(RADIUS * 0.65, RADIUS, dist);
+          const inf = gaussian * edgeFade * pointer.pull;
+          if (inf <= 0.03) continue;
 
           // Exaggerated ClearType subpixel sampling:
           // Left-shifted sample for Red, center for Green, right-shifted for Blue
@@ -173,14 +185,15 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
 
           if (aCenter < 0.02 && aLeft < 0.02 && aRight < 0.02) continue;
 
-          // Clear smooth text inside this pixel cell so the coarse block replaces it cleanly
-          ctx.clearRect(x0, y0, CELL, CELL);
+          // Clear smooth text in this cell proportionally; near center it fully decomposes into grains
+          ctx.save();
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(1, inf * 1.25).toFixed(3)})`;
+          ctx.fillRect(x0, y0, CELL, CELL);
+          ctx.restore();
 
-          // Exaggerated RGB subpixel ink absorption on paper (#f7f7fb):
-          // Left edge of stroke: aRight > aLeft -> warm amber/red
-          // Right edge of stroke: aLeft > aRight -> cool sky/cobalt blue
-          // Center of stroke: high coverage -> deep ink (#16181f)
-          const edgeDelta = (aRight - aLeft) * 1.45;
+          // Exaggerated RGB subpixel ink absorption preserving ClearType edge logic
+          const edgeDelta = (aRight - aLeft) * 1.5;
           const ink = Math.min(1, aCenter * 1.15);
 
           let r = 247 - ink * 225;
@@ -188,29 +201,34 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
           let b = 251 - ink * 220;
 
           if (edgeDelta > 0.02) {
-            // Left edge -> warm amber / burnt red
-            const t = Math.min(1, edgeDelta * (0.85 + 0.55 * inf));
+            const t = Math.min(1, edgeDelta * (0.85 + 0.65 * inf));
             r = r + (208 - r) * t;
             g = g + (96 - g) * t;
             b = b + (22 - b) * t;
           } else if (edgeDelta < -0.02) {
-            // Right edge -> cool cobalt / sky blue
-            const t = Math.min(1, -edgeDelta * (0.85 + 0.55 * inf));
+            const t = Math.min(1, -edgeDelta * (0.85 + 0.65 * inf));
             r = r + (24 - r) * t;
             g = g + (116 - g) * t;
             b = b + (232 - b) * t;
           }
 
-          const alpha = Math.min(1, Math.max(aCenter, Math.max(aLeft, aRight) * 0.85) * 1.15);
-          ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha.toFixed(3)})`;
-          ctx.fillRect(x0, y0, CELL, CELL);
+          // Deterministic grain scatter + radial dispersion strongest at cursor center
+          const [hx, hy] = hash2(col, row);
+          const dxFromPtr = cx - pointer.x;
+          const dyFromPtr = cy - pointer.y;
+          const ptrLen = Math.max(1, Math.hypot(dxFromPtr, dyFromPtr));
+          const scatter = inf * inf * 11.0;
+          const gx = cx + hx * scatter + (dxFromPtr / ptrLen) * inf * 4.5;
+          const gy = cy + hy * scatter + (dyFromPtr / ptrLen) * inf * 4.5;
 
-          // Subtle pixel-grid hairline around active exaggerated cells
-          if (inf > 0.28) {
-            ctx.strokeStyle = `rgba(22, 24, 31, ${(0.12 * inf).toFixed(3)})`;
-            ctx.lineWidth = 0.75;
-            ctx.strokeRect(x0 + 0.375, y0 + 0.375, CELL - 0.75, CELL - 0.75);
-          }
+          const baseCoverage = Math.max(aCenter, Math.max(aLeft, aRight) * 0.85);
+          const grainRadius = (1.1 + 1.45 * baseCoverage) * (0.65 + 0.55 * (1 - inf * 0.45));
+          const alpha = Math.min(1, baseCoverage * (0.55 + 0.55 * inf) * 1.15);
+
+          ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha.toFixed(3)})`;
+          ctx.beginPath();
+          ctx.arc(gx, gy, grainRadius, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
 
