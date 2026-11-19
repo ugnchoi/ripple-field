@@ -7,6 +7,7 @@ interface HeroPretextHeadlineProps {
 
 const CELL = 7;
 const RADIUS = 155;
+const PAD = 16;
 
 function smoothstep(edge0: number, edge1: number, x: number): number {
   const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
@@ -61,8 +62,8 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
 
     const rebuildMask = () => {
       const rect = h1.getBoundingClientRect();
-      width = Math.max(1, Math.ceil(rect.width));
-      height = Math.max(1, Math.ceil(rect.height));
+      width = Math.max(1, Math.ceil(rect.width) + PAD * 2);
+      height = Math.max(1, Math.ceil(rect.height) + PAD * 2);
       dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       canvas.width = Math.floor(width * dpr);
@@ -78,12 +79,16 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
 
       const style = window.getComputedStyle(h1);
       offCtx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-      offCtx.fillStyle = '#000000';
-      offCtx.textBaseline = 'top';
+      offCtx.fillStyle = '#16181f';
+      offCtx.textBaseline = 'alphabetic';
       if ('letterSpacing' in offCtx) {
         (offCtx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing =
           style.letterSpacing;
       }
+
+      const refMetrics = offCtx.measureText('Mg');
+      const fontAscent = refMetrics.fontBoundingBoxAscent || parseFloat(style.fontSize) * 0.82;
+      const fontDescent = refMetrics.fontBoundingBoxDescent || parseFloat(style.fontSize) * 0.22;
 
       const textNode = h1.firstChild;
       if (textNode && textNode.nodeType === Node.TEXT_NODE) {
@@ -95,13 +100,13 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
           range.setStart(textNode, match.index);
           range.setEnd(textNode, match.index + match[0].length);
           const wRect = range.getBoundingClientRect();
-          // Nudge baseline slightly to match CSS line-box top
-          const drawX = wRect.left - rect.left;
-          const drawY = wRect.top - rect.top + (wRect.height - parseFloat(style.fontSize)) * 0.14;
+          const leading = wRect.height - (fontAscent + fontDescent);
+          const drawX = PAD + (wRect.left - rect.left);
+          const drawY = PAD + (wRect.top - rect.top) + leading * 0.5 + fontAscent;
           offCtx.fillText(match[0], drawX, drawY);
         }
       } else {
-        offCtx.fillText(text, 0, 0);
+        offCtx.fillText(text, PAD, PAD + fontAscent);
       }
 
       maskData = offCtx.getImageData(0, 0, maskW, maskH).data;
@@ -228,11 +233,11 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
     const onPointerMove = (event: PointerEvent) => {
       if (event.pointerType === 'touch') return;
       const rect = h1.getBoundingClientRect();
-      const lx = event.clientX - rect.left;
-      const ly = event.clientY - rect.top;
+      const lx = event.clientX - rect.left + PAD;
+      const ly = event.clientY - rect.top + PAD;
 
-      const nearX = Math.max(0, Math.min(width, lx));
-      const nearY = Math.max(0, Math.min(height, ly));
+      const nearX = Math.max(PAD, Math.min(width - PAD, lx));
+      const nearY = Math.max(PAD, Math.min(height - PAD, ly));
       const edgeDist = Math.hypot(lx - nearX, ly - nearY);
 
       if (edgeDist < RADIUS) {
