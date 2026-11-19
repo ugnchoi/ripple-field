@@ -153,13 +153,6 @@ export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps)
     <section className="intro" aria-label="Self introduction">
       <div className="intro__sheet">
         <section className="intro__approach" aria-labelledby="intro-approach-heading">
-          <div className="intro__section-head">
-            <span className="section__index">01</span>
-            <h3 id="intro-approach-heading" className="section__title">
-              Approach
-            </h3>
-          </div>
-
           <div className="intro__scrolly">
             <div className="intro__chapters">
               {pillars.map((pillar, index) => {
@@ -176,6 +169,9 @@ export function Intro({ onReadResume, playgroundHref = './water/' }: IntroProps)
                     className={`intro__chapter${revealedChapters[index] ? ' is-revealed' : ''}`}
                   >
                     <span className="intro__chapter-index">
+                      {index === 0 ? (
+                        <span id="intro-approach-heading">Approach · </span>
+                      ) : null}
                       {chapterNumber} / {totalChapters}
                     </span>
                     <h4 className="intro__chapter-title">{pillar.title}</h4>

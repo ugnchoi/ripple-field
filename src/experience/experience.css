@@ -189,14 +189,16 @@
 .portfolio-tabs__name {
   margin: 0;
   font-family: var(--sans, 'Figtree Variable', system-ui, sans-serif);
-  font-weight: 550;
-  font-size: 1rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ink, #16181f);
   pointer-events: auto;
   transition: font-size 0.22s ease;
 }
 .portfolio-tabs--scrolled .portfolio-tabs__name {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
 }
 .portfolio-tabs__right {
   pointer-events: auto;
@@ -395,10 +397,8 @@
   justify-content: center;
   gap: 1.15rem;
   padding-block: clamp(2.5rem, 6vh, 4.5rem);
-  border-top: 1px solid var(--line, rgba(22, 24, 31, 0.12));
 }
 .intro__chapter:first-child {
-  border-top: 0;
   padding-top: 0.5rem;
 }
 .intro__chapter-index {
@@ -431,8 +431,7 @@
 }
 .intro__practice {
   margin-top: 0.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line, rgba(22, 24, 31, 0.12));
+  padding-top: 0.5rem;
   max-width: 44ch;
   display: flex;
   flex-direction: column;
@@ -501,9 +500,18 @@
     align-items: start;
   }
   .intro__chapter {
-    min-height: 76svh;
+    min-height: 86svh;
     padding-block: clamp(4rem, 10vh, 7.5rem);
+    scroll-snap-align: start;
+    scroll-margin-top: 4rem;
     transition: opacity 0.35s ease;
+  }
+  .water-opening__viewport,
+  .intro__band {
+    scroll-snap-align: start;
+  }
+  .intro__actions {
+    scroll-snap-align: end;
   }
   .intro__chapter[data-active='false'] {
     opacity: 0.38;
@@ -519,6 +527,12 @@
     position: sticky;
     top: 6svh;
     height: 86svh;
+  }
+}
+
+@media (min-width: 860px) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y proximity;
   }
 }
 
@@ -862,18 +876,44 @@
   transition: width 0.22s ease, max-height 0.22s ease, border-radius 0.22s ease;
 }
 
+.portfolio-shell {
+  --chat-sheet-w: min(30rem, 36vw);
+  transition: padding-right 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (min-width: 861px) {
+  .portfolio-shell--pushed {
+    padding-right: var(--chat-sheet-w);
+  }
+  .portfolio-shell--pushed .portfolio-tabs {
+    right: var(--chat-sheet-w);
+  }
+  .portfolio-shell--pushed .ripple-host {
+    right: var(--chat-sheet-w);
+  }
+}
+
 .chat-panel--expanded {
   top: 0;
   right: 0;
   bottom: 0;
   z-index: 45;
-  width: min(32rem, 100vw);
+  width: min(30rem, 36vw);
   max-height: 100svh;
   border-radius: 0;
   border-top: 0;
   border-right: 0;
   border-bottom: 0;
-  box-shadow: -16px 0 48px rgba(22, 24, 31, 0.16);
+  box-shadow: -12px 0 36px rgba(22, 24, 31, 0.12);
+}
+
+@media (max-width: 860px) {
+  .chat-panel--expanded {
+    left: 0;
+    width: 100vw;
+    border-left: 0;
+    box-shadow: none;
+    z-index: 50;
+  }
 }
 
 .chat-panel__actions {

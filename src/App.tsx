@@ -18,22 +18,31 @@ const tabFromHash = (): PortfolioTab =>
 function PortfolioTabs() {
   const [activeTab, setActiveTab] = useState<PortfolioTab>(tabFromHash);
   const [scrolled, setScrolled] = useState(false);
+  const [sideSheetOpen, setSideSheetOpen] = useState(false);
   const reducedMotion = useMotionPreference();
   const introTabRef = useRef<HTMLButtonElement>(null);
   const resumeTabRef = useRef<HTMLButtonElement>(null);
   const resumeSurfaceRef = useRef<SurfaceController | null>(null);
   const heroChatAnchorRef = useRef<HTMLDivElement | null>(null);
+  const scrollPositionsRef = useRef<Record<PortfolioTab, number>>({ intro: 0, resume: 0 });
 
-  const selectTab = useCallback((next: PortfolioTab, { scrollTop = false } = {}) => {
-    setActiveTab(next);
-    const nextHash = `#${next}`;
-    if (window.location.hash !== nextHash) {
-      window.history.pushState(null, '', nextHash);
-    }
-    if (scrollTop) {
-      window.scrollTo({ top: 0, behavior: 'auto' });
-    }
-  }, []);
+  const selectTab = useCallback(
+    (next: PortfolioTab, { scrollTop = false } = {}) => {
+      if (next !== activeTab) {
+        scrollPositionsRef.current[activeTab] = window.scrollY;
+      }
+      setActiveTab(next);
+      const nextHash = `#${next}`;
+      if (window.location.hash !== nextHash) {
+        window.history.pushState(null, '', nextHash);
+      }
+      const targetY = scrollTop ? 0 : scrollPositionsRef.current[next];
+      window.requestAnimationFrame(() => {
+        window.scrollTo({ top: targetY, behavior: 'auto' });
+      });
+    },
+    [activeTab],
+  );
 
   useEffect(() => {
     const syncFromLocation = () => setActiveTab(tabFromHash());
@@ -84,7 +93,7 @@ function PortfolioTabs() {
   const linkedinUrl = basics.profiles.find((p) => p.network.toLowerCase() === 'linkedin')?.url;
 
   return (
-    <>
+    <div className={`portfolio-shell${sideSheetOpen ? ' portfolio-shell--pushed' : ''}`}>
       <nav
         className={`portfolio-tabs no-print${scrolled ? ' portfolio-tabs--scrolled' : ''}`}
         aria-label="Portfolio sections"
@@ -243,8 +252,9 @@ function PortfolioTabs() {
       <ChatWidget
         heroAnchorRef={heroChatAnchorRef}
         dockedOnly={activeTab !== 'intro'}
+        onSideSheetChange={setSideSheetOpen}
       />
-    </>
+    </div>
   );
 }
 

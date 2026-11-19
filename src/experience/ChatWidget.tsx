@@ -17,6 +17,7 @@ const STARTER_PROMPTS = [
 interface ChatWidgetProps {
   heroAnchorRef?: RefObject<HTMLDivElement | null>;
   dockedOnly?: boolean;
+  onSideSheetChange?: (active: boolean) => void;
 }
 
 function clamp01(v: number): number {
@@ -61,7 +62,11 @@ function renderFormattedMessage(content: string) {
   });
 }
 
-export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProps = {}) {
+export function ChatWidget({
+  heroAnchorRef,
+  dockedOnly = false,
+  onSideSheetChange,
+}: ChatWidgetProps = {}) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -147,6 +152,10 @@ export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProp
       if (rafId) window.cancelAnimationFrame(rafId);
     };
   }, [heroAnchorRef, dockedOnly, open, isDocked]);
+
+  useEffect(() => {
+    onSideSheetChange?.(open && expanded);
+  }, [open, expanded, onSideSheetChange]);
 
   useEffect(() => {
     if (!open) return;
@@ -416,9 +425,10 @@ export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProp
         </div>
       )}
 
-      <div
-        ref={dockRef}
-        className={`chat-dock no-print${isDocked ? ' chat-dock--docked' : ' chat-dock--hero'}`}
+      {!(open && expanded) && (
+        <div
+          ref={dockRef}
+          className={`chat-dock no-print${isDocked ? ' chat-dock--docked' : ' chat-dock--hero'}`}
         style={
           isDocked
             ? undefined
@@ -505,7 +515,8 @@ export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProp
             </a>
           </div>
         )}
-      </div>
+        </div>
+      )}
     </>
   );
 }
