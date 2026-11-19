@@ -49,7 +49,7 @@ const resumeData = require('../docs/resume/resume.json') as Record<string, unkno
 
 const MAX_MESSAGES = 12;
 const MAX_CONTENT_LENGTH = 1000;
-const OLLAMA_TIMEOUT_MS = 8000;
+const OLLAMA_TIMEOUT_MS = 25000;
 const GEMINI_FALLBACK_MODELS = ['gemini-2.5-flash-lite', 'gemini-3.8-flash'];
 
 function buildSystemInstruction(resume: Record<string, unknown>): string {
@@ -131,6 +131,11 @@ async function tryOllama(
         model,
         stream: false,
         think: false,
+        keep_alive: '30m',
+        options: {
+          num_ctx: 4096,
+          num_predict: 256,
+        },
         messages: [{ role: 'system', content: systemPrompt }, ...messages],
       }),
     });
