@@ -184,11 +184,14 @@ vec3 ambientSurface(vec2 q, float t, float worldPerPx) {
   // Full strength across the core, then a short falloff, rather than a smoothstep from zero.
   float line = 1.0 - smoothstep(A_LINE_W * A_LINE_EDGE, A_LINE_W, distPx);
 
-  // The returned gradient is of the smooth height, not of the contour field. The contour value is
-  // discontinuous at every band edge, so steering dot drift with it would tear the lattice along
-  // each line. The warp's Jacobian is left out; it only steers a sub-pixel drift, and the exact
-  // chain rule would cost two more fbm evaluations to correct a direction nobody can see.
-  return vec3(line, n.yz * A_NOISE_F);
+  // Horizontal stroke-edge slope for ClearType-style subpixel antialiasing:
+  // positive on the left rising edge of a contour band, negative on the right falling edge, 0 at core/outside.
+  float foldSign = f < 0.5 ? 1.0 : -1.0;
+  float gradLen = max(length(gradU), 1e-4);
+  float edgeBand = smoothstep(0.02, 0.35, line) * (1.0 - smoothstep(0.72, 0.98, line));
+  float edgeSlopeX = clamp(-gradU.x * foldSign / gradLen, -1.0, 1.0) * edgeBand;
+
+  return vec3(line, edgeSlopeX, n.z * A_NOISE_F);
 }
 
 `;
