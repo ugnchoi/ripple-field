@@ -7,7 +7,7 @@ interface HeroPretextHeadlineProps {
 
 const CELL = 2;
 const RADIUS = 165;
-const PAD = 24;
+const PAD = 32;
 
 function smoothstep(edge0: number, edge1: number, x: number): number {
   const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
@@ -165,6 +165,7 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
       const rows = Math.ceil(height / CELL);
       const shift = 3.2;
       const sigma = RADIUS * 0.42;
+      const nowSec = performance.now() * 0.001;
 
       for (let row = 0; row < rows; row++) {
         const y0 = row * CELL;
@@ -216,21 +217,42 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
             b = b + (198 - b) * t;
           }
 
-          // Deterministic grain scatter + radial dispersion strongest at cursor center
+          // Two grain populations:
+          // 1. Anchored core grains (~55%): stay within the original letterform silhouette
+          // 2. Drifting particles (~45%): detach and drift outward with subtle organic motion
           const [hx, hy, hs] = hash3(col, row);
-          const dxFromPtr = cx - pointer.x;
-          const dyFromPtr = cy - pointer.y;
-          const ptrLen = Math.max(1, Math.hypot(dxFromPtr, dyFromPtr));
-          const scatter = inf * inf * 10.5;
-          const gx = cx + hx * scatter + (dxFromPtr / ptrLen) * inf * 4.5;
-          const gy = cy + hy * scatter + (dyFromPtr / ptrLen) * inf * 4.5;
-
+          const isDrifter = hs >= 0.55;
           const baseCoverage = Math.max(aCenter, Math.max(aLeft, aRight) * 0.85);
-          // Most grains are small/fine; sparingly (~5%) produce a larger accent grain
-          const sizeCurve = Math.pow(hs, 4.5);
-          const grainRadius =
-            (0.45 + 0.55 * baseCoverage + 1.55 * sizeCurve) * (0.72 + 0.4 * (1 - inf * 0.35));
-          const alpha = Math.min(1, baseCoverage * (0.55 + 0.55 * inf) * 1.15);
+
+          let gx: number;
+          let gy: number;
+          let grainRadius: number;
+          let alpha: number;
+
+          if (isDrifter) {
+            const driftFactor = ((hs - 0.55) / 0.45);
+            const dxFromPtr = cx - pointer.x;
+            const dyFromPtr = cy - pointer.y;
+            const ptrLen = Math.max(1, Math.hypot(dxFromPtr, dyFromPtr));
+            const push = inf * inf * (7.0 + 14.0 * driftFactor);
+            const breezeX = Math.sin(nowSec * 1.6 + hs * 19.0 + row * 0.25) * 3.2 * inf;
+            const breezeY = Math.cos(nowSec * 1.3 + hs * 23.0 + col * 0.25) * 3.2 * inf;
+
+            gx = cx + hx * (5.5 * inf) + (dxFromPtr / ptrLen) * push + breezeX;
+            gy = cy + hy * (5.5 * inf) + (dyFromPtr / ptrLen) * push + breezeY;
+
+            // Drifting particles are mostly fine, with rare larger accent specks
+            const largeSpec = hs > 0.96 ? 1.35 : 0.0;
+            grainRadius = (0.42 + 0.52 * baseCoverage + largeSpec) * (1 - inf * 0.22 * driftFactor);
+            alpha = Math.min(1, baseCoverage * (0.48 + 0.42 * inf) * (1 - 0.35 * driftFactor * inf));
+          } else {
+            // Stay anchored inside the original text stroke with micro-grain texture
+            gx = cx + hx * (1.15 * inf);
+            gy = cy + hy * (1.15 * inf);
+            const largeCore = hs > 0.51 ? 1.15 : 0.0;
+            grainRadius = (0.52 + 0.68 * baseCoverage + largeCore) * (0.85 + 0.2 * (1 - inf));
+            alpha = Math.min(1, baseCoverage * (0.72 + 0.4 * inf));
+          }
 
           ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha.toFixed(3)})`;
           ctx.beginPath();
