@@ -5,7 +5,7 @@ interface HeroPretextHeadlineProps {
   text: string;
 }
 
-const CELL = 5;
+const CELL = 3;
 const RADIUS = 165;
 const PAD = 24;
 
@@ -128,9 +128,8 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
     const sampleCellAvg = (x0: number, y0: number, dxShift: number): number => {
       let sum = 0;
       let count = 0;
-      const step = 2;
-      for (let sy = 1; sy < CELL; sy += step) {
-        for (let sx = 1; sx < CELL; sx += step) {
+      for (let sy = 0; sy < CELL; sy += 1) {
+        for (let sx = 0; sx < CELL; sx += 1) {
           sum += sampleAlpha(x0 + sx + dxShift, y0 + sy);
           count += 1;
         }
@@ -192,8 +191,8 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
           ctx.fillRect(x0, y0, CELL, CELL);
           ctx.restore();
 
-          // Exaggerated RGB subpixel ink absorption preserving ClearType edge logic
-          const edgeDelta = (aRight - aLeft) * 1.5;
+          // Gentler RGB subpixel ink absorption preserving ClearType edge logic
+          const edgeDelta = (aRight - aLeft) * 1.15;
           const ink = Math.min(1, aCenter * 1.15);
 
           let r = 247 - ink * 225;
@@ -201,15 +200,15 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
           let b = 251 - ink * 220;
 
           if (edgeDelta > 0.02) {
-            const t = Math.min(1, edgeDelta * (0.85 + 0.65 * inf));
-            r = r + (208 - r) * t;
-            g = g + (96 - g) * t;
-            b = b + (22 - b) * t;
+            const t = Math.min(0.55, edgeDelta * (0.42 + 0.35 * inf));
+            r = r + (186 - r) * t;
+            g = g + (108 - g) * t;
+            b = b + (64 - b) * t;
           } else if (edgeDelta < -0.02) {
-            const t = Math.min(1, -edgeDelta * (0.85 + 0.65 * inf));
-            r = r + (24 - r) * t;
-            g = g + (116 - g) * t;
-            b = b + (232 - b) * t;
+            const t = Math.min(0.55, -edgeDelta * (0.42 + 0.35 * inf));
+            r = r + (62 - r) * t;
+            g = g + (120 - g) * t;
+            b = b + (198 - b) * t;
           }
 
           // Deterministic grain scatter + radial dispersion strongest at cursor center
@@ -217,12 +216,12 @@ export function HeroPretextHeadline({ text }: HeroPretextHeadlineProps) {
           const dxFromPtr = cx - pointer.x;
           const dyFromPtr = cy - pointer.y;
           const ptrLen = Math.max(1, Math.hypot(dxFromPtr, dyFromPtr));
-          const scatter = inf * inf * 11.0;
+          const scatter = inf * inf * 10.0;
           const gx = cx + hx * scatter + (dxFromPtr / ptrLen) * inf * 4.5;
           const gy = cy + hy * scatter + (dyFromPtr / ptrLen) * inf * 4.5;
 
           const baseCoverage = Math.max(aCenter, Math.max(aLeft, aRight) * 0.85);
-          const grainRadius = (1.1 + 1.45 * baseCoverage) * (0.65 + 0.55 * (1 - inf * 0.45));
+          const grainRadius = (0.65 + 0.85 * baseCoverage) * (0.7 + 0.45 * (1 - inf * 0.4));
           const alpha = Math.min(1, baseCoverage * (0.55 + 0.55 * inf) * 1.15);
 
           ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha.toFixed(3)})`;
