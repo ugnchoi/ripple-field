@@ -75,13 +75,6 @@ export function Opening({
       onInteract={() => setIntro(false)}
       onController={next => { controller.current = next; }}
       onChange={next => { setStatus(next.status); setPaused(next.paused); }} />
-    <header className="water-opening__header">
-      <p className="water-opening__name">{resume.basics.name}</p>
-      {intro ? <button className="water-button" type="button" onClick={finishCue}>Skip animation</button>
-        : <button className="water-button" type="button" disabled={status !== 'ready'} onClick={() => setPaused(value => !value)}>
-          {paused ? 'Play surface motion' : 'Pause'}
-        </button>}
-    </header>
     <div className="water-opening__main">
       <div className="water-opening__copy">
         <h1>{resume.basics.tagline}</h1>

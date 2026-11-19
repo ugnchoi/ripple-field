@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
+import { resume } from '@/data/resume';
 import { Resume } from '@/resume/Resume';
 import { Opening } from '@/experience/Opening';
 import { Intro } from '@/experience/Intro';
@@ -16,6 +17,7 @@ const tabFromHash = (): PortfolioTab =>
 
 function PortfolioTabs() {
   const [activeTab, setActiveTab] = useState<PortfolioTab>(tabFromHash);
+  const [scrolled, setScrolled] = useState(false);
   const reducedMotion = useMotionPreference();
   const introTabRef = useRef<HTMLButtonElement>(null);
   const resumeTabRef = useRef<HTMLButtonElement>(null);
@@ -41,6 +43,13 @@ function PortfolioTabs() {
       window.removeEventListener('hashchange', syncFromLocation);
       window.removeEventListener('popstate', syncFromLocation);
     };
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const handleTabKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -73,7 +82,11 @@ function PortfolioTabs() {
 
   return (
     <>
-      <nav className="portfolio-tabs no-print" aria-label="Portfolio sections">
+      <nav
+        className={`portfolio-tabs no-print${scrolled ? ' portfolio-tabs--scrolled' : ''}`}
+        aria-label="Portfolio sections"
+      >
+        <p className="portfolio-tabs__name">{resume.basics.name}</p>
         <div
           className="portfolio-tabs__list"
           role="tablist"

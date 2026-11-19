@@ -188,7 +188,7 @@ vec3 ambientSurface(vec2 q, float t, float worldPerPx) {
   // positive on the left rising edge of a contour band, negative on the right falling edge, 0 at core/outside.
   float foldSign = f < 0.5 ? 1.0 : -1.0;
   float gradLen = max(length(gradU), 1e-4);
-  float edgeBand = smoothstep(0.02, 0.35, line) * (1.0 - smoothstep(0.72, 0.98, line));
+  float edgeBand = smoothstep(0.01, 0.22, line) * (1.0 - smoothstep(0.68, 0.96, line));
   float edgeSlopeX = clamp(-gradU.x * foldSign / gradLen, -1.0, 1.0) * edgeBand;
 
   return vec3(line, edgeSlopeX, n.z * A_NOISE_F);

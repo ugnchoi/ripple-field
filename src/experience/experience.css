@@ -11,7 +11,7 @@
   background: var(--water-paper);
   font-family: var(--sans, 'Figtree Variable', system-ui, sans-serif);
 }
-.water-opening { min-height: 100svh; display: flex; flex-direction: column; padding: clamp(1.25rem, 4vw, 4rem); }
+.water-opening { min-height: 100svh; display: flex; flex-direction: column; padding: clamp(4.75rem, 8vw, 6.25rem) clamp(1.25rem, 4vw, 4rem) clamp(1.25rem, 4vw, 4rem); }
 .water-opening::before {
   content: '';
   position: absolute;
@@ -148,25 +148,47 @@
 
 /* Portfolio 2-tab bar */
 .portfolio-tabs {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 20;
+  left: 0;
+  right: 0;
+  z-index: 30;
   display: flex;
-  justify-content: center;
-  padding: 0.75rem clamp(1rem, 3vw, 2.5rem);
-  background: rgba(247, 247, 251, 0.82);
-  backdrop-filter: blur(12px) saturate(1.1);
-  -webkit-backdrop-filter: blur(12px) saturate(1.1);
-  border-bottom: 1px solid var(--line, rgba(22, 24, 31, 0.12));
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1rem, 2.8vw, 1.75rem) clamp(1.25rem, 4vw, 4rem);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  pointer-events: none;
+  transition: background-color 0.22s ease, border-color 0.22s ease, backdrop-filter 0.22s ease;
+}
+.portfolio-tabs--scrolled {
+  background: rgba(247, 247, 251, 0.72);
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  border-bottom-color: var(--line, rgba(22, 24, 31, 0.1));
+}
+.portfolio-tabs__name {
+  margin: 0;
+  font-family: var(--sans, 'Figtree Variable', system-ui, sans-serif);
+  font-weight: 550;
+  font-size: 1rem;
+  color: var(--ink, #16181f);
+  pointer-events: auto;
 }
 .portfolio-tabs__list {
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem;
   border-radius: 999px;
   border: 1px solid var(--line, rgba(22, 24, 31, 0.12));
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(247, 247, 251, 0.72);
+}
+#panel-resume {
+  padding-top: 4.5rem;
 }
 .portfolio-tabs__tab {
   appearance: none;
