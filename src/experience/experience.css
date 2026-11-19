@@ -96,7 +96,7 @@
 .water-opening__copy h1 { font-family: var(--serif, Georgia, serif); font-weight: 400; font-size: clamp(2.75rem, 6.3vw, 5.5rem); line-height: 1.07; letter-spacing: -0.03em; text-wrap: balance; margin: 0; max-width: 15ch; text-shadow: 0 1px 0 rgba(247, 247, 251, 0.92), 0 14px 34px rgba(247, 247, 251, 0.72); }
 .hero-pretext { position: relative; display: inline-block; max-width: 100%; }
 .hero-pretext__h1--masked { color: transparent; text-shadow: none !important; }
-.hero-pretext__canvas { position: absolute; left: -32px; top: -32px; pointer-events: none; }
+.hero-pretext__canvas { position: absolute; left: -12px; top: -12px; pointer-events: none; }
 .water-opening__copy p { margin: 1.5rem 0 0; color: var(--water-secondary); font-size: 1rem; }
 .water-opening__hint { color: var(--water-secondary); font-size: 0.875rem; line-height: 1.5; margin: 0 0 1rem; max-width: 42ch; pointer-events: none; }
 .water-opening__navigation { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 2rem; }
