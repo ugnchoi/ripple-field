@@ -1,6 +1,6 @@
 // Adapted from src/engine/rippleFieldMaterial.ts ambientSurface, commit 4841159.
 // Original gradient approximation intentionally retained: warp Jacobian is omitted.
-export const CONTOUR=Object.freeze({timeScale:1.5,frequency:1.5,octaves:2,warpOctaves:2,levels:8,widthPx:8.1,edge:.25,warpAmplitude:1.6,warpFrequency:.55,warpSpeed:.23,baseline:-.24,gain:1});
+export const CONTOUR=Object.freeze({timeScale:1.5,frequency:1.5,octaves:2,warpOctaves:2,levels:8,widthPx:10.5,edge:.22,warpAmplitude:1.6,warpFrequency:.55,warpSpeed:.23,baseline:-.24,gain:1});
 const fract=x=>x-Math.floor(x);
 function hash(x,y){const a=x*.3183099+.3678794,b=y*.3678794+.3183099,v=fract(a*b*(a+b));return [-1+2*fract(16*.3183099*v),-1+2*fract(16*.3678794*v)];}
 function noise(x,y){
@@ -188,7 +188,7 @@ vec3 ambientSurface(vec2 q, float t, float worldPerPx) {
   // positive on the left rising edge of a contour band, negative on the right falling edge, 0 at core/outside.
   float foldSign = f < 0.5 ? 1.0 : -1.0;
   float gradLen = max(length(gradU), 1e-4);
-  float edgeBand = smoothstep(0.01, 0.22, line) * (1.0 - smoothstep(0.68, 0.96, line));
+  float edgeBand = smoothstep(0.01, 0.24, line) * (1.0 - smoothstep(0.58, 0.90, line));
   float edgeSlopeX = clamp(-gradU.x * foldSign / gradLen, -1.0, 1.0) * edgeBand;
 
   return vec3(line, edgeSlopeX, n.z * A_NOISE_F);

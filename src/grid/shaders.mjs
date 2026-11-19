@@ -21,19 +21,19 @@ void main(){
   float env=clamp(source.w,0.0,1.0)*(1.0-exp(-age/${f(P.rise)}))*exp(-${f(P.decay)}*age)*fade*exp(-.5*d*d/${f(P.width**2)});
   float phase=6.283185307179586*d/${f(P.wavelength)};
   raw+=env*cos(phase);
-  waveEdge+=env*(-sin(phase))*((p.x-source.x)/max(r,1e-4))*1.45;
+  waveEdge+=env*(-sin(phase))*((p.x-source.x)/max(r,1e-4))*2.2;
  }
  float pd=length(p-uPointer);
  float bump=exp(-pd*pd*1.65)*uPull;
  float s=smoothCap(raw/${f(P.cap)});
  float y=${f(P.lumaBase)}-${f(P.lumaGain)}*s;
  float tint=uMode>1.5?${f(P.chroma)}*smoothCap(-.65*p.x+.35*p.y+.6*s+bump*1.15):0.0;
- float subEdge=uMode>1.5?clamp(ambEdge+waveEdge,-1.0,1.0):0.0;
+ float subEdge=uMode>1.5?clamp(ambEdge*1.25+waveEdge,-1.0,1.0):0.0;
  vec3 baseInk=vec3(y+tint,y+.15*tint,y-${f((.2126+.7152*.15)/.0722)}*tint);
- vec3 warmAA=vec3(0.78,0.36,0.10);
- vec3 coolAA=vec3(0.12,0.46,0.86);
- vInk=mix(baseInk,subEdge>0.0?warmAA:coolAA,abs(subEdge)*0.76);
- vFringe=uMode>1.5?clamp(abs(s)*.95+bump*.55,0.0,1.0):0.0;
+ vec3 warmAA=vec3(0.84,0.34,0.08);
+ vec3 coolAA=vec3(0.08,0.44,0.92);
+ vInk=mix(baseInk,subEdge>0.0?warmAA:coolAA,clamp(abs(subEdge)*0.92,0.0,0.92));
+ vFringe=uMode>1.5?clamp(abs(s)*1.1+bump*.65,0.0,1.0):0.0;
  gl_PointSize=${f(P.pitch)}*(${f(P.diameterBase)}+(uMode>.5?${f(P.diameterGain)}*s:0.0))*uDpr;
  gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
 }`;
@@ -47,9 +47,9 @@ void main(){
  float edge=fwidth(r);
  float coverage=1.0-smoothstep(.5-edge,.5,r);
  if(coverage<=0.0)discard;
- float rim=smoothstep(.16,.48,r)*(1.0-smoothstep(.46,.52,r));
+ float rim=smoothstep(.14,.48,r)*(1.0-smoothstep(.46,.52,r));
  float horiz=clamp(pc.x*2.2,-1.0,1.0);
- vec3 aa=vec3(-horiz*.16,-abs(horiz)*.03,horiz*.18)*(rim*vFringe);
+ vec3 aa=vec3(-horiz*.22,-abs(horiz)*.04,horiz*.24)*(rim*vFringe);
  gl_FragColor=vec4(clamp(vInk+aa,0.0,1.0),coverage);
 #include <colorspace_fragment>
 }`;

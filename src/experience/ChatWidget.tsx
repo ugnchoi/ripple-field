@@ -363,37 +363,40 @@ export function ChatWidget({ heroAnchorRef, dockedOnly = false }: ChatWidgetProp
             <img
               src={yoojinAvatar}
               alt="Yoojin Choi"
-              width={48}
-              height={48}
+              width={52}
+              height={52}
               className="chat-hero-pill__avatar"
             />
-            <form className="chat-hero-pill__form" onSubmit={handleHeroSubmit}>
-              <label htmlFor="yoojin-hero-chat-input" className="chat-sr-only">
-                Ask a question about Yoojin
-              </label>
-              <input
-                id="yoojin-hero-chat-input"
-                type="text"
-                className="chat-hero-pill__input"
-                value={heroInput}
-                onChange={(event) => setHeroInput(event.target.value)}
-                onFocus={() => setHeroFocused(true)}
-                onBlur={() => setHeroFocused(false)}
-                placeholder={STARTER_PROMPTS[placeholderIndex]}
-                maxLength={1000}
-                disabled={loading}
-              />
-              {heroInput.trim() && (
-                <button
-                  type="submit"
-                  className="chat-hero-pill__send"
-                  aria-label="Ask question"
+            <div className="chat-hero-pill__content">
+              <span className="chat-hero-pill__title">Ask about Yoojin</span>
+              <form className="chat-hero-pill__form" onSubmit={handleHeroSubmit}>
+                <label htmlFor="yoojin-hero-chat-input" className="chat-sr-only">
+                  Ask a question about Yoojin
+                </label>
+                <input
+                  id="yoojin-hero-chat-input"
+                  type="text"
+                  className="chat-hero-pill__input"
+                  value={heroInput}
+                  onChange={(event) => setHeroInput(event.target.value)}
+                  onFocus={() => setHeroFocused(true)}
+                  onBlur={() => setHeroFocused(false)}
+                  placeholder={STARTER_PROMPTS[placeholderIndex]}
+                  maxLength={1000}
                   disabled={loading}
-                >
-                  →
-                </button>
-              )}
-            </form>
+                />
+                {heroInput.trim() && (
+                  <button
+                    type="submit"
+                    className="chat-hero-pill__send"
+                    aria-label="Ask question"
+                    disabled={loading}
+                  >
+                    →
+                  </button>
+                )}
+              </form>
+            </div>
             <a
               href={`mailto:${contactEmail}`}
               className="chat-hero-pill__mail"
