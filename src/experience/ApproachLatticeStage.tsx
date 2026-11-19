@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { PARAMS } from '../grid/field.mjs';
 
 export interface ApproachLatticeStageProps {
   /** Continuous scroll progress from 0.0 to 2.0 across the three chapters. */
@@ -45,10 +46,12 @@ const CHAPTER_TITLES = [
 ] as const;
 
 // Matches src/grid/field.mjs PARAMS.pitch = 6 & src/grid/shaders.mjs palette.
-const PITCH = 6;
+const PITCH = PARAMS.pitch;
 const PAPER_RGB = [247, 247, 251] as const; // #f7f7fb
 const INK_RGB = [22, 24, 31] as const; // #16181f
 const SLATE_RGB = [54, 79, 110] as const; // #364f6e
+const WARM_AA_RGB = [214, 87, 20] as const;
+const COOL_AA_RGB = [20, 112, 235] as const;
 
 function clamp01(v: number): number {
   return v < 0 ? 0 : v > 1 ? 1 : v;
@@ -479,6 +482,9 @@ export function ApproachLatticeStage({
       const halfH = height * 0.5;
 
       const ptr = pointerRef.current;
+      const rowEnergy = new Float32Array(cols);
+      const rowAccent = new Float32Array(cols);
+      const rowFade = new Float32Array(cols);
 
       for (let j = 0; j < rows; j++) {
         const py = offsetY + j * PITCH;
@@ -493,7 +499,12 @@ export function ApproachLatticeStage({
           // Radial/elliptical edge fade into --water-paper
           const edgeDist = Math.hypot(ex * 0.94, ey * 0.94);
           const edgeFade = 1 - smoothstep(0.62, 1.0, edgeDist);
-          if (edgeFade <= 0.01) continue;
+          rowFade[i] = edgeFade;
+          if (edgeFade <= 0.01) {
+            rowEnergy[i] = 0;
+            rowAccent[i] = 0;
+            continue;
+          }
 
           let energy = 0;
           let accent = 0;
@@ -522,8 +533,17 @@ export function ApproachLatticeStage({
             accent = clamp01(accent + bump * 0.65);
           }
 
-          // Base lattice dot presence + signal gain
-          const signal = clamp01(energy);
+          rowEnergy[i] = clamp01(energy);
+          rowAccent[i] = clamp01(accent);
+        }
+
+        for (let i = 0; i < cols; i++) {
+          const edgeFade = rowFade[i];
+          if (edgeFade <= 0.01) continue;
+
+          const px = offsetX + i * PITCH;
+          const signal = rowEnergy[i];
+          const accent = rowAccent[i];
           const radius = PITCH * (0.21 + 0.18 * signal);
 
           // Blend between subtle resting lattice grey -> #16181f ink -> #364f6e slate accent
@@ -535,12 +555,24 @@ export function ApproachLatticeStage({
           const baseG = PAPER_RGB[1] + (INK_RGB[1] - PAPER_RGB[1]) * (0.28 + 0.72 * inkMix);
           const baseB = PAPER_RGB[2] + (INK_RGB[2] - PAPER_RGB[2]) * (0.28 + 0.72 * inkMix);
 
-          const r = Math.round(baseR + (SLATE_RGB[0] - baseR) * slateMix);
-          const g = Math.round(baseG + (SLATE_RGB[1] - baseG) * slateMix);
-          const b = Math.round(baseB + (SLATE_RGB[2] - baseB) * slateMix);
-          const alpha = restAlpha * edgeFade;
+          let r = baseR + (SLATE_RGB[0] - baseR) * slateMix;
+          let g = baseG + (SLATE_RGB[1] - baseG) * slateMix;
+          let b = baseB + (SLATE_RGB[2] - baseB) * slateMix;
 
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
+          // ClearType-style horizontal edge antialiasing inherited from the hero shader
+          const prevE = i > 0 ? rowEnergy[i - 1] : signal;
+          const nextE = i + 1 < cols ? rowEnergy[i + 1] : signal;
+          const slope = (nextE - prevE) * 2.6;
+          const aaMix = clamp01(Math.abs(slope)) * 0.85;
+          if (aaMix > 0.01) {
+            const targetAA = slope > 0 ? WARM_AA_RGB : COOL_AA_RGB;
+            r += (targetAA[0] - r) * aaMix;
+            g += (targetAA[1] - g) * aaMix;
+            b += (targetAA[2] - b) * aaMix;
+          }
+
+          const alpha = restAlpha * edgeFade;
+          ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha.toFixed(3)})`;
           ctx.beginPath();
           ctx.arc(px, py, radius, 0, Math.PI * 2);
           ctx.fill();

@@ -1,5 +1,5 @@
 import {CONTOUR,contourAt} from './contour.mjs';
-export const PARAMS=Object.freeze({pitch:4.5,seed:42,wavelength:.24,speed:.48,width:.24,decay:.65,rise:.12,lifetime:8,core:.012,cap:.65,diameterBase:.44,diameterGain:.24,lumaBase:.44,lumaGain:.22,chroma:.038,maxSources:16});
+export const PARAMS=Object.freeze({pitch:5.25,seed:42,wavelength:.24,speed:.48,width:.24,decay:.65,rise:.12,lifetime:8,core:.012,cap:.65,diameterBase:.45,diameterGain:.23,lumaBase:.44,lumaGain:.22,chroma:.038,maxSources:16});
 export function ambientAt(x,y,time,height=900){
  return CONTOUR.baseline+CONTOUR.gain*contourAt(x,y,time,height).mask;
 }
