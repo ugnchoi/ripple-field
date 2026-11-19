@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { resume } from '../data/resume';
+import { HeroPretextHeadline } from './HeroPretextHeadline';
 import { introSession } from './introPolicy';
 import { SurfaceCanvas } from './SurfaceCanvas';
 import type { SurfaceController, SurfaceFactory, SurfaceStatus } from './types';
@@ -77,7 +78,7 @@ export function Opening({
       onChange={next => { setStatus(next.status); setPaused(next.paused); }} />
     <div className="water-opening__main">
       <div className="water-opening__copy">
-        <h1>{resume.basics.tagline}</h1>
+        <HeroPretextHeadline text={resume.basics.tagline} />
         <p>{resume.basics.title}</p>
       </div>
       <div ref={heroChatAnchorRef} className="water-opening__chat" aria-hidden="true" />
