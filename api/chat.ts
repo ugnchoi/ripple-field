@@ -509,7 +509,7 @@ export async function POST(request: Request): Promise<Response> {
       'Groq',
       'https://api.groq.com/openai/v1/chat/completions',
       groqKey,
-      process.env.GROQ_MODEL?.trim() || 'llama-3.1-8b-instant',
+      process.env.GROQ_MODEL?.trim() || 'openai/gpt-oss-20b',
       systemPrompt,
       messages,
     );
