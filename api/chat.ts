@@ -504,6 +504,21 @@ export async function POST(request: Request): Promise<Response> {
   const systemPrompt = buildSystemInstruction(resumeData, linkedinData);
   let lastError = 'The assistant service is unavailable.';
 
+  if (groqKey) {
+    const result = await tryOpenAICompatible(
+      'Groq',
+      'https://api.groq.com/openai/v1/chat/completions',
+      groqKey,
+      process.env.GROQ_MODEL?.trim() || 'llama-3.1-8b-instant',
+      systemPrompt,
+      messages,
+    );
+    if (result.ok && result.reply) {
+      return Response.json({ reply: result.reply });
+    }
+    lastError = result.error ?? lastError;
+  }
+
   if (ollamaBaseUrl) {
     const result = await tryOllama(ollamaBaseUrl, systemPrompt, messages);
     if (result.ok && result.reply) {
@@ -518,21 +533,6 @@ export async function POST(request: Request): Promise<Response> {
       'https://api.openai.com/v1/chat/completions',
       openaiKey,
       process.env.OPENAI_MODEL?.trim() || 'gpt-4o-mini',
-      systemPrompt,
-      messages,
-    );
-    if (result.ok && result.reply) {
-      return Response.json({ reply: result.reply });
-    }
-    lastError = result.error ?? lastError;
-  }
-
-  if (groqKey) {
-    const result = await tryOpenAICompatible(
-      'Groq',
-      'https://api.groq.com/openai/v1/chat/completions',
-      groqKey,
-      process.env.GROQ_MODEL?.trim() || 'llama-3.1-8b-instant',
       systemPrompt,
       messages,
     );
