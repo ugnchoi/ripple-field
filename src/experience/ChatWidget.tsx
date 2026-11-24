@@ -14,6 +14,13 @@ const STARTER_PROMPTS = [
   'How does Yoojin think about AI and design?',
 ] as const;
 
+const LOADING_STATUSES = [
+  { delayMs: 0, label: "Skimming Yoojin's notes…" },
+  { delayMs: 1800, label: 'Connecting the ripples across projects…' },
+  { delayMs: 4200, label: 'Distilling a clear answer…' },
+  { delayMs: 7500, label: 'Still with you — thinking this one through…' },
+] as const;
+
 interface ChatWidgetProps {
   heroAnchorRef?: RefObject<HTMLDivElement | null>;
   dockedOnly?: boolean;
@@ -77,6 +84,7 @@ export function ChatWidget({
   const [scrollProgress, setScrollProgress] = useState(dockedOnly ? 1 : 0);
   const [dockOffset, setDockOffset] = useState<{ dx: number; dy: number }>({ dx: 0, dy: 0 });
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   const dockRef = useRef<HTMLDivElement>(null);
@@ -95,6 +103,22 @@ export function ChatWidget({
     }, 3200);
     return () => window.clearInterval(timer);
   }, [heroFocused, heroInput, isDocked]);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingStep(0);
+      return;
+    }
+    setLoadingStep(0);
+    const timers = LOADING_STATUSES.slice(1).map((stage, idx) =>
+      window.setTimeout(() => {
+        setLoadingStep(idx + 1);
+      }, stage.delayMs),
+    );
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, [loading]);
 
   useLayoutEffect(() => {
     if (dockedOnly) {
@@ -375,12 +399,16 @@ export function ChatWidget({
               {loading && (
                 <div
                   className="chat-msg chat-msg--assistant chat-msg--loading"
-                  aria-label="Assistant is typing"
+                  role="status"
+                  aria-live="polite"
                 >
                   <span className="chat-dots" aria-hidden="true">
                     <span />
                     <span />
                     <span />
+                  </span>
+                  <span key={loadingStep} className="chat-loading__status">
+                    {LOADING_STATUSES[loadingStep].label}
                   </span>
                 </div>
               )}

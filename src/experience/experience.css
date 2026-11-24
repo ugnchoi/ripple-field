@@ -1088,7 +1088,22 @@
 }
 
 .chat-msg--loading {
-  padding: 0.7rem 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 0.9rem;
+}
+
+.chat-loading__status {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--water-secondary, #555761);
+  animation: chat-status-fade 0.25s ease;
+}
+
+@keyframes chat-status-fade {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .chat-dots {
@@ -1239,6 +1254,9 @@
   .chat-dots span {
     animation: none;
     opacity: 0.7;
+  }
+  .chat-loading__status {
+    animation: none;
   }
 }
 
