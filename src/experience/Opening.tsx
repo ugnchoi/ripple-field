@@ -79,6 +79,7 @@ export function Opening({
         <div className="water-opening__copy">
           <HeroPretextHeadline text={resume.basics.tagline} />
           <p>{resume.basics.title}</p>
+          <p className="water-opening__specialties">{resume.basics.specialties.join(' · ')}</p>
         </div>
         <div ref={heroChatAnchorRef} className="water-opening__chat" aria-hidden="true" />
       </div>

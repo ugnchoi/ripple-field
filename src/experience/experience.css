@@ -98,6 +98,7 @@
 .hero-pretext__h1--masked { color: transparent; text-shadow: none !important; }
 .hero-pretext__canvas { position: absolute; left: -12px; top: -12px; pointer-events: none; }
 .water-opening__copy p { margin: 1.5rem 0 0; color: var(--water-secondary); font-size: 1rem; }
+.water-opening__copy .water-opening__specialties { margin-top: 0.45rem; font-size: 0.875rem; line-height: 1.5; color: var(--water-secondary); }
 .water-opening__hint { color: var(--water-secondary); font-size: 0.875rem; line-height: 1.5; margin: 0 0 1rem; max-width: 42ch; pointer-events: none; }
 .water-opening__navigation { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 2rem; }
 .water-link { color: var(--water-ink); text-decoration: underline; text-underline-offset: 0.3em; text-decoration-color: #8c8d96; font-size: 0.9375rem; padding-block: 0.75rem; }
